@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>de.jonashackt</groupId>
-        <artifactId>spring-boot-vuejs</artifactId>
+        <artifactId>BimIot</artifactId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
 
