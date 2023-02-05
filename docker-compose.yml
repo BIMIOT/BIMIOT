@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  bimiot:
+    image: 'bimiot'
+    build:
+      context: .
+    container_name: bimiot
+    ports:
+      - "80:8080"
