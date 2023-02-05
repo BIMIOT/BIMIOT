@@ -8,8 +8,8 @@
     <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>spring-boot-vuejs</name>
-    <description>Demo project for WAY2GO App</description>
+    <name>BimIot</name>
+    <description>BimIot app</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
