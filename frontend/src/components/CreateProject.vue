@@ -4,7 +4,7 @@
     <v-form>
       <h1>filename</h1>
     </v-form>
-    <v-btn id="save-file" type="submit" @click=handleSave()>Save</v-btn>
+    <v-btn id="save-file" type="submit" @click=handleSave()>Save project</v-btn>
   </modal>
 </template>
 
@@ -19,13 +19,17 @@ export default {
   },
   methods:{
     async handleSave() {
-      const API_URL = '/api/bimiot/project?name={test}';
-      const directory = "testDirectory"
+      const API_URL = '/api/bimiot/project';
 
       try {
         const response = await fetch(`${API_URL}`, {
           method: 'POST',
-          body: JSON.stringify(directory)
+          headers:{
+            'Content-Type': `application/json`
+          },
+          body: JSON.stringify({
+            name : "testDirectory"
+          })
         });
         const result = await response.json();
 
@@ -35,7 +39,7 @@ export default {
           this.$emit("close");
         }
       } catch (error) {
-        console.log(error.message())
+        console.log(error.message)
       }
 
     }
