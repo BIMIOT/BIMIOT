@@ -1,20 +1,18 @@
 <template>
-    <section>
-      <div>
-        <input type="file" id="file-input" />
-        <!--        <v-icon id="play" icon="mdi-play-circle" />-->
-        <!--        <v-icon id="stop" icon="mdi-pause-circle" />-->
-        <v-btn id="play" v-on:click="start()" >Play</v-btn>
+  <section>
+    <div>
+      <input type="file" id="file-input" />
+      <v-btn id="play" v-on:click="start()" >Play</v-btn>
+      <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
+      <SensorsList :room_list="room_list"/>
+    </div>
 
-        <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
-      </div>
-
-      <p id="properties-text">
-        ID:
-        {{ entityData }}
-      </p>
-      <div id="model" />
-    </section>
+    <p id="properties-text">
+      ID:
+      {{ entityData }}
+    </p>
+    <div id="model" />
+  </section>
 </template>
 
 <script>
@@ -26,9 +24,13 @@ import * as StompJs from '@stomp/stompjs';
 import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE } from 'web-ifc';
 import {IfcAPI} from "three/examples/jsm/loaders/ifc/web-ifc-api";
 import * as THREE from "three";
+import SensorsList from './SensorsList.vue'
 export default {
     name: 'ModelViewer',
     props: ['token', 'projectId', 'discipline'],
+    components: {
+      SensorsList
+    },
     data() {
         return {
             entityData: '',
@@ -36,6 +38,7 @@ export default {
             viewer: undefined,
             model: undefined,
             structure: undefined,
+            room_list: [{roomId:1, sensors:[{sensorIFCid:1,sensorDataSetId:1}]}],
           invisibleMat: new MeshLambertMaterial({
             transparent: true,
             opacity: 0.4,
@@ -83,17 +86,18 @@ export default {
             console.log(relIDs);
             return relIDs;
         },
-        getSensors: async function(relIDs, rooms, manager, modelID) {
+        getSensors: async function(relIDs, manager, modelID) {
             if (relIDs.type === "IFCSPACE") {
                 const sensorList = [];
-                rooms.push({roomId:relIDs.expressID, sensors:sensorList});
+                this.room_list.push({roomId:relIDs.expressID, sensors:sensorList});
+                console.log(relIDs.expressID);
             }
             for (let component in relIDs.children) {
                 if (relIDs.type === "IFCSPACE" && relIDs.children[component].type === "IFCDISTRIBUTIONCONTROLELEMENT") {
                     const sensor = await manager.getItemProperties(modelID, relIDs.children[component].expressID);
-                    rooms[rooms.length-1].sensors.push({sensorIFCid:relIDs.children[component].expressID, sensorDataSetId:sensor.Name.value});
+                    this.room_list[this.room_list.length-1].sensors.push({sensorIFCid:relIDs.children[component].expressID, sensorDataSetId:sensor.Name.value});
                 }
-               await this.getSensors(relIDs.children[component], rooms, manager, modelID);
+               await this.getSensors(relIDs.children[component], manager, modelID);
             }
         },
         start: function() {
@@ -204,7 +208,7 @@ export default {
       this.viewer = viewer;
       viewer.axes.setAxes();
       viewer.grid.setGrid();
-      viewer.IFC.setWasmPath('../IFCjs/');
+      viewer.IFC.setWasmPath('../../IFCjs/');
      // const ifcapi = new IfcAPI();
      /*viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
         [IFCSPACE]: true
@@ -221,15 +225,20 @@ export default {
             const file = changed.target.files[0];
             const ifcURL = URL.createObjectURL(file);
             const model = await viewer.IFC.loadIfcUrl(ifcURL);
-            /*this.model = model;
+            
+            /*
+            this.model = model;
             model.removeFromParent();
-          
+            */
             const structure = await this.showStructure(viewer, model.modelID);
             this.structure = structure;
             //console.log(await viewer.IFC.getProperties(model.modelID, 283, true));
 
             
-            const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);*/
+            const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
+            const manager = this.viewer.IFC.loader.ifcManager;
+            await this.getSensors(structure, manager, model.modelID);
+
             /**
              * HERE IS THE CODE YOU WANT IT START FROM HERE 
              * */
