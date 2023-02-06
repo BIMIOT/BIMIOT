@@ -1,10 +1,9 @@
 <script>
-import ModelViewer from './components/ModelViewer.vue'
 
 export default {
     name: 'app',
     components: {
-        ModelViewer
+        //ModelViewer
     },
     created() {
         document.title = 'Vue IFC.js Example'
@@ -14,7 +13,7 @@ export default {
 
 <template>
   <div id="app">
-    <ModelViewer />
+    <router-view/>
   </div>
 </template>
 
