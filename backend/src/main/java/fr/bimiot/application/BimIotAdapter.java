@@ -1,24 +1,28 @@
 package fr.bimiot.application;
 
+import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.StartSimulation;
 import fr.bimiot.domain.use_cases.StopSimulation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/bimiot")
 public class BimIotAdapter {
-    private final StartSimulation startSimulation;
-    private final StopSimulation stopSimulation;
+    private final StartSimulation startSimulationUseCase;
+    private final StopSimulation stopSimulationUseCase;
 
-    public BimIotAdapter(StartSimulation startSimulation, StopSimulation stopSimulation){
-        this.startSimulation = startSimulation;
-        this.stopSimulation = stopSimulation;
+    private final CreateProject createProjectUseCase;
+
+    public BimIotAdapter(StartSimulation startSimulation,
+                         StopSimulation stopSimulation,
+                         CreateProject createProject){
+        this.startSimulationUseCase = startSimulation;
+        this.stopSimulationUseCase = stopSimulation;
+        this.createProjectUseCase = createProject;
     }
 
-    @GetMapping
-    public String getString(){
-        return null;
+    @PostMapping("/project")
+    public String createProject(String name){
+        return createProjectUseCase.execute(name);
     }
 }
