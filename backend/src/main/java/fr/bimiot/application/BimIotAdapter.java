@@ -22,7 +22,8 @@ public class BimIotAdapter {
     }
 
     @PostMapping("/project")
-    public String createProject(String name){
+    public String createProject(@RequestBody String name){
+        System.out.println("received name : "+name);
         return createProjectUseCase.execute(name);
     }
 }
