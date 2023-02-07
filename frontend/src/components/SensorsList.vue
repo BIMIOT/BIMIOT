@@ -35,9 +35,6 @@
   
           <v-card-text>
             <ul>
-<<<<<<< HEAD
-                <li v-for="room in room_list" :key="room.roomId"> {{ room.roomId }} : {{ room.sensors }}</li>
-=======
               <li v-for="(type,roomId) in room_list " :key="type.id">
                 Pièce : {{ roomId }}
                 <ul>
@@ -51,7 +48,6 @@
                   </li>
                 </ul>
               </li>
->>>>>>> 3550522d9d591907a88441b98c5fb4a3b8923b28
             </ul>
           </v-card-text>
   

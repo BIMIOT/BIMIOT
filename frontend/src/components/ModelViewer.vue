@@ -5,10 +5,7 @@
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <SensorsList :room_list="room_list"/>
-<<<<<<< HEAD
       <SensorsControlButtons v-on:child-method="updateParent"/>
-=======
->>>>>>> 3550522d9d591907a88441b98c5fb4a3b8923b28
     </div>
 
     <p id="properties-text">
