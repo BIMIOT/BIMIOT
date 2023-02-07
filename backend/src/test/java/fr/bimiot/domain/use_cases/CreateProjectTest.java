@@ -23,12 +23,13 @@ class CreateProjectTest {
 
     @BeforeAll
     public void init() throws IOException {
-        Files.createDirectory(Paths.get("tests"));
+        Files.createDirectory(Paths.get("Projects"));
+        Files.createDirectory(Paths.get("Projects/tests"));
     }
 
     @AfterAll
     public void afterAll() throws IOException {
-        Files.walkFileTree(Paths.get("tests"), new SimpleFileVisitor<>(){
+        Files.walkFileTree(Paths.get("Projects"), new SimpleFileVisitor<>(){
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.deleteIfExists(file);
@@ -52,6 +53,6 @@ class CreateProjectTest {
         createProject.execute(projectDirectory);
 
         //  Then
-        assertTrue(Files.isDirectory(Paths.get(projectDirectory.name())));
+        assertTrue(Files.isDirectory(Paths.get("Projects/" + projectDirectory.name())));
     }
 }
