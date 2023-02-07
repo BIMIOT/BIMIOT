@@ -5,7 +5,7 @@
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <SensorsList :room_list="room_list"/>
-      <SensorsControlButtons/>
+      <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
     <p id="properties-text">
@@ -69,6 +69,9 @@ export default {
         }
     },
     methods: {
+      updateParent: function (data) {
+        console.log(data)
+      },
       newSubsetOfType: async function (viewer,category) {
         const manager = viewer.IFC.loader.ifcManager;
         const ids = await manager.getAllItemsOfType(0, category, false);
