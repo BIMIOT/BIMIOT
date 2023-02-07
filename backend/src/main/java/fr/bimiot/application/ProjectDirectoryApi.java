@@ -1,11 +1,9 @@
 package fr.bimiot.application;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class ProjectDirectoryApi {
     private String directoryName;
-    private MultipartFile ifcFile;
-    private MultipartFile datasetFile;
+    private String ifcFile;
+    private String datasetFile;
 
     public String getDirectoryName() {
         return directoryName;
@@ -15,19 +13,19 @@ public class ProjectDirectoryApi {
         this.directoryName = directoryName;
     }
 
-    public MultipartFile getIfcFile() {
+    public String getIfcFile() {
         return ifcFile;
     }
 
-    public void setIfcFile(MultipartFile ifcFile) {
+    public void setIfcFile(String ifcFile) {
         this.ifcFile = ifcFile;
     }
 
-    public MultipartFile getDatasetFile() {
+    public String getDatasetFile() {
         return datasetFile;
     }
 
-    public void setDatasetFile(MultipartFile datasetFile) {
+    public void setDatasetFile(String datasetFile) {
         this.datasetFile = datasetFile;
     }
 }

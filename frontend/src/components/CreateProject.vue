@@ -14,14 +14,14 @@
             id="ifcFile"
             type="file"
             ref="ifcFile"
-            @change="saveIFCFile">
+            @change="handleIFCFile">
       </div>
       <div>
-        <input type="submit" @click="handleSave" value="Save">
+        <input type="submit" @click="saveDatas" value="Save">
       </div>
     </form>
-    <div v-if="formData != null">
-      <pre>{{formData}}</pre>
+    <div>
+      <pre>{{ifc}}</pre>
     </div>
   </div>
 </template>
@@ -31,22 +31,32 @@ export default {
   data() {
     return {
       projectName: null,
-      formData: null
+      ifc: null
     }
   },
   methods: {
-    saveIFCFile() {
+    handleIFCFile() {
       let file = this.$refs.ifcFile.files[0];
-      this.formData = new FormData();
-      this.formData.append("file", file);
+      this.createBase64File(file);
     },
-    async handleSave() {
-      fetch('/api/bimiot/fileUpload', {
-        method: 'POST', // or 'PUT'
+    createBase64File(fileObject){
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.ifc = e.target.result;
+      }
+      reader.readAsDataURL(fileObject);
+    },
+    async saveDatas() {
+      fetch('/api/bimiot/project', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json'
         },
-        body: this.formData,
+        body: JSON.stringify({
+          directoryName: this.projectName,
+          ifcFile: this.ifc,
+          datasetFile: "nothing"
+        }),
       })
           .then((response) => response.json())
           .then((data) => {
