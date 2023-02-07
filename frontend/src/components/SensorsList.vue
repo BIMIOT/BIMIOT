@@ -41,8 +41,8 @@
                   <li v-for="(sensor,type2) in room_list[roomId]" :key="sensor.id">
                     Type : {{ type2 }}
                     <ul>
-                      <li v-for="(DataId,IFCid) in room_list[roomId][type2]" :key="DataId.id">
-                        Capteur : {{ IFCid }} / {{ DataId }}, valeur : 0
+                      <li v-for="sensor in room_list[roomId][type2]" :key="sensor.id">
+                        Capteur : {{ sensor.IFCid }} / {{ sensor.DataId }}, valeur : {{ sensor.value }}
                       </li>
                     </ul>
                   </li>
