@@ -39,7 +39,7 @@ export default {
             model: undefined,
             structure: undefined,
             sensor_types: {},
-            room_list: {1:{"TEMPERATURESENSOR":{1:1}}}, // roomId:{type:{IFCid:DataId}}
+            room_list: {1:{"TEMPERATURESENSOR":[{IFCid:1,DataId:1,value:0}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
           invisibleMat: new MeshLambertMaterial({
             transparent: true,
             opacity: 0.4,
@@ -89,7 +89,6 @@ export default {
         },
         getSensors: async function(relIDs, manager, modelID) {
             if (relIDs.type === "IFCSPACE") {
-                const sensorList = [];
                 this.room_list[relIDs.expressID] = {};
                 console.log(relIDs.expressID);
             }
@@ -99,9 +98,9 @@ export default {
                     console.log(sensor);
                     const type_name = this.sensor_types[sensor.ObjectType.value];
                     if (this.room_list[relIDs.expressID][type_name] == undefined) {
-                      this.room_list[relIDs.expressID][type_name] = {};
+                      this.room_list[relIDs.expressID][type_name] = [];
                     }
-                    this.room_list[relIDs.expressID][type_name][relIDs.children[component].expressID] = sensor.ObjectType.value;
+                    this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value,value:0});
                 }
                await this.getSensors(relIDs.children[component], manager, modelID);
             }
