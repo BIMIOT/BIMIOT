@@ -4,6 +4,7 @@ import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.StartSimulation;
 import fr.bimiot.domain.use_cases.StopSimulation;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,9 +29,9 @@ public class BimIotAdapter {
         return toProjectDirectoryApi(createProjectUseCase.execute(toProjectDirectory(projectDirectoryApi)));
     }
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/fileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String uploadFile(@RequestParam("file")MultipartFile file){
-        return "stylé";
+        return String.format("File %s uploaded successfully !", file.getOriginalFilename());
     }
 
     private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi){
