@@ -2,7 +2,7 @@
   export default {
     props: {
         room_list: {
-            type: Array,
+            type: Object,
             required: true
         }
     },
@@ -35,7 +35,19 @@
   
           <v-card-text>
             <ul>
-                <li v-for="room in room_list" :key="room.roomId"> {{ room.roomId }} : {{ room.sensors }}</li>
+              <li v-for="(type,roomId) in room_list " :key="type.id">
+                Pièce : {{ roomId }}
+                <ul>
+                  <li v-for="(sensor,type2) in room_list[roomId]" :key="sensor.id">
+                    Type : {{ type2 }}
+                    <ul>
+                      <li v-for="(DataId,IFCid) in room_list[roomId][type2]" :key="DataId.id">
+                        Capteur : {{ IFCid }} / {{ DataId }}, valeur : 0
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </v-card-text>
   
