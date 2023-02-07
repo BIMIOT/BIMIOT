@@ -1,5 +1,6 @@
 package fr.bimiot.application;
 
+import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.StartSimulation;
 import fr.bimiot.domain.use_cases.StopSimulation;
@@ -22,8 +23,17 @@ public class BimIotAdapter {
     }
 
     @PostMapping("/project")
-    public String createProject(@RequestBody String name){
-        System.out.println("received name : "+name);
-        return createProjectUseCase.execute(name);
+    public ProjectDirectoryApi createProject(@RequestBody ProjectDirectoryApi projectDirectoryApi){
+        return toProjectDirectoryApi(createProjectUseCase.execute(toProjectDirectory(projectDirectoryApi)));
+    }
+
+    private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi){
+        return new ProjectDirectory(projectDirectoryApi.getDirectoryName());
+    }
+
+    private ProjectDirectoryApi toProjectDirectoryApi(ProjectDirectory projectDirectory){
+        var directory = new ProjectDirectoryApi();
+        directory.setDirectoryName(projectDirectory.name());
+        return directory;
     }
 }

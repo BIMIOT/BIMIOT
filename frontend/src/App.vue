@@ -1,13 +1,12 @@
 <script>
 
 export default {
-    name: 'app',
-    components: {
-        //ModelViewer
-    },
-    created() {
-        document.title = 'Vue IFC.js Example'
-    }
+  components: {
+    //ModelViewer
+  },
+  created() {
+    document.title = 'Vue IFC.js Example'
+  }
 }
 </script>
 
@@ -20,14 +19,40 @@ export default {
 <style>
 
 html {
-    overflow-y: hidden !important;
+  overflow-y: hidden !important;
 }
 
 #app {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    height: 100%;
+  box-sizing: border-box;
+  width: 500px;
+  margin: 0 auto;
+  padding: 0 20px 20px;
+}
+
+button,
+label,
+input {
+  display: inline-flex;
+  font-family: "Open sans", sans-serif;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button,
+input {
+  overflow: visible;
+}
+
+button {
+  text-transform: none;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"]{
+  -webkit-appearance: none;
 }
 
 </style>
