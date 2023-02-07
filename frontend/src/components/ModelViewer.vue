@@ -5,7 +5,10 @@
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <SensorsList :room_list="room_list"/>
+<<<<<<< HEAD
       <SensorsControlButtons v-on:child-method="updateParent"/>
+=======
+>>>>>>> 3550522d9d591907a88441b98c5fb4a3b8923b28
     </div>
 
     <p id="properties-text">
@@ -22,7 +25,7 @@ import { MeshLambertMaterial } from 'three';
 import axios from 'axios';
 import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
-import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE } from 'web-ifc';
+import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE, IFCSENSORTYPE, IFCSENSOR } from 'web-ifc';
 import {IfcAPI} from "three/examples/jsm/loaders/ifc/web-ifc-api";
 import * as THREE from "three";
 import SensorsList from './SensorsList.vue'
@@ -42,7 +45,8 @@ export default {
             model: undefined,
             currentSenseType:undefined,
             structure: undefined,
-            room_list: [{roomId:1, sensors:[{sensorIFCid:1,sensorDataSetId:1}]}],
+            sensor_types: {},
+            room_list: {1:{"TEMPERATURESENSOR":[{IFCid:1,DataId:1,value:0}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
           invisibleMat: new MeshLambertMaterial({
             transparent: true,
             opacity: 0.4,
@@ -95,14 +99,19 @@ export default {
         },
         getSensors: async function(relIDs, manager, modelID) {
             if (relIDs.type === "IFCSPACE") {
-                const sensorList = [];
-                this.room_list.push({roomId:relIDs.expressID, sensors:sensorList});
+
+                this.room_list[relIDs.expressID] = {};
                 console.log(relIDs.expressID);
             }
             for (let component in relIDs.children) {
                 if (relIDs.type === "IFCSPACE" && relIDs.children[component].type === "IFCDISTRIBUTIONCONTROLELEMENT") {
                     const sensor = await manager.getItemProperties(modelID, relIDs.children[component].expressID);
-                    this.room_list[this.room_list.length-1].sensors.push({sensorIFCid:relIDs.children[component].expressID, sensorDataSetId:sensor.Name.value});
+                    console.log(sensor);
+                    const type_name = this.sensor_types[sensor.ObjectType.value];
+                    if (this.room_list[relIDs.expressID][type_name] == undefined) {
+                      this.room_list[relIDs.expressID][type_name] = [];
+                    }
+                    this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value,value:0});
                 }
                await this.getSensors(relIDs.children[component], manager, modelID);
             }
@@ -234,12 +243,24 @@ export default {
             this.model = model;
 
             model.removeFromParent();
+            
+            /*
+            this.model = model;
+            model.removeFromParent();
+            */
+
             const structure = await this.showStructure(viewer, model.modelID);
             this.structure = structure;
             //console.log(await viewer.IFC.getProperties(model.modelID, 283, true));
 
             
             //const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
+
+            const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
+            for (let type in types) {
+              this.sensor_types[types[type].Name.value] = types[type].PredefinedType.value;
+            }
+
             const manager = this.viewer.IFC.loader.ifcManager;
             await this.getSensors(structure, manager, model.modelID);
 

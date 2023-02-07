@@ -1,19 +1,22 @@
 package fr.bimiot.domain.use_cases;
 
+import fr.bimiot.domain.entities.ProjectDirectory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Component
 public class CreateProject {
-    public String execute(String directoryName){
+    public ProjectDirectory execute(ProjectDirectory projectDirectory){
         try{
-            Files.createDirectory(Paths.get("backend/"+directoryName));
+            if(!Files.isDirectory(Paths.get("Projects"))){
+                Files.createDirectory(Paths.get("Projects"));
+            }
+            Files.createDirectory(Paths.get("Projects/" + projectDirectory.name()));
         }catch (Exception e){
             throw new AssertionError(e);
         }
-        return directoryName;
+        return projectDirectory;
     }
 }
