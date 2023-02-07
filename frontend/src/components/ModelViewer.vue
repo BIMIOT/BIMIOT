@@ -40,6 +40,7 @@ export default {
             client: undefined,
             viewer: undefined,
             model: undefined,
+            currentSenseType:undefined,
             structure: undefined,
             room_list: [{roomId:1, sensors:[{sensorIFCid:1,sensorDataSetId:1}]}],
           invisibleMat: new MeshLambertMaterial({
@@ -69,8 +70,8 @@ export default {
         }
     },
     methods: {
-      updateParent: function (data) {
-        console.log(data)
+      updateParent: function (type) {
+        this.currentSenseType = type
       },
       newSubsetOfType: async function (viewer,category) {
         const manager = viewer.IFC.loader.ifcManager;
@@ -216,11 +217,10 @@ export default {
       viewer.grid.setGrid();
       viewer.IFC.setWasmPath('../../IFCjs/');
      // const ifcapi = new IfcAPI();
-     /*viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
-        [IFCSPACE]: true
-        ,
+     viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
+        [IFCSPACE]: true,
         [IFCOPENINGELEMENT]: false
-      });*/
+      });
 
       const input = document.getElementById("file-input");
 
@@ -231,24 +231,22 @@ export default {
             const file = changed.target.files[0];
             const ifcURL = URL.createObjectURL(file);
             const model = await viewer.IFC.loadIfcUrl(ifcURL);
-            
-            /*
             this.model = model;
+
             model.removeFromParent();
-            */
             const structure = await this.showStructure(viewer, model.modelID);
             this.structure = structure;
             //console.log(await viewer.IFC.getProperties(model.modelID, 283, true));
 
             
-            const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
+            //const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
             const manager = this.viewer.IFC.loader.ifcManager;
             await this.getSensors(structure, manager, model.modelID);
 
             /**
              * HERE IS THE CODE YOU WANT IT START FROM HERE 
              * */
-             /*
+
             const floor = {
               modelID: model.modelID,
               ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSLAB,false),
@@ -271,7 +269,7 @@ export default {
               customID:"stuff3"
             }
 
-            const space = {
+            const spaces = {
               modelID: model.modelID,
               ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSPACE,false),
               removePrevious: true,
@@ -282,17 +280,17 @@ export default {
             var floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
             var sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
             var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
-            var sp = await viewer.IFC.loader.ifcManager.createSubset(space);
+            var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
 
-            const manager = this.viewer.IFC.loader.ifcManager;
+           // const manager = this.viewer.IFC.loader.ifcManager;
             for (const space in spaces) {
 
               console.log(spaces[space])
 
             }
 
-            let json = {rooms:[]};
+           /* let json = {rooms:[]};
             await this.getSensors(structure, json.rooms, manager, model.modelID);
 
             console.log(JSON.stringify(json));
@@ -302,11 +300,11 @@ export default {
              // const props = await viewer.IFC.getProperties(model.modelID, id, true, false);
               //await viewer.IFC.selector.highlightIfcItem(false)
               //console.log(props);
-            }
+            }*/
 
-            function get_random (list) {
+           /* function get_random (list) {
               return list[Math.floor((Math.random()*list.length))];
-            }
+            }*/
 
 
             const scene = this.viewer.context.getScene();
@@ -315,9 +313,7 @@ export default {
             scene.add(walls);
             scene.add(sp);
 
-            const strcture = await viewer.IFC.getSpatialStructure(model.modelID);
-            console.log("hello ",strcture);
-
+            /*
             axios
                 .post('http://localhost:8082/api/rooms', json)
                 .then(response => (console.log(response)));
