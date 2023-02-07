@@ -5,6 +5,7 @@
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <SensorsList :room_list="room_list"/>
+      <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
     <p id="properties-text">
@@ -25,11 +26,13 @@ import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCW
 import {IfcAPI} from "three/examples/jsm/loaders/ifc/web-ifc-api";
 import * as THREE from "three";
 import SensorsList from './SensorsList.vue'
+import SensorsControlButtons from "@/components/SensorsControlButtons";
 export default {
     name: 'ModelViewer',
     props: ['token', 'projectId', 'discipline'],
     components: {
-      SensorsList
+      SensorsList,
+      SensorsControlButtons
     },
     data() {
         return {
@@ -37,6 +40,7 @@ export default {
             client: undefined,
             viewer: undefined,
             model: undefined,
+            currentSenseType:undefined,
             structure: undefined,
             sensor_types: {},
             room_list: {1:{"TEMPERATURESENSOR":[{IFCid:1,DataId:1,value:0}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
@@ -67,6 +71,9 @@ export default {
         }
     },
     methods: {
+      updateParent: function (type) {
+        this.currentSenseType = type
+      },
       newSubsetOfType: async function (viewer,category) {
         const manager = viewer.IFC.loader.ifcManager;
         const ids = await manager.getAllItemsOfType(0, category, false);
@@ -89,6 +96,7 @@ export default {
         },
         getSensors: async function(relIDs, manager, modelID) {
             if (relIDs.type === "IFCSPACE") {
+
                 this.room_list[relIDs.expressID] = {};
                 console.log(relIDs.expressID);
             }
@@ -215,11 +223,10 @@ export default {
       viewer.grid.setGrid();
       viewer.IFC.setWasmPath('../../IFCjs/');
      // const ifcapi = new IfcAPI();
-     /*viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
-        [IFCSPACE]: true
-        ,
+     viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
+        [IFCSPACE]: true,
         [IFCOPENINGELEMENT]: false
-      });*/
+      });
 
       const input = document.getElementById("file-input");
 
@@ -230,17 +237,22 @@ export default {
             const file = changed.target.files[0];
             const ifcURL = URL.createObjectURL(file);
             const model = await viewer.IFC.loadIfcUrl(ifcURL);
+            this.model = model;
+
+            model.removeFromParent();
             
             /*
             this.model = model;
             model.removeFromParent();
             */
+
             const structure = await this.showStructure(viewer, model.modelID);
             this.structure = structure;
             //console.log(await viewer.IFC.getProperties(model.modelID, 283, true));
 
             
             //const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
+
             const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
             for (let type in types) {
               this.sensor_types[types[type].Name.value] = types[type].PredefinedType.value;
@@ -252,7 +264,7 @@ export default {
             /**
              * HERE IS THE CODE YOU WANT IT START FROM HERE 
              * */
-             /*
+
             const floor = {
               modelID: model.modelID,
               ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSLAB,false),
@@ -275,7 +287,7 @@ export default {
               customID:"stuff3"
             }
 
-            const space = {
+            const spaces = {
               modelID: model.modelID,
               ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSPACE,false),
               removePrevious: true,
@@ -286,17 +298,17 @@ export default {
             var floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
             var sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
             var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
-            var sp = await viewer.IFC.loader.ifcManager.createSubset(space);
+            var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
 
-            const manager = this.viewer.IFC.loader.ifcManager;
+           // const manager = this.viewer.IFC.loader.ifcManager;
             for (const space in spaces) {
 
               console.log(spaces[space])
 
             }
 
-            let json = {rooms:[]};
+           /* let json = {rooms:[]};
             await this.getSensors(structure, json.rooms, manager, model.modelID);
 
             console.log(JSON.stringify(json));
@@ -306,11 +318,11 @@ export default {
              // const props = await viewer.IFC.getProperties(model.modelID, id, true, false);
               //await viewer.IFC.selector.highlightIfcItem(false)
               //console.log(props);
-            }
+            }*/
 
-            function get_random (list) {
+           /* function get_random (list) {
               return list[Math.floor((Math.random()*list.length))];
-            }
+            }*/
 
 
             const scene = this.viewer.context.getScene();
@@ -319,9 +331,7 @@ export default {
             scene.add(walls);
             scene.add(sp);
 
-            const strcture = await viewer.IFC.getSpatialStructure(model.modelID);
-            console.log("hello ",strcture);
-
+            /*
             axios
                 .post('http://localhost:8082/api/rooms', json)
                 .then(response => (console.log(response)));
