@@ -5,6 +5,7 @@
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <SensorsList :room_list="room_list"/>
+      <SensorsControlButtons/>
     </div>
 
     <p id="properties-text">
@@ -25,11 +26,13 @@ import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCW
 import {IfcAPI} from "three/examples/jsm/loaders/ifc/web-ifc-api";
 import * as THREE from "three";
 import SensorsList from './SensorsList.vue'
+import SensorsControlButtons from "@/components/SensorsControlButtons";
 export default {
     name: 'ModelViewer',
     props: ['token', 'projectId', 'discipline'],
     components: {
-      SensorsList
+      SensorsList,
+      SensorsControlButtons
     },
     data() {
         return {
