@@ -21,6 +21,7 @@
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.1.6",
+    "vue3-colorpicker": "^2.1.2",
     "vuetify": "^3.0.0-beta.0",
     "web-ifc-viewer": "^1.0.213",
     "webfontloader": "^1.0.0"

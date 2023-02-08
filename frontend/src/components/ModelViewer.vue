@@ -28,12 +28,17 @@ import SensorsList from './SensorsList.vue'
 
 
 import SensorsControlButtons from "@/components/SensorsControlButtons";
+
+import { ref } from "vue";
+
+
 export default {
     name: 'ModelViewer',
     props: ['token', 'projectId', 'discipline'],
     components: {
       SensorsList,
       SensorsControlButtons
+
     },
     data() {
         return {
@@ -540,5 +545,12 @@ export default {
     left: 0%;
     bottom: 0%;
     z-index: 100;
+}
+#colorPicker {
+  position: absolute !important;
+  z-index: 100 !important;
+}
+.v-application__wrap {
+  min-height: auto;
 }
 </style>
