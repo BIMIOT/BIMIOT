@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 public class CreateProject {
 
     private final static String IFC_FILE = "ifcFile.ifc";
+    private final static String DATASET_FILE = "dataset.csv";
 
     public ProjectDirectory execute(ProjectDirectory projectDirectory){
         try{
@@ -19,6 +20,9 @@ public class CreateProject {
             Files.createDirectory(Paths.get("Projects/" + projectDirectory.name()));
             Files.createFile(Paths.get("Projects/" + projectDirectory.name() + "/" + IFC_FILE));
             Files.write(Paths.get("Projects/"+projectDirectory.name()+"/" + IFC_FILE), projectDirectory.ifcFile().getBytes());
+
+            Files.createFile(Paths.get("Projects/" + projectDirectory.name() + "/" + DATASET_FILE));
+            Files.write(Paths.get("Projects/"+projectDirectory.name()+"/" + DATASET_FILE), projectDirectory.datasetFile().getBytes());
         }catch (Exception e){
             throw new AssertionError(e);
         }
