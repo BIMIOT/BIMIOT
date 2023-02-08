@@ -4,6 +4,7 @@
       <input type="file" id="file-input" />
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
+      <ColorPickerSensor v-on:meshcolor="updateMeshes" id="colorPickers"/>
       <SensorsList :room_list="room_list"/>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -24,15 +25,21 @@ import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
 import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE, IFCSENSORTYPE, IFCSENSOR } from 'web-ifc';
 import SensorsList from './SensorsList.vue'
+
+
+
 import SensorsControlButtons from "@/components/SensorsControlButtons";
+import ColorPickers from "@/components/ColorPickers";
+import ColorPickerSensor from "@/components/ColorPickerSensor";
 
 
 export default {
     name: 'ModelViewer',
     props: ['token', 'projectId', 'discipline'],
     components: {
+      ColorPickerSensor,
       SensorsList,
-      SensorsControlButtons
+      SensorsControlButtons,
     },
     data() {
         return {
@@ -181,7 +188,23 @@ export default {
         }
     },
     methods: {
-      updateParent: function (type) {
+     convertHexToInt: function(colors) {
+        return colors.map(color => {
+         // var hex = parseInt(color.replace(/^#/, ''), 16);
+          console.log(Number(`0x${color.value.substr(1)}`))
+          return new MeshLambertMaterial({
+            transparent: true,
+            opacity: 0.3,
+            color:`0x${color.value.substr(1)}`,
+            depthTest: false,
+          });
+        });
+      },
+    updateMeshes: function (data) {
+      this.tempMeshes = this.convertHexToInt(data.temperature)
+      console.log(this.tempMeshes)
+    },
+    updateParent: function (type) {
         this.currentSenseType = type
         switch (type) {
           case 'hum':
@@ -470,7 +493,6 @@ export default {
 
             this.currentColorRange = this.tempMeshes;
 
-
             setInterval(async () => {
 
               let space = manager.createSubset({
@@ -480,6 +502,7 @@ export default {
                 removePrevious: true,
                 customID: "new"
               });
+
 
               scene.add(space)
 
