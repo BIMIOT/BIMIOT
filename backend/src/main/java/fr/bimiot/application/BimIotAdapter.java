@@ -29,7 +29,7 @@ public class BimIotAdapter {
     }
 
     @PutMapping(value="/sendData", consumes = "application/json")
-    public void test(@RequestBody Data data) {
+    public void sendData(@RequestBody Data data) {
         System.out.println(data.toString());
     }
 
