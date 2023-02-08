@@ -3,6 +3,7 @@
     <h3>Create/Update Project Form</h3>
     <form novalidate>
       <div>
+        <ColorPickers/>
         <input
             id="projectName"
             type="text"
@@ -41,7 +42,11 @@
 </template>
 <script>
 
+import ColorPickers from "@/components/ColorPickers";
+
 export default {
+  components: {ColorPickers},
+
   data() {
     return {
       projectName: null,
