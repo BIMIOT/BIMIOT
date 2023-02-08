@@ -26,11 +26,14 @@ import * as StompJs from '@stomp/stompjs';
 import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE, IFCSENSORTYPE, IFCSENSOR } from 'web-ifc';
 import SensorsList from './SensorsList.vue'
 
+import * as THREE from 'three';
+
 
 
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickers from "@/components/ColorPickers";
 import ColorPickerSensor from "@/components/ColorPickerSensor";
+
 
 
 export default {
@@ -190,12 +193,12 @@ export default {
     methods: {
      convertHexToInt: function(colors) {
         return colors.map(color => {
-         // var hex = parseInt(color.replace(/^#/, ''), 16);
-          console.log(Number(`0x${color.value.substr(1)}`))
+          var color2 = new THREE.Color(color.value);
+           console.log(color2.getHex())
           return new MeshLambertMaterial({
             transparent: true,
             opacity: 0.3,
-            color:`0x${color.value.substr(1)}`,
+            color: color2.getHex(),
             depthTest: false,
           });
         });
