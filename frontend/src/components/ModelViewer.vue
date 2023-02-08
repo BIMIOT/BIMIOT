@@ -24,12 +24,7 @@ import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
 import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE, IFCSENSORTYPE, IFCSENSOR } from 'web-ifc';
 import SensorsList from './SensorsList.vue'
-
-
-
 import SensorsControlButtons from "@/components/SensorsControlButtons";
-
-import { ref } from "vue";
 
 
 export default {
@@ -38,7 +33,6 @@ export default {
     components: {
       SensorsList,
       SensorsControlButtons
-
     },
     data() {
         return {
@@ -546,7 +540,7 @@ export default {
     bottom: 0%;
     z-index: 100;
 }
-#colorPicker {
+#colorPickers {
   position: absolute !important;
   z-index: 100 !important;
 }
