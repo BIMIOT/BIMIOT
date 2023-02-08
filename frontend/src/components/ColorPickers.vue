@@ -27,6 +27,7 @@
 
 <script>
 export default {
+  name: "ColorPickers",
   data() {
     return {
       colors: [
