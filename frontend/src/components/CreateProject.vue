@@ -4,13 +4,13 @@
     <form novalidate>
       <div>
         <input
-
             id="projectName"
             type="text"
             placeholder="Project Name"
             v-model="projectName">
       </div>
       <div>
+        <label for="ifcFile">IFC File</label>
         <input
             id="ifcFile"
             type="file"
@@ -18,6 +18,7 @@
             @change="handleIFCFile">
       </div>
       <div>
+        <label for="datasetFile">Dataset File</label>
         <input
             id="datasetFile"
             type="file"
