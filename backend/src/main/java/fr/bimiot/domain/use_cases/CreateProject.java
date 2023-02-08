@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 public class CreateProject {
 
     private final static String IFC_FILE = "ifcFile.ifc";
-    private final static String DATASET_FILE = "dataset.csv";
+    private final static String DATASET_FILE = "datasetFile.csv";
 
     public ProjectDirectory execute(ProjectDirectory projectDirectory){
         try{
