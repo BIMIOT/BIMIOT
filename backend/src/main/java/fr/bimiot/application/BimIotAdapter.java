@@ -35,7 +35,9 @@ public class BimIotAdapter {
 
     private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
         return new ProjectDirectory(projectDirectoryApi.getDirectoryName(),
-                new String(DECODER.decode(getContentOfFile(projectDirectoryApi.getIfcFile()))), null);
+                new String(DECODER.decode(getContentOfFile(projectDirectoryApi.getIfcFile()))),
+                new String(DECODER.decode(getContentOfFile(projectDirectoryApi.getDatasetFile())))
+        );
     }
 
     private ProjectDirectoryApi toProjectDirectoryApi(ProjectDirectory projectDirectory) {
