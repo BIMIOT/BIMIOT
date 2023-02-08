@@ -1,5 +1,6 @@
 package fr.bimiot.application;
 
+import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.StartSimulation;
@@ -25,6 +26,11 @@ public class BimIotAdapter {
     @PostMapping("/project")
     public ProjectDirectoryApi createProject(@RequestBody ProjectDirectoryApi projectDirectoryApi){
         return toProjectDirectoryApi(createProjectUseCase.execute(toProjectDirectory(projectDirectoryApi)));
+    }
+
+    @PutMapping(value="/sendData", consumes = "application/json")
+    public void test(@RequestBody Data data) {
+        System.out.println(data.toString());
     }
 
     private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi){
