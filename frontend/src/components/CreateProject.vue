@@ -5,13 +5,13 @@
       <div>
         <ColorPickers/>
         <input
-
             id="projectName"
             type="text"
             placeholder="Project Name"
             v-model="projectName">
       </div>
       <div>
+        <label for="ifcFile">IFC File</label>
         <input
             id="ifcFile"
             type="file"
@@ -19,10 +19,23 @@
             @change="handleIFCFile">
       </div>
       <div>
+        <label for="datasetFile">Dataset File</label>
+        <input
+            id="datasetFile"
+            type="file"
+            ref="datasetFile"
+            @change="handleDatasetFile">
+      </div>
+      <div>
         <input type="submit" @click="saveDatas" value="Save">
       </div>
     </form>
     <div>
+      <h3>Dataset</h3>
+      <pre>{{dataset}}</pre>
+    </div>
+    <div>
+      <h3>IFC File</h3>
       <pre>{{ifc}}</pre>
     </div>
   </div>
@@ -37,7 +50,8 @@ export default {
   data() {
     return {
       projectName: null,
-      ifc: null
+      ifc: null,
+      dataset:null,
     }
   },
   methods: {
@@ -45,10 +59,21 @@ export default {
       let file = this.$refs.ifcFile.files[0];
       this.createBase64File(file);
     },
+    handleDatasetFile(){
+      let file = this.$refs.datasetFile.files[0];
+      this.createBase64DatasetFile(file);
+    },
     createBase64File(fileObject){
       const reader = new FileReader();
       reader.onload = (e) => {
         this.ifc = e.target.result;
+      }
+      reader.readAsDataURL(fileObject);
+    },
+    createBase64DatasetFile(fileObject){
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.dataset = e.target.result;
       }
       reader.readAsDataURL(fileObject);
     },
@@ -61,7 +86,7 @@ export default {
         body: JSON.stringify({
           directoryName: this.projectName,
           ifcFile: this.ifc,
-          datasetFile: "nothing"
+          datasetFile: this.dataset,
         }),
       })
           .then((response) => response.json())
