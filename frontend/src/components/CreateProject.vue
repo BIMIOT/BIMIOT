@@ -2,7 +2,7 @@
   <div>
     <h3>Create/Update Project Form</h3>
     <form novalidate>
-      <div class="form-group">
+      <div>
         <input
 
             id="projectName"
@@ -11,28 +11,52 @@
             v-model="projectName">
       </div>
       <div>
-        <input type="submit" @click="handleSave" value="Save">
+        <input
+            id="ifcFile"
+            type="file"
+            ref="ifcFile"
+            @change="handleIFCFile">
+      </div>
+      <div>
+        <input type="submit" @click="saveDatas" value="Save">
       </div>
     </form>
+    <div>
+      <pre>{{ifc}}</pre>
+    </div>
   </div>
 </template>
 <script>
 
 export default {
-  data(){
+  data() {
     return {
-      projectName: null
+      projectName: null,
+      ifc: null
     }
   },
   methods: {
-    async handleSave() {
+    handleIFCFile() {
+      let file = this.$refs.ifcFile.files[0];
+      this.createBase64File(file);
+    },
+    createBase64File(fileObject){
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.ifc = e.target.result;
+      }
+      reader.readAsDataURL(fileObject);
+    },
+    async saveDatas() {
       fetch('/api/bimiot/project', {
-        method: 'POST', // or 'PUT'
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          directoryName: this.projectName
+          directoryName: this.projectName,
+          ifcFile: this.ifc,
+          datasetFile: "nothing"
         }),
       })
           .then((response) => response.json())
