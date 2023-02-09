@@ -1,5 +1,6 @@
 package fr.bimiot.application;
 
+import fr.bimiot.application.dto.RoomDTO;
 import fr.bimiot.application.dto.RoomListDTO;
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
@@ -8,6 +9,7 @@ import fr.bimiot.domain.use_cases.GetAllProjects;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -57,7 +59,8 @@ public class BimIotController {
     }
 
     @PostMapping("/mapping")
-    public String createMapping(@RequestBody RoomListDTO roomListDTO){
-        return null;
+    public int createMapping(@RequestBody RoomDTO[] roomListDTO) {
+        System.out.println(Arrays.toString(roomListDTO));
+        return 0;
     }
 }

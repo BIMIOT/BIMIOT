@@ -51,7 +51,7 @@ export default {
             structure: undefined,
             sensor_types: {},
             room_list: {1:{"TEMPERATURESENSOR":[{IFCid:1,DataId:1,value:0}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
-            sensorMapping: {1:[{IFCSensorId:1,DataSetSensorId:1}]}, // roomId:[{IFCsensorId:"1",DatasetId:"1"}]
+            sensorMapping: [{"roomId":1, "sensorMappingDTO":[{"IFCSensorId":1,"DataSetSensorId":1}]}], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]
           invisibleMat: new MeshLambertMaterial({
             transparent: true,
             opacity: 0.4,
@@ -268,7 +268,7 @@ export default {
         getSensors: async function(relIDs, manager, modelID) {
             if (relIDs.type === "IFCSPACE") {
                 this.room_list[relIDs.expressID] = {};
-                this.sensorMapping[relIDs.expressID]  = [];
+                this.sensorMapping.push({"roomId":relIDs.expressID, "sensorMappingDTO":[]});
                 console.log(relIDs.expressID);
             }
             for (let component in relIDs.children) {
@@ -280,7 +280,7 @@ export default {
                       this.room_list[relIDs.expressID][type_name] = [];
                     }
                     this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value,value:0});
-                    this.sensorMapping[relIDs.expressID].push({IFCSensorId:relIDs.children[component].expressID,DataSetSensorId:sensor.ObjectType.value.split(":")[1]});
+                    this.sensorMapping[this.sensorMapping.length-1].sensorMappingDTO.push({"IFCSensorId":relIDs.children[component].expressID,"DataSetSensorId":sensor.ObjectType.value.split(":")[1]});
                 }
                await this.getSensors(relIDs.children[component], manager, modelID);
             }
@@ -296,14 +296,12 @@ export default {
               .then(response => (console.log(response)));
         },
         sendMapping: function (){
-            fetch("/api/bimiot/mapping",{
-              method: 'POST',
-              headers:{'Content-Type': 'application/json'},
-              body: JSON.stringify({
-                mapping : this.sensorMapping
-              })
-            })
-                .then((response) => response.json())
+          axios.post("/api/bimiot/mapping", this.sensorMapping)
+            // fetch("/api/bimiot/mapping",{
+            //   method: 'POST',
+            //   headers:{'Content-Type': 'application/json'},
+            //   body: JSON.stringify(this.sensorMapping)
+            // })
                 .then((data) => {
                   console.log('Success:', data);
                 })
@@ -454,6 +452,9 @@ export default {
 
             const manager = this.viewer.IFC.loader.ifcManager;
             await this.getSensors(structure, manager, model.modelID);
+            console.log(JSON.stringify(this.sensorMapping));
+            this.sendMapping();
+            
 
             /**
              * HERE IS THE CODE YOU WANT IT START FROM HERE 
