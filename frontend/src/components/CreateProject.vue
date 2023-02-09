@@ -26,7 +26,12 @@
             @change="handleDatasetFile">
       </div>
       <div>
-        <input type="submit" @click="saveDatas" value="Save">
+        <v-btn
+            color="success"
+            dark
+        >
+          Save
+        </v-btn>
       </div>
     </form>
     <div>
