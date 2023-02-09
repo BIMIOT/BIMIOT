@@ -87,7 +87,7 @@ export default {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          directoryName: this.projectName,
+          projectName: this.projectName,
           ifcFile: this.ifc,
           datasetFile: this.dataset,
         }),

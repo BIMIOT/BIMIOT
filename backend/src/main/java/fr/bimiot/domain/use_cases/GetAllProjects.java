@@ -10,10 +10,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class GetAllProjects {
-    public List<String> execute() throws IOException {
-        return Files.list(Paths.get("Projects"))
-                .filter(Files::isDirectory)
-                .map(path -> path.getFileName().toString())
-                .collect(Collectors.toList());
+    public List<String> execute() {
+        try {
+            return Files.list(Paths.get("Projects"))
+                    .filter(Files::isDirectory)
+                    .map(path -> path.getFileName().toString())
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException("I/O error occurred");
+        }
     }
 }
