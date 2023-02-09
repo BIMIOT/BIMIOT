@@ -1,7 +1,6 @@
 package fr.bimiot.application;
 
 import fr.bimiot.application.dto.RoomDTO;
-import fr.bimiot.application.dto.RoomListDTO;
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
