@@ -29,6 +29,7 @@
         <v-btn
             color="success"
             dark
+            v-on:click="saveDatas"
         >
           Save
         </v-btn>
@@ -36,11 +37,11 @@
     </form>
     <div>
       <h3>Dataset</h3>
-      <pre>{{dataset}}</pre>
+      <pre>{{ dataset }}</pre>
     </div>
     <div>
       <h3>IFC File</h3>
-      <pre>{{ifc}}</pre>
+      <pre>{{ ifc }}</pre>
     </div>
   </div>
 </template>
@@ -53,7 +54,7 @@ export default {
     return {
       projectName: null,
       ifc: null,
-      dataset:null,
+      dataset: null,
     }
   },
   methods: {
@@ -61,18 +62,18 @@ export default {
       let file = this.$refs.ifcFile.files[0];
       this.createBase64File(file);
     },
-    handleDatasetFile(){
+    handleDatasetFile() {
       let file = this.$refs.datasetFile.files[0];
       this.createBase64DatasetFile(file);
     },
-    createBase64File(fileObject){
+    createBase64File(fileObject) {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.ifc = e.target.result;
       }
       reader.readAsDataURL(fileObject);
     },
-    createBase64DatasetFile(fileObject){
+    createBase64DatasetFile(fileObject) {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.dataset = e.target.result;
@@ -94,6 +95,7 @@ export default {
           .then((response) => response.json())
           .then((data) => {
             console.log('Success:', data);
+            this.$router.push("/");
           })
           .catch((error) => {
             console.error('Error:', error);
