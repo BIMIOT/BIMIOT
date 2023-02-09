@@ -1,5 +1,6 @@
 package fr.bimiot.application;
 
+import fr.bimiot.application.dto.RoomListDTO;
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
@@ -53,5 +54,10 @@ public class BimIotController {
 
     private String getContentOfFile(String encodedFile) {
         return encodedFile.split(",")[1];
+    }
+
+    @PostMapping("/mapping")
+    public String createMapping(@RequestBody RoomListDTO roomListDTO){
+        return null;
     }
 }
