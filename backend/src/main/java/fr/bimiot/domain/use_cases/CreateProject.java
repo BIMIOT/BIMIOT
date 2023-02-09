@@ -14,8 +14,6 @@ import java.util.Objects;
 @Component
 public class CreateProject {
     private final static Path PROJECTS_FOLDER = Paths.get("Projects");
-    private final static String IFC_FILE = "ifcFile.ifc";
-    private final static String DATASET_FILE = "datasetFile.csv";
 
     public void createFolder(ProjectDirectory projectDirectory) throws DomainException {
         if (Files.isDirectory(PROJECTS_FOLDER.resolve(projectDirectory.name()))) {
