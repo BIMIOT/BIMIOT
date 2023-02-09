@@ -1,5 +1,6 @@
 package fr.bimiot.application;
 
+import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.GetAllProjects;
@@ -30,6 +31,11 @@ public class BimIotController {
     @GetMapping("/projects")
     public List<String> getAllProjects() throws IOException {
         return getAllProjects.execute();
+    }
+
+    @PutMapping(value="/sendData", consumes = "application/json")
+    public void sendData(@RequestBody Data data) {
+        System.out.println(data.toString());
     }
 
     private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
