@@ -47,12 +47,14 @@ class CreateProjectTest {
     @Test
     public void givenProjectName_whenCreateProject_thenCreateDirectoryWithProjecName(){
         //  Given
-        ProjectDirectory projectDirectory = new ProjectDirectory("tests/Bim");
+        ProjectDirectory projectDirectory = new ProjectDirectory("tests/Bim", "SGVsbG8gV29ybGQgIQo=", "SGVsbG8gV29ybGQgIQo=");
 
         //  When
         createProject.execute(projectDirectory);
 
         //  Then
         assertTrue(Files.isDirectory(Paths.get("Projects/" + projectDirectory.name())));
+        assertTrue(Files.isRegularFile(Paths.get("Projects/"+projectDirectory.name()+"/ifcFile.ifc")));
+        assertTrue(Files.isRegularFile(Paths.get("Projects/"+projectDirectory.name()+"/datasetFile.csv")));
     }
 }

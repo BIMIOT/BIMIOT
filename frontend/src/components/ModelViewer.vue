@@ -23,10 +23,10 @@ import axios from 'axios';
 import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
 import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE, IFCSENSORTYPE, IFCSENSOR } from 'web-ifc';
-import {IfcAPI} from "three/examples/jsm/loaders/ifc/web-ifc-api";
-import * as THREE from "three";
 import SensorsList from './SensorsList.vue'
 import SensorsControlButtons from "@/components/SensorsControlButtons";
+
+
 export default {
     name: 'ModelViewer',
     props: ['token', 'projectId', 'discipline'],
@@ -40,7 +40,7 @@ export default {
             client: undefined,
             viewer: undefined,
             model: undefined,
-            currentSenseType:undefined,
+            currentSenseType:"temp",
             structure: undefined,
             sensor_types: {},
             room_list: {1:{"TEMPERATURESENSOR":[{IFCid:1,DataId:1,value:0}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
@@ -67,12 +67,135 @@ export default {
             color: 0x00FFFF,
             depthTest: false,
           }),
-
+          tempMeshes:[
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x668cff,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xffff99,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xffcc33,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xee6600,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x990000,
+              depthTest: false,
+            })
+          ],
+          humMeshes:[
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x05192C,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xD0AE8B,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xE8E4E2,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x73CCD8,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x52B1D2,
+              depthTest: false,
+            })
+          ],
+          co2Meshes:[
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x24a6f2,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xe4c844,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x10394c,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x94a651,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xb7b7b7,
+              depthTest: false,
+            })
+          ],
+          lumMeshes:[
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0x000000,
+              depthTest: false,
+            }),
+            new MeshLambertMaterial({
+              transparent: true,
+              opacity: 0.3,
+              color: 0xFFFF00,
+              depthTest: false,
+            })
+          ],
+          currentColorRange: []
         }
     },
     methods: {
       updateParent: function (type) {
         this.currentSenseType = type
+        switch (type) {
+          case 'hum':
+            this.currentColorRange = this.humMeshes;
+            break;
+          case 'lum':
+            this.currentColorRange = this.lumMeshes;
+            break;
+          case 'co2':
+            this.currentColorRange = this.co2Meshes;
+            break;
+          default:
+            this.currentColorRange = this.tempMeshes;
+        }
       },
       newSubsetOfType: async function (viewer,category) {
         const manager = viewer.IFC.loader.ifcManager;
@@ -190,6 +313,7 @@ export default {
       const changeColor = (relIDs, roomId, sensorId, material, previousMaterial, groupId) => {
         const manager = this.viewer.IFC.loader.ifcManager;
         manager.removeSubset(this.model.modelID, previousMaterial, groupId);
+
         manager.createSubset({
           modelID: this.model.modelID,
           ids: [roomId],
@@ -215,6 +339,7 @@ export default {
         }*/
       }
     },
+
     mounted() {
       const container = document.getElementById('model');
       const viewer = new IfcViewerAPI({ container });
@@ -227,6 +352,10 @@ export default {
         [IFCSPACE]: true,
         [IFCOPENINGELEMENT]: false
       });
+
+
+
+
 
       const input = document.getElementById("file-input");
 
@@ -287,6 +416,7 @@ export default {
               customID:"stuff3"
             }
 
+
             const spaces = {
               modelID: model.modelID,
               ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSPACE,false),
@@ -299,6 +429,7 @@ export default {
             var sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
             var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
             var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+
 
 
            // const manager = this.viewer.IFC.loader.ifcManager;
@@ -329,7 +460,35 @@ export default {
             scene.add(floors);
             scene.add(sensors);
             scene.add(walls);
-            scene.add(sp);
+
+            let array = this.co2Meshes;
+            let index = 0;
+            let m = this.invisibleMat;
+
+
+            let s =  this.viewer.context.getScene();
+
+            this.currentColorRange = this.tempMeshes;
+
+
+            setInterval(async () => {
+
+              let space = manager.createSubset({
+                modelID: model.modelID,
+                ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSPACE,false),
+                material: this.currentColorRange.at(index),
+                removePrevious: true,
+                customID: "new"
+              });
+
+              scene.add(space)
+
+              index = (index + 1) % this.currentColorRange.length;
+
+              manager.removeSubset(model.modelID,this.currentColorRange.at(index) , "new");
+
+            }, 5000);
+
 
             /*
             axios
@@ -380,5 +539,12 @@ export default {
     left: 0%;
     bottom: 0%;
     z-index: 100;
+}
+#colorPickers {
+  position: absolute !important;
+  z-index: 100 !important;
+}
+.v-application__wrap {
+  min-height: auto;
 }
 </style>
