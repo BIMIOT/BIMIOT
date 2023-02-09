@@ -8,12 +8,18 @@ import java.util.Arrays;
 
 @Component
 public class StartSimulation {
+    private final RestTemplate restTemplate = new RestTemplate();
+
     public void execute(String simulation_name) {
-        System.out.println(getSimulationId(simulation_name));
+        startSimulation(getSimulationId(simulation_name));
+    }
+
+    private void startSimulation(String simulation_id) {
+        restTemplate.put("http://localhost:8083/v1/sessions/start/" + simulation_id, "");
+        System.out.println("started simulation");
     }
 
     private String getSimulationId(String simulation_name) {
-        RestTemplate restTemplate = new RestTemplate();
         Simulation[] result = restTemplate.getForObject("http://localhost:8083/v1/sessions", Simulation[].class);
         if (result == null) {
             throw new IllegalArgumentException("Simulation with name : " + simulation_name + " doesn't exist.");
