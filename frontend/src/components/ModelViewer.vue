@@ -237,9 +237,13 @@ export default {
             }
         },
         start: function() {
-          axios
-              .post('http://localhost:8082/api/start')
-              .then(response => (console.log(response)));
+          axios.put('/api/bimiot/start/' + "etienne", {})
+              .then((data) => {
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
         },
         stop: function() {
           axios

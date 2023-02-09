@@ -38,6 +38,12 @@ public class BimIotController {
         System.out.println(data.toString());
     }
 
+    @PutMapping(value="/start/{simulation_name}")
+    public int start(@PathVariable String simulation_name) {
+        System.out.println(simulation_name);
+        return 0;
+    }
+
     private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
         return new ProjectDirectory(projectDirectoryApi.getDirectoryName(),
                 new String(DECODER.decode(getContentOfFile(projectDirectoryApi.getIfcFile()))),
