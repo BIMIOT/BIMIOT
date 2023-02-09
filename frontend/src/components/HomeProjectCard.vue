@@ -8,17 +8,35 @@
         color="green"
         @click="sendProjectName"
       >
-        Details
+        Simulation
       </v-btn>
-      <v-btn
-          variant="text"
-          color="red"
-          @click="deleteProject"
-      >
-        Supprime
-      </v-btn>
+        <v-btn
+            variant="text"
+            color="red"
+            @click="this.dialog = true"
+        >
+          Supprime
+        </v-btn>
     </v-card-actions>
   </v-card>
+
+  <div class="text-center">
+  <v-dialog
+      v-model="dialog"
+      width="auto"
+  >
+    <v-card>
+      <v-card-text>
+        Êtes-vous sûr de vouloir supprimer cet projet ?
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="success"  @click="dialog = false">Annuler</v-btn>
+        <v-btn color="primary"  @click="deleteProject">Confirmer</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  </div>
+
 </template>
 
 <script>
@@ -28,7 +46,8 @@ export default {
   props: ["title"],
   data(){
     return {
-      show: true
+      show: true,
+      dialog:false,
     }
   },
   methods: {
@@ -38,7 +57,7 @@ export default {
 
     async deleteProject() {
       this.show = false;
-
+      this.dialog =false;
       const response = await axios
           .delete("/api/bimiot/projects/" + this.title, {})
           .catch((error) =>{
