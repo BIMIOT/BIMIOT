@@ -237,7 +237,7 @@ export default {
             }
         },
         start: function() {
-          axios.put('/api/bimiot/start/' + "etienne", {})
+          axios.put('/api/bimiot/start/' + 'etienne', {}) // TODO : replace "etienne" with project name
               .then((data) => {
                 console.log('Success:', data);
               })
@@ -246,9 +246,13 @@ export default {
               });
         },
         stop: function() {
-          axios
-              .post('http://localhost:8082/api/stop')
-              .then(response => (console.log(response)));
+          axios.put('/api/bimiot/stop/' + 'etienne', {}) // TODO : replace "etienne" with project name
+              .then((data) => {
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
         }
     },
     created: function() {
