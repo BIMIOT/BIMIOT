@@ -53,7 +53,7 @@ export default {
             room_by_color: {},
             colors: {
                   temperature: [
-                          { id: 0, value: '#ff0000', intList: [1,3] },
+                          { id: 0, value: '#fd0000', intList: [1,3] },
                           { id: 1, value: '#00ff00', intList: [4, 10] },
                           { id: 2, value: '#0000ff', intList: [11, 20] },
                           { id: 3, value: '#ffff00', intList: [21, 50] }
@@ -81,7 +81,7 @@ export default {
           invisibleMat: new MeshLambertMaterial({
             transparent: true,
             opacity: 0.4,
-            color: 0xff0000,
+            color: 0xffffff,
             depthTest: false,
           }),
           preSelectMat: new MeshLambertMaterial({
@@ -224,7 +224,6 @@ export default {
         console.log(response["roomIfcID"])
         console.log(response["sensorIfcID"] in this.room_list)
         if(!(response["roomIfcID"]  in this.room_list)) {
-           console.log(" i didn go ")
           return;
         }
 
@@ -283,20 +282,27 @@ export default {
 
         const manager = this.viewer.IFC.loader.ifcManager;
         if(this.room_by_color[response["roomIfcID"]] !== undefined) {
-          manager.removeSubset(this.model.modelID, this.room_by_color[response["roomIfcID"]].color,"new");
+          console.log("hello im " ,this.room_by_color[response["roomIfcID"]][response["sensorType"]])
+          manager.removeSubset(this.model.modelID, this.room_by_color[response["roomIfcID"]][response["sensorType"]],response["roomIfcID"]+response["sensorType"]+"");
+        }
+        if(this.room_by_color[response["roomIfcID"]] === undefined) {
+          this.room_by_color[response["roomIfcID"]] = { [response["sensorType"]] : mesh};
+        } else {
+          this.room_by_color[response["roomIfcID"]][response["sensorType"]] = mesh ;
         }
 
-        this.room_by_color[response["roomIfcID"]] = { sensorType: response["sensorType"], color: mesh };
 
-       if(response["sensorType"] === this.currentSenseType) {
+        console.log(this.room_by_color[response["roomIfcID"]])
 
+       if(response["sensorType"] === this.currentSenseType && this.room_by_color[response["roomIfcID"]][this.currentSenseType] !== this.invisibleMat ) {
+          console.log("putting a new one")
          manager.createSubset({
            modelID: this.model.modelID,
            ids: [response["roomIfcID"]],
-           material: this.room_by_color[response["roomIfcID"]].color,
+           material: this.room_by_color[response["roomIfcID"]][this.currentSenseType],
            scene: this.viewer.context.getScene(),
            removePrevious: false,
-           customID: "new"
+           customID: response["roomIfcID"]+response["sensorType"]+""
          });
          console.log(" wow im here")
        }
@@ -317,19 +323,55 @@ export default {
       this.tempMeshes = this.convertHexToInt(data.temperature)
       console.log(this.tempMeshes)
     },
-    updateParent: function (type) {
+      removeAll: function (room_ids, manager) {
+        const room_ids_iter = Object.keys(room_ids);
+        const sensorTypes = ["temp","hum","lum","co2"]
+        for (const sensorType of sensorTypes) {
+          for (const id of room_ids_iter) {
+            manager.removeSubset(this.model.modelID,
+                this.room_by_color[parseInt(id, 10)] === undefined ?
+                    this.invisibleMat : this.room_by_color[parseInt(id, 10)][sensorType]
+                , id + sensorType + "");
+          }
+        }
+      },
+      changeColor: function (room_ids, manager, sensorType) {
+        const room_ids_iter = Object.keys(room_ids);
+
+        for (const id of room_ids_iter) {
+          manager.createSubset({
+            modelID: this.model.modelID,
+            ids: [parseInt(id, 10)],
+            material: this.room_by_color[parseInt(id, 10)] === undefined ? this.invisibleMat : this.room_by_color[parseInt(id, 10)][sensorType],
+            scene: this.viewer.context.getScene(),
+            removePrevious: false,
+            customID: id+sensorType+""
+          });
+        }
+      },
+      updateParent: function (type) {
         this.currentSenseType = type
+
+        const manager = this.viewer.IFC.loader.ifcManager;
         switch (type) {
           case 'hum':
+            this.removeAll(this.room_list,manager)
+            this.changeColor(this.room_list, manager,type);
             this.currentColorRange = this.humMeshes;
             break;
           case 'lum':
+            this.removeAll(this.room_list,manager)
+            this.changeColor(this.room_list, manager,type);
             this.currentColorRange = this.lumMeshes;
             break;
           case 'co2':
+            this.removeAll(this.room_list,manager)
+            this.changeColor(this.room_list, manager,type);
             this.currentColorRange = this.co2Meshes;
             break;
           default:
+            this.removeAll(this.room_list,manager)
+            this.changeColor(this.room_list, manager,type);
             this.currentColorRange = this.tempMeshes;
         }
       },
@@ -410,7 +452,11 @@ export default {
           // This is needed because this will be executed after a (re)connect
           client.subscribe('/data/sensors', (greeting) => {
             const response = JSON.parse(greeting.body);
-            if (this.model === undefined) {
+
+            console.log(response)
+
+            this.subscribe(response)
+            /*if (this.model === undefined) {
               return;
             }
             console.log(response["sensorIfcID"]);
@@ -427,7 +473,7 @@ export default {
               } else {
                 changeColor(this.structure, 234, response["sensorIfcID"], this.preSelectMatBlue, this.preSelectMat, 2);
               }
-            }
+            }*/
 
          });
 
@@ -574,9 +620,11 @@ export default {
             scene.add(walls);
 
 
-            this.currentColorRange = this.tempMeshes;
+            //this.currentColorRange = this.tempMeshes;
 
-            setInterval(async () => {
+            this.changeColor(this.room_list,manager,this.currentSenseType)
+
+          /*  setInterval(async () => {
 
               let min = 1;
               let max = 50;
@@ -590,7 +638,7 @@ export default {
               this.subscribe(greeting)
 
 
-            }, 3000);
+            }, 3000);*/
 
 
 
