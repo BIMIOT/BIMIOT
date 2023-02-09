@@ -68,9 +68,19 @@ public class SessionRestController {
     }
 
     @RequestMapping(value = "/start/{sessionId}", method = RequestMethod.PUT)
-    public ActiveSessionManagementCommandResultMessage manage(@PathVariable("sessionId") @NotNull String sessionId) throws Exception {
+    public ActiveSessionManagementCommandResultMessage start(@PathVariable("sessionId") @NotNull String sessionId) throws Exception {
 
         ActiveSessionManagementCommand command = new ActiveSessionManagementCommand(SessionManagementCommand.START);
+        logger.debug("Performing command {} for session {}.", command.getCommand(), sessionId);
+        ActiveSessionManagementCommandResultMessage message = activeSessionManager.manage(sessionId, command);
+
+        return message;
+    }
+
+    @RequestMapping(value = "/stop/{sessionId}", method = RequestMethod.PUT)
+    public ActiveSessionManagementCommandResultMessage stop(@PathVariable("sessionId") @NotNull String sessionId) throws Exception {
+
+        ActiveSessionManagementCommand command = new ActiveSessionManagementCommand(SessionManagementCommand.STOP);
         logger.debug("Performing command {} for session {}.", command.getCommand(), sessionId);
         ActiveSessionManagementCommandResultMessage message = activeSessionManager.manage(sessionId, command);
 
