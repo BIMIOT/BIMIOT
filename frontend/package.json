@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "preserve": "cpy --flat ./node_modules/web-ifc/web-ifc.wasm ./node_modules/web-ifc-three/IFCWorker.js ./node_modules/web-ifc-three/IFCWorker.js.map public/IFCjs"
+    "preserve": "cpy --flat ./node_modules/web-ifc/web-ifc.wasm ./node_modules/web-ifc-three/IFCWorker.js ./node_modules/web-ifc-three/IFCWorker.js.map public/IFCjs",
+    "prebuild": "cpy --flat ./node_modules/web-ifc/web-ifc.wasm ./node_modules/web-ifc-three/IFCWorker.js ./node_modules/web-ifc-three/IFCWorker.js.map public/IFCjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
