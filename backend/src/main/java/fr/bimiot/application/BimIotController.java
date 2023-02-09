@@ -5,6 +5,7 @@ import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.GetAllProjects;
+import fr.bimiot.domain.use_cases.ManageData;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,10 +20,12 @@ public class BimIotController {
 
     private final CreateProject createProjectUseCase;
     private final GetAllProjects getAllProjects;
+    private final ManageData manageData;
 
-    public BimIotController(CreateProject createProject, GetAllProjects getAllProjects) {
+    public BimIotController(CreateProject createProject, GetAllProjects getAllProjects, ManageData manageData) {
         this.createProjectUseCase = createProject;
         this.getAllProjects = getAllProjects;
+        this.manageData = manageData;
     }
 
     @PostMapping("/project")
@@ -38,6 +41,7 @@ public class BimIotController {
     @PutMapping(value="/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
         System.out.println(data.toString());
+        manageData.execute(data);
     }
 
     private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
@@ -60,6 +64,7 @@ public class BimIotController {
     @PostMapping("/mapping")
     public int createMapping(@RequestBody RoomDTO[] roomListDTO) {
         System.out.println(Arrays.toString(roomListDTO));
+        manageData.setRoomListDTO(roomListDTO);
         return 0;
     }
 }
