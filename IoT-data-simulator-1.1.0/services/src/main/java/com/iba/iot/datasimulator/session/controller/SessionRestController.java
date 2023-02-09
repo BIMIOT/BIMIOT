@@ -19,6 +19,7 @@ import com.iba.iot.datasimulator.session.service.active.manager.ActiveSessionMan
 import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionsStatusCommandResultMessage;
 import com.iba.iot.datasimulator.session.model.active.command.ActiveSessionManagementCommand;
 import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionManagementCommandResultMessage;
+import com.iba.iot.datasimulator.session.model.active.command.SessionManagementCommand;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -63,6 +64,16 @@ public class SessionRestController {
 
         ActiveSessionsStatusCommandResultMessage message =
                 new ActiveSessionsStatusCommandResultMessage(activeSessionManager.getSessionStatuses(), CommandResult.SUCCESS);
+        return message;
+    }
+
+    @RequestMapping(value = "/start/{sessionId}", method = RequestMethod.PUT)
+    public ActiveSessionManagementCommandResultMessage manage(@PathVariable("sessionId") @NotNull String sessionId) throws Exception {
+
+        ActiveSessionManagementCommand command = new ActiveSessionManagementCommand(SessionManagementCommand.START);
+        logger.debug("Performing command {} for session {}.", command.getCommand(), sessionId);
+        ActiveSessionManagementCommandResultMessage message = activeSessionManager.manage(sessionId, command);
+
         return message;
     }
 
