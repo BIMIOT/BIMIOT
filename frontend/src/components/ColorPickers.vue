@@ -34,7 +34,7 @@ export default {
   watch: {
     colors: {
       handler: function(newValue) {
-       this.$emit('colors',newValue);
+        this.$emit('colors',newValue);
       },
       deep: true
     }

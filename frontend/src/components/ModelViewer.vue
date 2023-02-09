@@ -36,6 +36,7 @@ import ColorPickerSensor from "@/components/ColorPickerSensor";
 
 
 
+
 export default {
     name: 'ModelViewer',
     props: ['token', 'projectId', 'discipline'],
@@ -496,6 +497,7 @@ export default {
 
             this.currentColorRange = this.tempMeshes;
 
+
             setInterval(async () => {
 
               let space = manager.createSubset({
@@ -505,7 +507,6 @@ export default {
                 removePrevious: true,
                 customID: "new"
               });
-
 
               scene.add(space)
 
