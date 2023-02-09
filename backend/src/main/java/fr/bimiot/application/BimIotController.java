@@ -4,6 +4,7 @@ import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.GetAllProjects;
+import fr.bimiot.domain.use_cases.StartSimulation;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,10 +18,12 @@ public class BimIotController {
 
     private final CreateProject createProjectUseCase;
     private final GetAllProjects getAllProjects;
+    private final StartSimulation startSimulation;
 
-    public BimIotController(CreateProject createProject, GetAllProjects getAllProjects) {
+    public BimIotController(CreateProject createProject, GetAllProjects getAllProjects, StartSimulation startSimulation) {
         this.createProjectUseCase = createProject;
         this.getAllProjects = getAllProjects;
+        this.startSimulation = startSimulation;
     }
 
     @PostMapping("/project")
@@ -40,7 +43,7 @@ public class BimIotController {
 
     @PutMapping(value="/start/{simulation_name}")
     public int start(@PathVariable String simulation_name) {
-        System.out.println(simulation_name);
+        startSimulation.execute(simulation_name);
         return 0;
     }
 
