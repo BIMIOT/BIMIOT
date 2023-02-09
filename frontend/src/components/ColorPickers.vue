@@ -28,7 +28,20 @@
 <script>
 export default {
   name: "ColorPickers",
+  props: {
+    datas: []
+  },
+  watch: {
+    colors: {
+      handler: function(newValue) {
+        this.$emit('colors',newValue);
+      },
+      deep: true
+    }
+  },
   data() {
+
+
     return {
       colors: [
         { id: 0, value: '#ff0000', intList: [] },
@@ -42,6 +55,8 @@ export default {
     }
   },
   mounted() {
+    this.$emit('colors',this.colors);
+    console.log("hello")
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
   beforeUnmount() {
