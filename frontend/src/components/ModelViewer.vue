@@ -28,13 +28,9 @@ import SensorsList from './SensorsList.vue'
 
 import * as THREE from 'three';
 
-
-
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickers from "@/components/ColorPickers";
 import ColorPickerSensor from "@/components/ColorPickerSensor";
-
-
 
 
 export default {
@@ -192,6 +188,30 @@ export default {
         }
     },
     methods: {
+      subscribe: function(greeting) {
+        const response = greeting;
+        if (this.model === undefined) {
+          return;
+        }
+        console.log(response["roomIfcID"])
+        console.log(response["sensorIfcID"] in this.room_list)
+        if(!(response["roomIfcID"]  in this.room_list) || !(response["sensorIfcID"] in this.room_list)) {
+           console.log(" i didn go ")
+          return;
+        }
+        const manager = this.viewer.IFC.loader.ifcManager;
+        manager.removeSubset(this.model.modelID,this.tempMeshes[0],"new");
+
+        manager.createSubset({
+          modelID: this.model.modelID,
+          ids: [response["roomIfcID"]],
+          material: this.tempMeshes[1],
+          scene: this.viewer.context.getScene(),
+          removePrevious: false,
+          customID: "new"
+        });
+        console.log(" wow im here")
+      },
      convertHexToInt: function(colors) {
         return colors.map(color => {
           var color2 = new THREE.Color(color.value);
@@ -459,19 +479,11 @@ export default {
 
 
 
-           // const manager = this.viewer.IFC.loader.ifcManager;
-            for (const space in spaces) {
 
-              console.log(spaces[space])
 
-            }
+            console.log(this.room_list);
 
-           /* let json = {rooms:[]};
-            await this.getSensors(structure, json.rooms, manager, model.modelID);
-
-            console.log(JSON.stringify(json));
-
-            window.onclick = async () => {
+            /*window.onclick = async () => {
               //const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
              // const props = await viewer.IFC.getProperties(model.modelID, id, true, false);
               //await viewer.IFC.selector.highlightIfcItem(false)
@@ -496,9 +508,14 @@ export default {
             let s =  this.viewer.context.getScene();
 
             this.currentColorRange = this.tempMeshes;
+            const greeting = {
+              "roomIfcID": 207,
+              "sensorIFCid": 688
+            }
+            this.subscribe(greeting)
 
 
-            setInterval(async () => {
+           /* setInterval(async () => {
 
               let space = manager.createSubset({
                 modelID: model.modelID,
@@ -512,9 +529,10 @@ export default {
 
               index = (index + 1) % this.currentColorRange.length;
 
+
               manager.removeSubset(model.modelID,this.currentColorRange.at(index) , "new");
 
-            }, 5000);
+            }, 5000);*/
 
 
             /*
