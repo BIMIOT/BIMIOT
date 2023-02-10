@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import createProject from "@/components/CreateProject.vue";
+import createProject from "@/views/CreateProject.vue";
 import ModelViewer from "@/components/ModelViewer.vue";
 import Error404 from "@/components/Error404.vue";
 import HomeProjectsPage from "@/views/HomeProjectsPage.vue";

@@ -59,47 +59,38 @@ export default {
   },
   methods: {
     handleIFCFile() {
-      let file = this.$refs.ifcFile.files[0];
-      this.createBase64File(file);
+      this.ifc = this.$refs.ifcFile.files[0];
     },
     handleDatasetFile() {
-      let file = this.$refs.datasetFile.files[0];
-      this.createBase64DatasetFile(file);
-    },
-    createBase64File(fileObject) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.ifc = e.target.result;
-      }
-      reader.readAsDataURL(fileObject);
-    },
-    createBase64DatasetFile(fileObject) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.dataset = e.target.result;
-      }
-      reader.readAsDataURL(fileObject);
+      this.dataset = this.$refs.datasetFile.files[0];
     },
     async saveDatas() {
-      fetch('/api/bimiot/project', {
+      fetch('/api/bimiot/project/folder', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          directoryName: this.projectName,
-          ifcFile: this.ifc,
-          datasetFile: this.dataset,
+          projectName: this.projectName,
         }),
       })
           .then((response) => response.json())
           .then((data) => {
-            console.log('Success:', data);
+            const name = data.projectName;
+            const formData = new FormData();
+            formData.append('files', this.ifc);
+            formData.append('files', this.dataset);
+            fetch(`api/bimiot/project/files/${name}`, {
+              method: 'POST',
+              body: formData
+            })
             this.$router.push("/");
           })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          })
+
     }
   }
 }

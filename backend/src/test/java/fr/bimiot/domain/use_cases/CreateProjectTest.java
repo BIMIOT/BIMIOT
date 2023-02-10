@@ -1,6 +1,7 @@
 package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.ProjectDirectory;
+import fr.bimiot.domain.exception.DomainException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -45,16 +46,14 @@ class CreateProjectTest {
     }
 
     @Test
-    public void givenProjectName_whenCreateProject_thenCreateDirectoryWithProjecName(){
+    public void givenProjectName_whenCreateProject_thenCreateDirectoryWithProjecName() throws DomainException {
         //  Given
-        ProjectDirectory projectDirectory = new ProjectDirectory("tests/Bim", "SGVsbG8gV29ybGQgIQo=", "SGVsbG8gV29ybGQgIQo=");
+        ProjectDirectory projectDirectory = new ProjectDirectory("tests/Bim");
 
         //  When
-        createProject.execute(projectDirectory);
+        createProject.createFolder(projectDirectory);
 
         //  Then
         assertTrue(Files.isDirectory(Paths.get("Projects/" + projectDirectory.name())));
-        assertTrue(Files.isRegularFile(Paths.get("Projects/"+projectDirectory.name()+"/ifcFile.ifc")));
-        assertTrue(Files.isRegularFile(Paths.get("Projects/"+projectDirectory.name()+"/datasetFile.csv")));
     }
 }
