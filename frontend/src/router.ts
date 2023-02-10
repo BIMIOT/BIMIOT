@@ -13,12 +13,14 @@ export default createRouter({
         },
         {
             path: '/create-project',
+            name: 'create-project',
             component: createProject
         },
         {
-            path: '/simulation',
+            path: '/simulation/:project',
             name:'simulation',
             component: ModelViewer,
+            props: true
         },
         {
             path: '/:pathMatch(.*)*',

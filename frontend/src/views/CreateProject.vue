@@ -65,7 +65,7 @@ export default {
       this.dataset = this.$refs.datasetFile.files[0];
     },
     async saveDatas() {
-      fetch('/api/bimiot/project/folder', {
+      fetch('/api/bimiot/projects/folder', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export default {
             const formData = new FormData();
             formData.append('files', this.ifc);
             formData.append('files', this.dataset);
-            fetch(`api/bimiot/project/files/${name}`, {
+            fetch(`/api/bimiot/projects/files/${name}`, {
               method: 'POST',
               body: formData
             })
