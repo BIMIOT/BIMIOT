@@ -543,7 +543,7 @@ export default {
   created: function() {
     console.log("Starting connection to WebSocket Server");
     let client = new StompJs.Client({
-      brokerURL: 'ws://localhost:8082/sensors-data-endpoint',
+      brokerURL: 'ws://localhost:80/sensors-data-endpoint',
       debug: function (str) {
         //console.log(str);
       },
@@ -558,7 +558,7 @@ export default {
       // to be used for each (re)connect
       client.webSocketFactory = function () {
         // Note that the URL is different from the WebSocket URL
-        return new sockjs('http://localhost:8082/sensors-data-endpoint');
+        return new sockjs('http://localhost:80/sensors-data-endpoint');
       };
     }
 

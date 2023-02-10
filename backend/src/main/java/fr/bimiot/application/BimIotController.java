@@ -9,7 +9,9 @@ import fr.bimiot.domain.use_cases.GetAllProjects;
 import fr.bimiot.domain.use_cases.ManageData;
 import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.domain.use_cases.GetFile;
+import fr.bimiot.simulator.ConverterEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.ws.rs.core.Application;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,9 @@ public class BimIotController {
     private final ManageData manageData;
     private final ManageSimulation manageSimulation;
     private final GetFile getFile;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     public BimIotController(CreateProject createProject, GetAllProjects getAllProjects, GetFile getFile,ManageData manageData, ManageSimulation manageSimulation) {
@@ -71,7 +77,8 @@ public class BimIotController {
 
     @PutMapping(value = "/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
-        System.out.println(manageData.execute(data));
+        applicationEventPublisher.publishEvent(new ConverterEvent(this, manageData.execute(data)));
+        //System.out.println(manageData.execute(data));
     }
 
     @PutMapping(value="/start/{simulation_name}")
