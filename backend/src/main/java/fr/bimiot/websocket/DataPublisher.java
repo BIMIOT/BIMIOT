@@ -21,6 +21,7 @@ public class DataPublisher implements ApplicationListener<ConverterEvent> {
     @Override
     public void onApplicationEvent(ConverterEvent event) {
         System.out.println("im in the data pub" + event);
+        System.out.println("before sending message: " + event.getMessage());
         sendMessage(event);
     }
 
@@ -31,6 +32,7 @@ public class DataPublisher implements ApplicationListener<ConverterEvent> {
                 .put("value", Integer.parseInt(data.value()))
                 .put("roomIfcID", Integer.parseInt(data.roomIfcID()))
                 .put("sensorType", data.type());
-        this.messageSendingOperations.convertAndSend("/data/sensors", event.getMessage());
+        System.out.println("before sending ws: " + sensorJson);
+        this.messageSendingOperations.convertAndSend("/data/sensors", sensorJson.toString());
     }
 }

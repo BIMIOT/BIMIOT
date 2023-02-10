@@ -77,7 +77,9 @@ public class BimIotController {
 
     @PutMapping(value = "/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
-        applicationEventPublisher.publishEvent(new ConverterEvent(this, manageData.execute(data)));
+        var event = new ConverterEvent(this, manageData.execute(data));
+        System.out.println("before publish : " + event.getMessage());
+        applicationEventPublisher.publishEvent(event);
         //System.out.println(manageData.execute(data));
     }
 
