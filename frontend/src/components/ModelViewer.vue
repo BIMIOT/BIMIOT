@@ -49,6 +49,7 @@ export default {
       model: undefined,
       currentSenseType:"temp",
       structure: undefined,
+      sensorMapping: [{"roomId":1, "sensors":[{"sensorIFCid":1,"sensorDataSetId":1}]}], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]invisibleMat: new MeshLambertMaterial({
       sensor_types: {},
       room_by_color: {},
       colors: {
@@ -244,6 +245,7 @@ export default {
 
       const manager = this.viewer.IFC.loader.ifcManager;
       await this.getSensors(structure, manager, this.model.modelID);
+      this.sendMapping();
 
       /**
        * HERE IS THE CODE YOU WANT IT START FROM HERE
@@ -477,8 +479,8 @@ export default {
     },
     getSensors: async function(relIDs, manager, modelID) {
       if (relIDs.type === "IFCSPACE") {
-
         this.room_list[relIDs.expressID] = {};
+        this.sensorMapping.push({"roomId":relIDs.expressID, "sensors":[]});
         console.log(relIDs.expressID);
       }
       for (let component in relIDs.children) {
@@ -490,6 +492,7 @@ export default {
             this.room_list[relIDs.expressID][type_name] = [];
           }
           this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value,value:0});
+          this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[1]});
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
@@ -515,7 +518,14 @@ export default {
     },
 
     sendMapping: function (){
-      axios.post("/api/bimiot/mapping", this.sensorMapping)
+      let config = {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+
+      console.log(JSON.stringify(this.sensorMapping));
+      axios.post("/api/bimiot/mapping", JSON.stringify(this.sensorMapping), config)
           // fetch("/api/bimiot/mapping",{
           //   method: 'POST',
           //   headers:{'Content-Type': 'application/json'},
@@ -657,6 +667,8 @@ export default {
 
           const manager = this.viewer.IFC.loader.ifcManager;
           await this.getSensors(structure, manager, model.modelID);
+          this.sendMapping();
+          console.log(this.sensorMapping);
 
           /**
            * HERE IS THE CODE YOU WANT IT START FROM HERE

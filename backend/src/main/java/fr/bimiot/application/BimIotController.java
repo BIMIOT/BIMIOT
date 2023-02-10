@@ -1,8 +1,8 @@
 package fr.bimiot.application;
 
-import fr.bimiot.application.dto.RoomDTO;
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
+import fr.bimiot.domain.entities.Room;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.GetAllProjects;
@@ -71,8 +71,7 @@ public class BimIotController {
 
     @PutMapping(value = "/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
-        System.out.println(data.toString());
-        manageData.execute(data);
+        System.out.println(manageData.execute(data));
     }
 
     @PutMapping(value="/start/{simulation_name}")
@@ -92,8 +91,8 @@ public class BimIotController {
     }
 
     @PostMapping("/mapping")
-    public int createMapping(@RequestBody RoomDTO[] roomListDTO) {
-        System.out.println(Arrays.toString(roomListDTO));
+    public int createMapping(@RequestBody List<Room> roomListDTO) {
+        System.out.println(roomListDTO);
         manageData.setRoomListDTO(roomListDTO);
         return 0;
     }
