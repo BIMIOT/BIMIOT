@@ -1,10 +1,13 @@
 package fr.bimiot.application;
 
+import fr.bimiot.application.dto.RoomDTO;
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.GetAllProjects;
+import fr.bimiot.domain.use_cases.ManageData;
+import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.domain.use_cases.GetFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +26,16 @@ import java.util.List;
 public class BimIotController {
     private final CreateProject createProjectUseCase;
     private final GetAllProjects getAllProjects;
+    private final ManageData manageData;
+    private final ManageSimulation manageSimulation;
     private final GetFile getFile;
 
     @Autowired
-    public BimIotController(CreateProject createProject, GetAllProjects getAllProjects, GetFile getFile) {
+    public BimIotController(CreateProject createProject, GetAllProjects getAllProjects, GetFile getFile,ManageData manageData, ManageSimulation manageSimulation) {
         this.createProjectUseCase = createProject;
         this.getAllProjects = getAllProjects;
+        this.manageData = manageData;
+        this.manageSimulation = manageSimulation;
         this.getFile = getFile;
     }
 
@@ -64,9 +72,29 @@ public class BimIotController {
     @PutMapping(value = "/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
         System.out.println(data.toString());
+        manageData.execute(data);
+    }
+
+    @PutMapping(value="/start/{simulation_name}")
+    public int start(@PathVariable String simulation_name) {
+        manageSimulation.executeStart(simulation_name);
+        return 0;
+    }
+
+    @PutMapping(value="/stop/{simulation_name}")
+    public int stop(@PathVariable String simulation_name) {
+        manageSimulation.executeStop(simulation_name);
+        return 0;
     }
 
     private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
         return new ProjectDirectory(projectDirectoryApi.getProjectName());
+    }
+
+    @PostMapping("/mapping")
+    public int createMapping(@RequestBody RoomDTO[] roomListDTO) {
+        System.out.println(Arrays.toString(roomListDTO));
+        manageData.setRoomListDTO(roomListDTO);
+        return 0;
     }
 }
