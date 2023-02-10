@@ -200,7 +200,7 @@ export default {
         responseType: 'blob',
       });
       console.log(response);
-      const ifcURL = URL.createObjectURL(response);
+      const ifcURL = URL.createObjectURL(response.data);
       this.model = await viewer.IFC.loadIfcUrl(ifcURL);
       console.log(this.model);
     },
@@ -443,7 +443,7 @@ this.room_list[relIDs.expressID] = {};
       [IFCOPENINGELEMENT]: false
     });
 
-    this.loadFile();
+    this.loadFile(viewer);
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -476,8 +476,8 @@ this.room_list[relIDs.expressID] = {};
 
           const manager = this.viewer.IFC.loader.ifcManager;
           await this.getSensors(structure, manager, model.modelID);
-            console.log(JSON.stringify(this.sensorMapping));
-            this.sendMapping();
+          console.log(JSON.stringify(this.sensorMapping));
+          this.sendMapping();
 
           /**
            * HERE IS THE CODE YOU WANT IT START FROM HERE
