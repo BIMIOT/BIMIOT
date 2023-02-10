@@ -462,7 +462,7 @@ export default {
             await this.getSensors(structure, manager, model.modelID);
             console.log(JSON.stringify(this.sensorMapping));
             this.sendMapping();
-            
+
 
             /**
              * HERE IS THE CODE YOU WANT IT START FROM HERE 
