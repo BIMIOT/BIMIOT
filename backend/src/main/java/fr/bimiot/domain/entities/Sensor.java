@@ -33,4 +33,12 @@ public class Sensor {
     public int hashCode() {
         return Objects.hash(sensorDataSetId, sensorIFCid);
     }
+
+    @Override
+    public String toString() {
+        return "Sensor{" +
+                "sensorDataSetId='" + sensorDataSetId + '\'' +
+                ", sensorIFCid='" + sensorIFCid + '\'' +
+                '}';
+    }
 }

@@ -7,7 +7,7 @@
 *.jar
 *.war
 *.ear
-
+/Projects
 # Eclipse #
 .settings
 .project
