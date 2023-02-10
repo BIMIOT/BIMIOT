@@ -40,7 +40,7 @@ import ColorPickerSensor from "@/components/ColorPickerSensor";
 
 export default {
   name: 'ModelViewer',
-  props: ['token', 'projectId', 'discipline'],
+  props: ['token', 'projectId', 'discipline', 'project'],
   components: {
     ColorPickerSensor,
     SensorsList,
@@ -196,7 +196,7 @@ export default {
   methods: {
     async loadFile(viewer) {
       //  TODO : replace 'Brice' by project name
-      const response = await axios.get('api/bimiot/project/files/Brice', {
+      const response = await axios.get(`api/bimiot/project/files/`, {
         responseType: 'blob',
       });
       console.log(response);
