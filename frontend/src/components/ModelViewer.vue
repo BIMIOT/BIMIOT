@@ -57,6 +57,7 @@ export default {
       sensor_types: {},
       room_list: {1: {"TEMPERATURESENSOR": [{IFCid: 1, DataId: 1, value: 0}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
       sensorMapping: [{"roomId":1, "sensorMappingDTO":[{"IFCSensorId":1,"DataSetSensorId":1}]}], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]invisibleMat: new MeshLambertMaterial({
+      invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.4,
         color: 0xff0000,
