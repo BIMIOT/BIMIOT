@@ -41,6 +41,20 @@
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
         </dependency>
+        <!-- WebSocket dependencies -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <!-- JSON dependencies -->
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220924</version>
+        </dependency>
     </dependencies>
 
     <build>

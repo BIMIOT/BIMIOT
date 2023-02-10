@@ -492,7 +492,7 @@ export default {
             this.room_list[relIDs.expressID][type_name] = [];
           }
           this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value,value:0});
-          this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[1]});
+          this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[0]});
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
@@ -543,7 +543,7 @@ export default {
   created: function() {
     console.log("Starting connection to WebSocket Server");
     let client = new StompJs.Client({
-      brokerURL: 'ws://localhost:8082/sensors-data-endpoint',
+      brokerURL: 'ws://localhost:80/sensors-data-endpoint',
       debug: function (str) {
         //console.log(str);
       },
@@ -557,8 +557,9 @@ export default {
       // For SockJS you need to set a factory that creates a new SockJS instance
       // to be used for each (re)connect
       client.webSocketFactory = function () {
+        console.log("test");
         // Note that the URL is different from the WebSocket URL
-        return new sockjs('http://localhost:8082/sensors-data-endpoint');
+        return new sockjs('/sensors-data-endpoint');
       };
     }
 
@@ -568,9 +569,11 @@ export default {
       client.subscribe('/data/sensors', (greeting) => {
         const response = JSON.parse(greeting.body);
 
-        console.log(response)
+        console.log(greeting, "here is greeting");
 
-        this.subscribe(response)
+        console.log(response, "helloo im response");
+
+        this.subscribe(response);
         /*if (this.model === undefined) {
           return;
         }
