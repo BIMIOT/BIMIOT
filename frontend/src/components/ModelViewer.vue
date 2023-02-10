@@ -196,7 +196,7 @@ export default {
   methods: {
     async loadFile(viewer) {
       //  TODO : replace 'Brice' by project name
-      const response = await axios.get(`api/bimiot/project/files/`, {
+      const response = await axios.get(`/api/bimiot/simulation/files/${this.project}`, {
         responseType: 'blob',
       });
       console.log(response);

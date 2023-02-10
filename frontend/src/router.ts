@@ -13,6 +13,7 @@ export default createRouter({
         },
         {
             path: '/create-project',
+            name: 'create-project',
             component: createProject
         },
         {
