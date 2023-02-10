@@ -36,7 +36,7 @@ export default {
   },
   methods :{
     toCreateProjectPage(){
-      this.$router.push("/create-project");
+      this.$router.push({name: 'create-project'});
     }
   },
   mounted() {

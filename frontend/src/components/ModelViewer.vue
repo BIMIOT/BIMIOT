@@ -35,7 +35,7 @@ import ColorPickerSensor from "@/components/ColorPickerSensor";
 
 export default {
   name: 'ModelViewer',
-  props: ['token', 'projectId', 'discipline'],
+  props: ['token', 'projectId', 'discipline', 'project'],
   components: {
     ColorPickerSensor,
     SensorsList,
@@ -217,7 +217,7 @@ export default {
   },
   methods: {
     async loadFile(viewer) {
-      const response = await axios.get('api/bimiot/project/files/Brice', {
+      const response = await axios.get(`/api/bimiot/simulation/files/${this.project}`, {
         responseType: 'blob',
       });
       console.log(response);
@@ -499,7 +499,7 @@ export default {
     },
     start: function () {
       axios
-          .put('/api/bimiot/start/' + 'etienne', {}) // TODO : replace "etienne" with project name
+          .put(`/api/bimiot/start/${this.project}`, {}) // TODO : replace "etienne" with project name
           .then((data) => {
             console.log('Success:', data);
           })
@@ -508,7 +508,7 @@ export default {
           });
     },
     stop: function () {
-      axios.put('/api/bimiot/stop/' + 'etienne', {}) // TODO : replace "etienne" with project name
+      axios.put(`/api/bimiot/stop/${this.project}`, {}) // TODO : replace "etienne" with project name
           .then((data) => {
             console.log('Success:', data);
           })

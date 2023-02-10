@@ -2,8 +2,6 @@ package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.ProjectDirectory;
 import fr.bimiot.domain.exception.DomainException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -22,38 +21,20 @@ class CreateProjectTest {
     @InjectMocks
     CreateProject createProject;
 
-    @BeforeAll
-    public void init() throws IOException {
-        Files.createDirectory(Paths.get("Projects"));
-        Files.createDirectory(Paths.get("Projects/tests"));
-    }
+    private final static Path PROJECTS_FOLDER = Paths.get("Projects");
+    private final static Path TEST_PROJECT = PROJECTS_FOLDER.resolve("test");
 
-    @AfterAll
-    public void afterAll() throws IOException {
-        Files.walkFileTree(Paths.get("Projects"), new SimpleFileVisitor<>(){
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.deleteIfExists(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.deleteIfExists(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
 
     @Test
-    public void givenProjectName_whenCreateProject_thenCreateDirectoryWithProjecName() throws DomainException {
+    public void givenProjectName_whenCreateProject_thenCreateDirectoryWithProjecName() throws DomainException, IOException {
         //  Given
-        ProjectDirectory projectDirectory = new ProjectDirectory("tests/Bim");
+        ProjectDirectory projectDirectory = new ProjectDirectory("test");
 
         //  When
         createProject.createFolder(projectDirectory);
 
         //  Then
-        assertTrue(Files.isDirectory(Paths.get("Projects/" + projectDirectory.name())));
+        assertTrue(Files.isDirectory(TEST_PROJECT));
+        Files.delete(TEST_PROJECT);
     }
 }
