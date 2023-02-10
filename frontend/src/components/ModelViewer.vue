@@ -286,14 +286,22 @@ export default {
             }
         },
         start: function() {
-          axios
-              .post('http://localhost:8082/api/start')
-              .then(response => (console.log(response)));
+          axios.put('/api/bimiot/start/' + 'etienne', {}) // TODO : replace "etienne" with project name
+              .then((data) => {
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
         },
         stop: function() {
-          axios
-              .post('http://localhost:8082/api/stop')
-              .then(response => (console.log(response)));
+          axios.put('/api/bimiot/stop/' + 'etienne', {}) // TODO : replace "etienne" with project name
+              .then((data) => {
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
         },
         sendMapping: function (){
           axios.post("/api/bimiot/mapping", this.sensorMapping)
@@ -454,7 +462,7 @@ export default {
             await this.getSensors(structure, manager, model.modelID);
             console.log(JSON.stringify(this.sensorMapping));
             this.sendMapping();
-            
+
 
             /**
              * HERE IS THE CODE YOU WANT IT START FROM HERE 
