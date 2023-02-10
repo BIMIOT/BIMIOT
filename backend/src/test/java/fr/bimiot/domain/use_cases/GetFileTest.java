@@ -1,6 +1,9 @@
 package fr.bimiot.domain.use_cases;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +13,11 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
 public class GetFileTest {
+
+    @InjectMocks
+    GetFile getFile;
 
     private final static Path PROJECTS_FOLDER = Paths.get("Projects");
     private final static Path TEST_PROJECT = PROJECTS_FOLDER.resolve("test");
@@ -22,7 +29,6 @@ public class GetFileTest {
         Files.createDirectories(TEST_PROJECT);
         Files.write(TEST_FILE, expected);
 
-        GetFile getFile = new GetFile();
         byte[] result = getFile.execute("test");
         assertArrayEquals(expected, result);
 
