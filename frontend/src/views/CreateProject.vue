@@ -36,17 +36,17 @@
       </div>
     </form>
     <div>
-      <h3>Dataset</h3>
-      <pre>{{ dataset }}</pre>
-    </div>
-    <div>
-      <h3>IFC File</h3>
-      <pre>{{ ifc }}</pre>
+      <v-snackbar
+          v-model="snackbar"
+          :timeout="timeout"
+          color="error"
+      >
+        {{ errorMessage }}
+      </v-snackbar>
     </div>
   </div>
 </template>
 <script>
-
 
 export default {
   components: {},
@@ -55,6 +55,9 @@ export default {
       projectName: null,
       ifc: null,
       dataset: null,
+      snackbar: false,
+      timeout: 5000,
+      errorMessage: null
     }
   },
   methods: {
@@ -76,7 +79,7 @@ export default {
       })
           .then((response) => response.json())
           .then((data) => {
-            if(data.code === '400'){
+            if (data.code === '400') {
               throw new Error(data.message);
             }
             const name = data.projectName;
@@ -87,9 +90,16 @@ export default {
               method: 'POST',
               body: formData
             })
-          }).catch(error => {
-            console.log(error.message);
-      })
+                .then(response => response.json())
+                .then(data => {
+                  this.$router.push({name: 'home'});
+                })
+          })
+
+          .catch(error => {
+            this.errorMessage = error.message;
+            this.snackbar = true;
+          })
 
     }
   }
