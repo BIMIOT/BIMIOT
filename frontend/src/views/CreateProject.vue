@@ -76,6 +76,9 @@ export default {
       })
           .then((response) => response.json())
           .then((data) => {
+            if(data.code === '400'){
+              throw new Error(data.message);
+            }
             const name = data.projectName;
             const formData = new FormData();
             formData.append('files', this.ifc);
@@ -84,12 +87,9 @@ export default {
               method: 'POST',
               body: formData
             })
-            this.$router.push("/");
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-          })
+          }).catch(error => {
+            console.log(error.message);
+      })
 
     }
   }
