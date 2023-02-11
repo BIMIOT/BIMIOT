@@ -248,7 +248,7 @@ export default {
       this.sendMapping();
 
       /**
-       * HERE IS THE CODE YOU WANT IT START FROM HERE
+       * HERE IS THE code YOU WANT IT START FROM HERE
        * */
 
       const floor = {
@@ -674,7 +674,7 @@ export default {
           console.log(this.sensorMapping);
 
           /**
-           * HERE IS THE CODE YOU WANT IT START FROM HERE
+           * HERE IS THE code YOU WANT IT START FROM HERE
            * */
 
           const floor = {
