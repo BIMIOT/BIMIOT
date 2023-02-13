@@ -35,7 +35,7 @@
   
           <v-card-text>
             <ul>
-              <li v-for="(type,roomId) in room_list " :key="type.id">
+              <li v-for="(type,roomId) in room_list " :key="type.id" v-if="roomId != null">
                 Pièce : {{ roomId }}
                 <ul>
                   <li v-for="(sensor,type2) in room_list[roomId]" :key="sensor.id">

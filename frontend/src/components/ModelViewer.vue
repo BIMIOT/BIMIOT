@@ -78,7 +78,7 @@ export default {
           { id: 3, value: '#ffff00', intList: [21, 50] }
         ]
       },
-      room_list: {1:{"TEMPERATURESENSOR":[{IFCid:1,DataId:1,value:0}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
+      room_list: {null:{null:[{IFCid:null,DataId:null,value:null}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.4,
