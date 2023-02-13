@@ -37,7 +37,7 @@
     </form>
     <div>
       <v-snackbar
-          location="center"
+          location="top"
           v-model="snackbar"
           :timeout="timeout"
           color="error"
@@ -96,7 +96,6 @@ export default {
                   this.$router.push({name: 'home'});
                 })
           })
-
           .catch(error => {
             this.errorMessage = error.message;
             this.snackbar = true;
