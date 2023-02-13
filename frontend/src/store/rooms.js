@@ -1,10 +1,17 @@
 import { defineStore } from 'pinia'
-import {computed} from "vue";
+import {ref} from "vue";
 
 export const roomsStateStore = defineStore('rooms', () => {
     const state =  ref({})
-    const getLastRoomColorByType = computed((room,type) => { return "" });
-    const storeNewRoomColorByType =  computed((room,type, value) => { return "" });
+    function getLastRoomColorByType (roomId,sensorType) {
+        let combinedKey = `${roomId},${sensorType}`;
+        return state.value[combinedKey];
+    }
+
+    function storeNewRoomColorByType(roomId,sensorType, value) {
+        let combinedKey = `${roomId},${sensorType}`;
+        state.value[combinedKey] = value;
+    }
     return {state, getLastRoomColorByType, storeNewRoomColorByType}
 
 })

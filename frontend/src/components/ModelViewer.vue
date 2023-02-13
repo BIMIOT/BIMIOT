@@ -31,6 +31,7 @@ import * as THREE from 'three';
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickers from "@/components/ColorPickers";
 import ColorPickerSensor from "@/components/ColorPickerSensor";
+import {roomsStateStore} from "@/store/rooms";
 
 
 export default {
@@ -40,6 +41,11 @@ export default {
     ColorPickerSensor,
     SensorsList,
     SensorsControlButtons,
+  },
+  setup() {
+    const store = roomsStateStore()
+
+    return {store}
   },
   data() {
     return {
@@ -569,29 +575,9 @@ export default {
       client.subscribe('/data/sensors', (greeting) => {
         const response = JSON.parse(greeting.body);
 
-        console.log(greeting, "here is greeting");
+        this.store.storeNewRoomColorByType(response["roomIfcID"],response["sensorIfcID"],response["color"]);
 
-
-        console.log(response, "helloo im response");
         this.subscribe(response);
-        /*if (this.model === undefined) {
-          return;
-        }
-        console.log(response["sensorIfcID"]);
-        if (response["sensorIfcID"] === 283) {
-          if (response["value"] === 20) {
-            changeColor(this.structure, 201, response["sensorIfcID"], this.preSelectMat, this.preSelectMatBlue, 1);
-          } else {
-            changeColor(this.structure, 201, response["sensorIfcID"], this.preSelectMatBlue, this.preSelectMat, 1);
-          }
-        }
-        if (response["sensorIfcID"] === 722) {
-          if (response["value"] === 20) {
-            changeColor(this.structure, 234, response["sensorIfcID"], this.preSelectMat, this.preSelectMatBlue, 2);
-          } else {
-            changeColor(this.structure, 234, response["sensorIfcID"], this.preSelectMatBlue, this.preSelectMat, 2);
-          }
-        }*/
 
       });
 
@@ -626,6 +612,8 @@ export default {
   },
 
   mounted() {
+    this.store.storeNewRoomColorByType("1B080","Sensor1",30)
+    console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({ container });
     this.viewer = viewer;
@@ -671,6 +659,7 @@ export default {
           const manager = this.viewer.IFC.loader.ifcManager;
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
+
           console.log(this.sensorMapping);
 
           /**
