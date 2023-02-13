@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import {roomsStateStore} from "@/store/rooms";
+
 export default {
   props: ["title"],
   methods: {
@@ -12,6 +14,7 @@ export default {
       this.$router.push({name: "simulation", params: {project: this.title}});
     }
   }
+
 }
 </script>
 

@@ -32,6 +32,7 @@
 
 <script>
 import HomeProjectCard from "@/components/HomeProjectCard";
+import {roomsStateStore} from "@/store/rooms";
 
 export default {
   components: {HomeProjectCard},
