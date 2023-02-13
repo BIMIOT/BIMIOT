@@ -37,6 +37,7 @@
     </form>
     <div>
       <v-snackbar
+          location="center"
           v-model="snackbar"
           :timeout="timeout"
           color="error"
