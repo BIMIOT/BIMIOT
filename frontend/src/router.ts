@@ -9,16 +9,19 @@ export default createRouter({
     routes: [
         {
             path: '/',
+            name: 'home',
             component: HomeProjectsPage,
         },
         {
             path: '/create-project',
+            name: 'create-project',
             component: createProject
         },
         {
-            path: '/simulation',
+            path: '/simulation/:project',
             name:'simulation',
             component: ModelViewer,
+            props: true
         },
         {
             path: '/:pathMatch(.*)*',

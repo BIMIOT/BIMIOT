@@ -2,10 +2,10 @@
   <v-container fluid>
     <v-row dense>
       <v-btn
-        fab
-        dark
-        color="indigo"
-        @click="toCreateProjectPage">
+          fab
+          dark
+          color="indigo"
+          @click="toCreateProjectPage">
         <v-icon dark>
           mdi-plus
         </v-icon>
@@ -19,8 +19,14 @@
       </v-col>
     </v-row>
   </v-container>
-  <div>
-    <HomeProjectCard :title="message"/>
+  <div class="text-center">
+    <v-snackbar
+        v-model="snackbar"
+        :timeout="timeout"
+        color="success"
+    >
+      Nouveau projet : {{ newProject }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -31,12 +37,12 @@ export default {
   components: {HomeProjectCard},
   data() {
     return {
-      names: []
+      names: [],
     };
   },
-  methods :{
-    toCreateProjectPage(){
-      this.$router.push("/create-project");
+  methods: {
+    toCreateProjectPage() {
+      this.$router.push({name: 'create-project'});
     }
   },
   mounted() {

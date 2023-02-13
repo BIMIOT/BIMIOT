@@ -35,7 +35,7 @@ import ColorPickerSensor from "@/components/ColorPickerSensor";
 
 export default {
   name: 'ModelViewer',
-  props: ['token', 'projectId', 'discipline'],
+  props: ['token', 'projectId', 'discipline', 'project'],
   components: {
     ColorPickerSensor,
     SensorsList,
@@ -217,7 +217,7 @@ export default {
   },
   methods: {
     async loadFile(viewer) {
-      const response = await axios.get('api/bimiot/project/files/Brice', {
+      const response = await axios.get(`/api/bimiot/simulation/files/${this.project}`, {
         responseType: 'blob',
       });
       console.log(response);
@@ -248,7 +248,7 @@ export default {
       this.sendMapping();
 
       /**
-       * HERE IS THE CODE YOU WANT IT START FROM HERE
+       * HERE IS THE code YOU WANT IT START FROM HERE
        * */
 
       const floor = {
@@ -492,14 +492,14 @@ export default {
             this.room_list[relIDs.expressID][type_name] = [];
           }
           this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value,value:0});
-          this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[1]});
+          this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[0]});
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
     },
     start: function () {
       axios
-          .put('/api/bimiot/start/' + 'etienne', {}) // TODO : replace "etienne" with project name
+          .put(`/api/bimiot/start/${this.project}`, {}) // TODO : replace "etienne" with project name
           .then((data) => {
             console.log('Success:', data);
           })
@@ -508,7 +508,7 @@ export default {
           });
     },
     stop: function () {
-      axios.put('/api/bimiot/stop/' + 'etienne', {}) // TODO : replace "etienne" with project name
+      axios.put(`/api/bimiot/stop/${this.project}`, {}) // TODO : replace "etienne" with project name
           .then((data) => {
             console.log('Success:', data);
           })
@@ -557,8 +557,10 @@ export default {
       // For SockJS you need to set a factory that creates a new SockJS instance
       // to be used for each (re)connect
       client.webSocketFactory = function () {
+        console.log("test");
         // Note that the URL is different from the WebSocket URL
-        return new sockjs('http://localhost:80/sensors-data-endpoint');
+        return new sockjs('/sensors-data-endpoint');
+
       };
     }
 
@@ -568,9 +570,11 @@ export default {
       client.subscribe('/data/sensors', (greeting) => {
         const response = JSON.parse(greeting.body);
 
-        console.log(response)
+        console.log(greeting, "here is greeting");
 
-        this.subscribe(response)
+        console.log(response, "helloo im response");
+
+        this.subscribe(response);
         /*if (this.model === undefined) {
           return;
         }
@@ -671,7 +675,7 @@ export default {
           console.log(this.sensorMapping);
 
           /**
-           * HERE IS THE CODE YOU WANT IT START FROM HERE
+           * HERE IS THE code YOU WANT IT START FROM HERE
            * */
 
           const floor = {

@@ -5,12 +5,13 @@ import { loadFonts } from './plugins/webfontloader'
 import router from './router'
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { createPinia } from 'pinia'
 import { faThermometerHalf, faTint,faLightbulb, faLeaf, faPhone } from "@fortawesome/free-solid-svg-icons";
-
+const pinia = createPinia()
 library.add(faThermometerHalf, faTint, faLightbulb, faLeaf, faPhone);
 
 loadFonts()
 
-createApp(App)
+createApp(App).use(pinia)
   .use(vuetify).use(router).component("font-awesome-icon", FontAwesomeIcon)
   .mount('#app')
