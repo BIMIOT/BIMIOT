@@ -54,7 +54,6 @@ public class BimIotController {
         var event = new ConverterEvent(this, manageData.execute(data));
         System.out.println("before publish : " + event.getMessage());
         applicationEventPublisher.publishEvent(event);
-        //System.out.println(manageData.execute(data));
     }
 
     @PutMapping(value="/start/{simulation_name}")

@@ -9,6 +9,7 @@ export default createRouter({
     routes: [
         {
             path: '/',
+            name: 'home',
             component: HomeProjectsPage,
         },
         {

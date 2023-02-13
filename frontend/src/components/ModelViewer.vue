@@ -248,7 +248,7 @@ export default {
       this.sendMapping();
 
       /**
-       * HERE IS THE CODE YOU WANT IT START FROM HERE
+       * HERE IS THE code YOU WANT IT START FROM HERE
        * */
 
       const floor = {
@@ -571,8 +571,8 @@ export default {
 
         console.log(greeting, "here is greeting");
 
-        console.log(response, "helloo im response");
 
+        console.log(response, "helloo im response");
         this.subscribe(response);
         /*if (this.model === undefined) {
           return;
@@ -674,7 +674,7 @@ export default {
           console.log(this.sensorMapping);
 
           /**
-           * HERE IS THE CODE YOU WANT IT START FROM HERE
+           * HERE IS THE code YOU WANT IT START FROM HERE
            * */
 
           const floor = {

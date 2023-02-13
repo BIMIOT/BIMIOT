@@ -17,7 +17,7 @@ public class CreateProject {
 
     public void createFolder(ProjectDirectory projectDirectory) throws DomainException {
         if (Files.isDirectory(PROJECTS_FOLDER.resolve(projectDirectory.name()))) {
-            throw new DomainException("Le projet " + projectDirectory.name() + " existe déjà !");
+            throw new DomainException("Le projet '" + projectDirectory.name() + "' existe déjà !");
         }
 
         try {
