@@ -31,6 +31,6 @@ public class DataPublisher implements ApplicationListener<ConverterEvent> {
                 .put("value", Integer.parseInt(data.value()))
                 .put("roomIfcID", Integer.parseInt(data.roomIfcID()))
                 .put("sensorType", data.type());
-        this.messageSendingOperations.convertAndSend("/data/sensors", event.getMessage());
+        this.messageSendingOperations.convertAndSend("/data/sensors", sensorJson);
     }
 }
