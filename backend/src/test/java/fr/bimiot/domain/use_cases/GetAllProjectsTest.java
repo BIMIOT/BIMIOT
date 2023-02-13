@@ -25,6 +25,9 @@ class GetAllProjectsTest {
 
     @Test
     public void givenSeveralFolder_whenGetAllProjects_thenReturnAllProjectNames() throws IOException {
+        if(!Files.isDirectory(PROJECTS_FOLDER)){
+            Files.createDirectory(PROJECTS_FOLDER);
+        }
         Files.createDirectory(TEST_FOLDER);
         List<String> results = getAllProjects.execute();
         assertNotNull(results);
