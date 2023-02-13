@@ -1,11 +1,12 @@
 package fr.bimiot.domain.use_cases;
 
-import fr.bimiot.domain.entities.ProjectDirectory;
+import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
@@ -21,6 +22,9 @@ class CreateProjectTest {
     @InjectMocks
     CreateProject createProject;
 
+    @Mock
+    ProjectPort projectPort;
+
     private final static Path PROJECTS_FOLDER = Paths.get("Projects");
     private final static Path TEST_PROJECT = PROJECTS_FOLDER.resolve("test");
 
@@ -28,10 +32,10 @@ class CreateProjectTest {
     @Test
     public void givenProjectName_whenCreateProject_thenCreateDirectoryWithProjecName() throws DomainException, IOException {
         //  Given
-        ProjectDirectory projectDirectory = new ProjectDirectory("test");
+        Project project = new Project("test");
 
         //  When
-        createProject.createFolder(projectDirectory);
+        createProject.createFolder(project);
 
         //  Then
         assertTrue(Files.isDirectory(TEST_PROJECT));

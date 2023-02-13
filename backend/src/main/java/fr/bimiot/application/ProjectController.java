@@ -1,6 +1,6 @@
 package fr.bimiot.application;
 
-import fr.bimiot.domain.entities.ProjectDirectory;
+import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.CreateProject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(fileNames);
     }
 
-    private ProjectDirectory toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
-        return new ProjectDirectory(projectDirectoryApi.getProjectName());
+    private Project toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
+        return new Project(projectDirectoryApi.getProjectName());
     }
 }

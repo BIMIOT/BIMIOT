@@ -1,6 +1,6 @@
 package fr.bimiot.domain.use_cases;
 
-import fr.bimiot.domain.entities.ProjectDirectory;
+import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,16 +14,18 @@ import java.util.Objects;
 @Component
 public class CreateProject {
     private final static Path PROJECTS_FOLDER = Paths.get("Projects");
+    private ProjectPort projectPort;
 
-    public void createFolder(ProjectDirectory projectDirectory) throws DomainException {
-        if (Files.isDirectory(PROJECTS_FOLDER.resolve(projectDirectory.name()))) {
-            throw new DomainException("Le projet '" + projectDirectory.name() + "' existe déjà !");
+    public void createFolder(Project project) throws DomainException {
+        if (Files.isDirectory(PROJECTS_FOLDER.resolve(project.name()))) {
+            throw new DomainException("Le projet '" + project.name() + "' existe déjà !");
         }
 
         try {
-            Files.createDirectory(PROJECTS_FOLDER.resolve(projectDirectory.name()));
+            Files.createDirectory(PROJECTS_FOLDER.resolve(project.name()));
+            projectPort.insert(project);
         } catch (IOException e) {
-            throw new RuntimeException("Le projet " + projectDirectory.name() + " n'a pas pu être créé !");
+            throw new RuntimeException("Le projet " + project.name() + " n'a pas pu être créé !");
         }
     }
 
