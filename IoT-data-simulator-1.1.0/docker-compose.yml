@@ -37,8 +37,7 @@ services:
       - 15672:15672
       - 61613:61613
   services:
-    build: ./services
-    image: ibagroup/iot-data-simulator-services:1.1.0
+    image: tietienne/iot-data-simulator-services:1.0.0
     container_name: iot-ds-services
     depends_on:
       - mongodb
