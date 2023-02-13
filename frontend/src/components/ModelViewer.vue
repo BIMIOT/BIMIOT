@@ -78,7 +78,7 @@ export default {
           { id: 3, value: '#ffff00', intList: [21, 50] }
         ]
       },
-      room_list: {null:{null:[{IFCid:null,DataId:null,value:null}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
+      room_list: {"roomId":{"type":[{IFCid:null,DataId:null,value:null}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.4,
@@ -491,7 +491,7 @@ export default {
           if (this.room_list[relIDs.expressID][type_name] == undefined) {
             this.room_list[relIDs.expressID][type_name] = [];
           }
-          this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value,value:0});
+          this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value.split(":")[0],value:0});
           this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[0]});
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
