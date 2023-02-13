@@ -22,6 +22,7 @@
     "core-js": "^3.8.3",
     "cpy": "^9.0.1",
     "cpy-cli": "^4.2.0",
+    "pinia": "^2.0.30",
     "roboto-fontface": "*",
     "sockjs-client": "^1.6.1",
     "vue": "^3.2.13",
