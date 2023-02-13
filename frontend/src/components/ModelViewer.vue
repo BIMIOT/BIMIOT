@@ -560,7 +560,6 @@ export default {
         console.log("test");
         // Note that the URL is different from the WebSocket URL
         return new sockjs('/sensors-data-endpoint');
-
       };
     }
 
@@ -572,8 +571,8 @@ export default {
 
         console.log(greeting, "here is greeting");
 
-        console.log(response, "helloo im response");
 
+        console.log(response, "helloo im response");
         this.subscribe(response);
         /*if (this.model === undefined) {
           return;
