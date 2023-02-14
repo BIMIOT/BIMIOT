@@ -1,6 +1,8 @@
 package fr.bimiot.infrastructure;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ProjectJpaRepository extends MongoRepository<ProjectJpa, Long> {
+@Repository
+public interface ProjectJpaRepository extends MongoRepository<ProjectJpa, String> {
 }

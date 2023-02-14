@@ -5,10 +5,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document
+@Document(collection = "project")
 public class ProjectJpa {
     @Id
-    private Long id;
+    private String id;
     private String name;
 
     public ProjectJpa(String name) {

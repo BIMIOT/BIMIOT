@@ -1,28 +1,30 @@
-version: '2'
+version: '3.8'
 
 services:
   mongodb:
     image: mongo
     container_name: mongodb
     ports:
-      - 27020:27017
+      - "27020:27017"
     volumes:
       - data:/data
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=rootuser
-      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=pass
   mongo-express:
     image: mongo-express
     container_name: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=pass
       - ME_CONFIG_MONGODB_SERVER=mongodb
   bimiot:
     image: 'bimiot'
+    links:
+      - mongodb
     build:
       context: .
     container_name: bimiot
@@ -32,6 +34,12 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./Projects:/Projects
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb:27017/bimiot
 
 volumes:
   data: {}
+
+networks:
+  default:
+    name: mongodb_network
