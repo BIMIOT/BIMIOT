@@ -1,9 +1,6 @@
 package fr.bimiot.domain.use_cases;
 
-import fr.bimiot.domain.entities.Data;
-import fr.bimiot.domain.entities.Room;
-import fr.bimiot.domain.entities.SensorType;
-import fr.bimiot.domain.entities.WebSocketData;
+import fr.bimiot.domain.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -15,6 +12,7 @@ public class ManageData {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
     private List<Room> roomListDTO;
+    private TypesColors typesColors;
 
     public WebSocketData execute(Data data) {
         var found = false;

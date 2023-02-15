@@ -1,8 +1,7 @@
 package fr.bimiot.application;
 
-import fr.bimiot.domain.entities.Data;
+import fr.bimiot.domain.entities.*;
 
-import fr.bimiot.domain.entities.Room;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.GetAllProjects;
 import fr.bimiot.domain.use_cases.ManageData;
@@ -66,6 +65,13 @@ public class BimIotController {
     public int createMapping(@RequestBody List<Room> roomListDTO) {
         System.out.println(roomListDTO);
         manageData.setRoomListDTO(roomListDTO);
+        return 0;
+    }
+
+    @PostMapping("/colors")
+    public int createColors(@RequestBody TypesColors typesColors) {
+        System.out.println(typesColors);
+        //manageData.setRoomListDTO(roomListDTO);
         return 0;
     }
 }

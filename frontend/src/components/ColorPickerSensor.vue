@@ -67,6 +67,7 @@ export default {
       this.luminosityColors = colors;
     },
     saveData() {
+      console.log("colors: ", this.temperatureColors);
       const data = {
         temperature: this.temperatureColors,
         humidity: this.humidityColors,
