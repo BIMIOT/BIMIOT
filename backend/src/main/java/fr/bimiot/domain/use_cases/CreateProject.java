@@ -16,6 +16,10 @@ public class CreateProject {
     private final static Path PROJECTS_FOLDER = Paths.get("Projects");
     private ProjectPort projectPort;
 
+    public CreateProject(ProjectPort projectPort) {
+        this.projectPort = projectPort;
+    }
+
     public void createFolder(Project project) throws DomainException {
         if (Files.isDirectory(PROJECTS_FOLDER.resolve(project.name()))) {
             throw new DomainException("Le projet '" + project.name() + "' existe déjà !");
