@@ -2,6 +2,7 @@ package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.Room;
+import fr.bimiot.domain.entities.SensorType;
 import fr.bimiot.domain.entities.WebSocketData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -16,14 +17,27 @@ public class ManageData {
     private List<Room> roomListDTO;
 
     public WebSocketData execute(Data data) {
+        var found = false;
+        String ifcID = null;
         for (var room : roomListDTO) {
+            var nb = 0;
+            var sum = 0;
             for (var sensor : room.getSensors()) {
                 if (sensor.getSensorDataSetId().equals(data.getId())) {
-                    return new WebSocketData(sensor.getSensorIFCid(), data.getValue(), room.getRoomId(), data.getType());
+                    sensor.setValue(data.getValue());
+                    ifcID = sensor.getSensorIFCid();
+                    found = true;
+                }
+                if (SensorType.valueOf(data.getType()).equals(sensor.getType())) {
+                    nb++;
+                    sum+=Float.parseFloat(sensor.getValue());
                 }
             }
+            if (found) {
+                return new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(), "red"); // TODO : get color from average (sum / nb)
+            }
         }
-        return new WebSocketData("0","0","0","0"); // TODO : Handle error when sensor not found
+        return new WebSocketData("0","0","0","0", "0"); // TODO : Handle error when sensor not found
     }
 
     public void setRoomListDTO(List<Room> roomListDTO) {

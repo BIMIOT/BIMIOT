@@ -309,6 +309,7 @@ export default {
       if (this.model === undefined) {
         return;
       }
+      console.log(response["color"])
       console.log(response["roomIfcID"])
       console.log(response["sensorIfcID"] in this.room_list)
       if(!(response["roomIfcID"]  in this.room_list)) {
