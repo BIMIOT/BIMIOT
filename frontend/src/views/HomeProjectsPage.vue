@@ -21,6 +21,7 @@
   </v-container>
   <div class="text-center">
     <v-snackbar
+        location="top"
         v-model="snackbar"
         :timeout="timeout"
         color="success"
