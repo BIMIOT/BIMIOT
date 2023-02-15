@@ -10,19 +10,19 @@
           <div class="sensor-container">
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'thermometer-half']"  class="my-3"/>
-              <color-pickers v-on:colors="updateTemp" />
+              <color-pickers v-on:colors="updateTemp" v-on:values="updateTempValues"/>
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'tint']" class="my-3" />
-              <color-pickers v-on:colors="updateHum" v-model="humidityColors"  />
+              <color-pickers v-on:colors="updateHum" v-on:values="updateHumValues" v-model="humidityColors"  />
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'lightbulb']" class="my-3"/>
-              <color-pickers v-on:colors="updateLight"  v-model="luminosityColors" />
+              <color-pickers v-on:colors="updateLight" v-on:values="updateLightValues" v-model="luminosityColors" />
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'leaf']" class="my-3" />
-              <color-pickers  v-on:colors="updateCo2"  v-model="co2Colors" />
+              <color-pickers  v-on:colors="updateCo2" v-on:values="updateCo2Values" v-model="co2Colors" />
             </div>
           </div>
         </v-card-text>
@@ -38,6 +38,7 @@
 <script>
 
 import ColorPickers from "@/components/ColorPickers";
+import axios from 'axios';
 
 export default {
   name: "ColorPickerSensor",
@@ -50,7 +51,11 @@ export default {
       temperatureColors: [],
       humidityColors: [],
       luminosityColors: [],
-      co2Colors: []
+      co2Colors: [],
+      temperatureValues: [],
+      humidityValues: [],
+      luminosityValues: [],
+      co2Values: []
     }
   },
   methods: {
@@ -66,6 +71,18 @@ export default {
     updateLight(colors) {
       this.luminosityColors = colors;
     },
+    updateTempValues(values) {
+      this.temperatureValues= values;
+    },
+    updateHumValues(values) {
+      this.humidityValues = values;
+    },
+    updateCo2Values(values) {
+      this.co2Values = values;
+    },
+    updateLightValues(values) {
+      this.luminosityValues = values;
+    },
     saveData() {
       console.log("colors: ", this.temperatureColors);
       const data = {
@@ -75,7 +92,29 @@ export default {
         co2: this.co2Colors
       }
       this.$emit("meshcolor", data)
+      this.sendColors()
       this.showModal = false
+    },
+    sendColors: function (){
+      let config = {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+      let typesColors = {"typesColor":{}};
+      typesColors["typesColor"]["TEMPERATURE"] = {"colors":[],"values":this.temperatureValues};
+      for (let i in this.temperatureColors) {
+        typesColors["typesColor"]["TEMPERATURE"]["colors"].push(this.temperatureColors[i].value);
+      }
+
+      console.log(JSON.stringify(typesColors));
+      axios.post("/api/bimiot/colors", JSON.stringify(typesColors), config)
+          .then((data) => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
     }
   }
 }

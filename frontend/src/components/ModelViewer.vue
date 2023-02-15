@@ -499,7 +499,12 @@ export default {
             this.room_list[relIDs.expressID][type_name] = [];
           }
           this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value.split(":")[0],value:0});
-          this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[0]});
+          this.sensorMapping[this.sensorMapping.length-1].sensors.push({
+            "sensorIFCid":relIDs.children[component].expressID,
+            "sensorDataSetId":sensor.ObjectType.value.split(":")[0],
+            "type":"TEMPERATURE", // TODO : Use sensor type
+            "value":undefined
+          });
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
