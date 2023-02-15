@@ -14,7 +14,7 @@ import java.util.Objects;
 @Component
 public class ProjectFileProviderImpl implements ProjectFileProvider {
 
-    private final static Path PROJECTS_FOLDER = Paths.get("Projects");
+    public final static Path PROJECTS_FOLDER = Paths.get("Projects");
 
     @Override
     public void create(Project project) throws DomainException, IOException {

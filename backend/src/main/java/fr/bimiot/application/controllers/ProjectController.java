@@ -25,11 +25,11 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
-        var projectResponse = createProject.create(toProject(projectName, ifc, dataset));
+        var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
         return ResponseEntity.ok(toProjectApi(projectResponse));
     }
 
-    private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) throws IOException {
+    private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) {
         return new Project(null, projectName, ifc, dataset);
     }
 

@@ -13,9 +13,4 @@ public class ProjectJpa {
     private String name;
     private Binary ifc;
     private Binary dataset;
-    public ProjectJpa(String name, Binary ifc, Binary dataset) {
-        this.name = name;
-        this.ifc = ifc;
-        this.dataset = dataset;
-    }
 }

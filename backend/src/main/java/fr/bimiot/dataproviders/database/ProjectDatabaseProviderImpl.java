@@ -24,7 +24,11 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
     }
 
     private ProjectJpa toProjectJpa(Project project) throws IOException {
-        return new ProjectJpa(project.getName(), toBinary(project.getIfc()), toBinary(project.getDataset()));
+        ProjectJpa projectJpa = new ProjectJpa();
+        projectJpa.setIfc(toBinary(project.getIfc()));
+        projectJpa.setDataset(toBinary(project.getDataset()));
+        projectJpa.setName(project.getName());
+        return projectJpa;
     }
 
     private Binary toBinary(MultipartFile file) throws IOException {

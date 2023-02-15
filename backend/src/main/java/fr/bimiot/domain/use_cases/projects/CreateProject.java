@@ -19,7 +19,7 @@ public class CreateProject {
         this.projectFileProvider = projectFileProvider;
     }
 
-    public String create(Project project) throws DomainException, IOException {
+    public String execute(Project project) throws DomainException, IOException {
         projectFileProvider.create(project);
         return projectDatabaseProvider.create(project);
     }
