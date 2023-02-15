@@ -42,4 +42,9 @@ public class ProjectController {
     private Project toProjectDirectory(ProjectDirectoryApi projectDirectoryApi) {
         return new Project(projectDirectoryApi.getProjectName());
     }
+
+    public ResponseEntity<List<String>> deleteProject(@PathVariable("projectName") String projectName){
+
+    }
+
 }
