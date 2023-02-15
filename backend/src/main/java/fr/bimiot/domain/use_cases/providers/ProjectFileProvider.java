@@ -7,4 +7,6 @@ import java.io.IOException;
 
 public interface ProjectFileProvider {
     void create(Project project) throws DomainException, IOException;
+
+    void delete(String projectName) throws DomainException;
 }
