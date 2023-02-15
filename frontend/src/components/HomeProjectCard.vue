@@ -27,11 +27,11 @@
   >
     <v-card>
       <v-card-text>
-        Êtes-vous sûr de vouloir supprimer cet projet ?
+        Êtes-vous sûr de supprimer cet projet ?
       </v-card-text>
       <v-card-actions>
         <v-btn color="success"  @click="dialog = false">Annuler</v-btn>
-        <v-btn color="primary"  @click="deleteProject">Confirmer</v-btn>
+        <v-btn color="blue"  @click="deleteProject">Confirmer</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -64,6 +64,8 @@ export default {
             console.log("Error of deleting project: ",error);
           })
       console.log("Response of deleting project: ",response);
+      //refresh the parent page
+      this.$emit("delete")
     }
   }
 
