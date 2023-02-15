@@ -1,28 +1,23 @@
-version: '2'
+version: '3.8'
 
 services:
   mongodb:
     image: mongo
     container_name: mongodb
     ports:
-      - 27020:27017
+      - "27020:27017"
     volumes:
       - data:/data
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=rootuser
-      - MONGO_INITDB_ROOT_PASSWORD=rootpass
   mongo-express:
     image: mongo-express
     container_name: mongo-express
     restart: always
     ports:
-      - 8081:8081
-    environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
-      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - "8081:8081"
   bimiot:
     image: 'bimiot'
+    depends_on:
+      - mongodb
     build:
       context: .
     container_name: bimiot
@@ -35,3 +30,7 @@ services:
 
 volumes:
   data: {}
+
+networks:
+  default:
+    name: mongodb_network
