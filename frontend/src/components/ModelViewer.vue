@@ -538,11 +538,6 @@ export default {
 
       console.log(JSON.stringify(this.sensorMapping));
       axios.post("/api/bimiot/mapping", JSON.stringify(this.sensorMapping), config)
-          // fetch("/api/bimiot/mapping",{
-          //   method: 'POST',
-          //   headers:{'Content-Type': 'application/json'},
-          //   body: JSON.stringify(this.sensorMapping)
-          // })
           .then((data) => {
             console.log('Success:', data);
           })
