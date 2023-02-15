@@ -3,6 +3,7 @@ package fr.bimiot.application;
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.CreateProject;
+import fr.bimiot.domain.use_cases.DeleteProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,12 @@ public class ProjectController {
 
     private final CreateProject createProject;
 
+    private final DeleteProject deleteProject;
+
     @Autowired
-    public ProjectController(CreateProject createProject) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject) {
         this.createProject = createProject;
+        this.deleteProject = deleteProject;
     }
 
     @PostMapping("/folder")
@@ -43,8 +47,10 @@ public class ProjectController {
         return new Project(projectDirectoryApi.getProjectName());
     }
 
-    public ResponseEntity<List<String>> deleteProject(@PathVariable("projectName") String projectName){
-
+    @DeleteMapping("/{projectName}")
+    public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
+        deleteProject.execute(projectName);
+        return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
 
 }
