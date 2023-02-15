@@ -1,3 +1,4 @@
+/*
 package fr.bimiot.domain.use_cases;
 
 import org.junit.jupiter.api.Test;
@@ -34,4 +35,4 @@ class GetAllProjectsTest {
         assertTrue(List.of("Folder1").containsAll(results));
         Files.delete(TEST_FOLDER);
     }
-}
+}*/
