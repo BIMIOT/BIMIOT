@@ -1,4 +1,4 @@
-package fr.bimiot.application;
+package fr.bimiot.application.controllers;
 
 import fr.bimiot.domain.use_cases.GetFile;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package fr.bimiot.infrastructure;
+package fr.bimiot.dataproviders;
 
 import fr.bimiot.domain.entities.ports.SimulatorPort;
 import org.springframework.stereotype.Component;
