@@ -2,6 +2,7 @@ package fr.bimiot.domain.entities;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class TypeColor {
     private ArrayList<String> colors;
@@ -10,6 +11,12 @@ public class TypeColor {
     public TypeColor(ArrayList<String> colors, ArrayList<Float> values) {
         this.colors = colors;
         this.values = values;
+    }
+
+    public String getColor(Float value) {
+        return colors.get(IntStream.range(0, values.size())
+                .filter(i -> value <= values.get(i))
+                .findFirst().orElse(colors.size()));
     }
 
     @Override

@@ -13,6 +13,10 @@ public class TypesColors {
         this.typesColor = typesColor;
     }
 
+    public String getColor(SensorType type, Float value) {
+        return typesColor.get(type).getColor(value);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

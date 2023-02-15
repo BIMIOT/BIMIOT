@@ -19,7 +19,7 @@ public class ManageData {
         String ifcID = null;
         for (var room : roomListDTO) {
             var nb = 0;
-            var sum = 0;
+            var sum = 0f;
             for (var sensor : room.getSensors()) {
                 if (sensor.getSensorDataSetId().equals(data.getId())) {
                     sensor.setValue(data.getValue());
@@ -32,7 +32,8 @@ public class ManageData {
                 }
             }
             if (found) {
-                return new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(), "red"); // TODO : get color from average (sum / nb)
+                return new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
+                        typesColors.getColor(SensorType.valueOf(data.getType()), sum/nb));
             }
         }
         return new WebSocketData("0","0","0","0", "0"); // TODO : Handle error when sensor not found
@@ -40,5 +41,9 @@ public class ManageData {
 
     public void setRoomListDTO(List<Room> roomListDTO) {
         this.roomListDTO = roomListDTO;
+    }
+
+    public void setTypesColors(TypesColors typesColors) {
+        this.typesColors = typesColors;
     }
 }
