@@ -418,6 +418,7 @@ export default {
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.tempMeshes;
+          break;
         default:
           console.log("Unknown type!");
       }
