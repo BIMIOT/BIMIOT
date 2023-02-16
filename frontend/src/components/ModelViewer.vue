@@ -304,6 +304,7 @@ export default {
 
     },
     subscribe: function(greeting) {
+      console.log(greeting);
 
       const response = greeting;
       if (this.model === undefined) {
@@ -312,71 +313,24 @@ export default {
       console.log(response["color"])
       console.log(response["roomIfcID"])
       console.log(response["sensorIfcID"] in this.room_list)
-      if(!(response["roomIfcID"]  in this.room_list)) {
+      if(!(response["roomIfcID"] in this.room_list)) {
         return;
       }
+      console.log(this.colors.temperature);
 
-      let mesh  = null
-      for (let i = 0; i < this.colors.temperature.length; i++) {
-        if (response["value"] <= this.colors.temperature[i].intList[this.colors.temperature[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
+      let mesh = new MeshLambertMaterial({
             transparent: true,
             opacity: 0.3,
-            color: new THREE.Color(this.colors.temperature[i].value).getHex(),
+            color: new THREE.Color(response["color"]).getHex(),
             depthTest: false,
-          })
-          break;
-        }
-      }
-
-      for (let i = 0; i < this.colors.humidity.length; i++) {
-        if (response["value"] <= this.colors.humidity[i].intList[this.colors.humidity[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
-            transparent: true,
-            opacity: 0.3,
-            color: new THREE.Color(this.colors.humidity[i].value).getHex(),
-            depthTest: false,
-          })
-          break;
-        }
-      }
-
-      for (let i = 0; i < this.colors.co2.length; i++) {
-        if (response["value"] <= this.colors.co2[i].intList[this.colors.co2[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
-            transparent: true,
-            opacity: 0.3,
-            color: new THREE.Color(this.colors.co2[i].value).getHex(),
-            depthTest: false,
-          })
-          break;
-        }
-      }
-
-      for (let i = 0; i < this.colors.luminosity.length; i++) {
-        if (response["value"] <= this.colors.luminosity[i].intList[this.colors.luminosity[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
-            transparent: true,
-            opacity: 0.3,
-            color: new THREE.Color(this.colors.luminosity[i].value).getHex(),
-            depthTest: false,
-          })
-          break;
-        }
-      }
+          });
 
       const manager = this.viewer.IFC.loader.ifcManager;
-      if(this.room_by_color[response["roomIfcID"]] !== undefined) {
-        console.log("hello im " ,this.room_by_color[response["roomIfcID"]][response["sensorType"]])
-        manager.removeSubset(this.model.modelID, this.room_by_color[response["roomIfcID"]][response["sensorType"]],response["roomIfcID"]+response["sensorType"]+"");
-      }
       if(this.room_by_color[response["roomIfcID"]] === undefined) {
         this.room_by_color[response["roomIfcID"]] = { [response["sensorType"]] : mesh};
       } else {
+        console.log("hello im " ,this.room_by_color[response["roomIfcID"]][response["sensorType"]])
+        manager.removeSubset(this.model.modelID, this.room_by_color[response["roomIfcID"]][response["sensorType"]],response["roomIfcID"]+response["sensorType"]+"");
         this.room_by_color[response["roomIfcID"]][response["sensorType"]] = mesh ;
       }
 
@@ -612,8 +566,8 @@ export default {
   },
 
   mounted() {
-    this.store.storeNewRoomColorByType("1B080","Sensor1",30)
-    console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
+    //this.store.storeNewRoomColorByType("1B080","Sensor1",30)
+    //console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({ container });
     this.viewer = viewer;

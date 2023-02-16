@@ -53,7 +53,7 @@ export default {
         { id: 2, value: '#0000ff' },
         { id: 3, value: '#ffff00' }
       ],
-      values: [],
+      values: [3,10,20],
       selectedColorId: null,
       selectedTab: 0,
       newInt: ''

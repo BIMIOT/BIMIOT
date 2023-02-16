@@ -16,7 +16,7 @@ public class TypeColor {
     public String getColor(Float value) {
         return colors.get(IntStream.range(0, values.size())
                 .filter(i -> value <= values.get(i))
-                .findFirst().orElse(colors.size()));
+                .findFirst().orElse(colors.size()-1));
     }
 
     @Override
