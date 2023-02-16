@@ -1,5 +1,6 @@
-package fr.bimiot.domain.use_cases;
+package fr.bimiot.domain.use_cases.projects;
 
+import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -10,6 +11,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class GetAllProjects {
+
+    private final ProjectDatabaseProvider projectDatabaseProvider;
+
+    public GetAllProjects(ProjectDatabaseProvider projectDatabaseProvider) {
+        this.projectDatabaseProvider = projectDatabaseProvider;
+    }
+
     public List<String> execute() {
         try {
             return Files.list(Paths.get("Projects"))

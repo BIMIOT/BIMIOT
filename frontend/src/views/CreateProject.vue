@@ -69,32 +69,21 @@ export default {
       this.dataset = this.$refs.datasetFile.files[0];
     },
     async saveDatas() {
-      fetch('/api/bimiot/projects/folder', {
+      const formData = new FormData();
+      formData.append('name', this.projectName);
+      formData.append('ifc', this.ifc);
+      formData.append('dataset', this.dataset);
+      fetch('/api/bimiot/projects', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          projectName: this.projectName,
-        }),
+        body: formData
       })
           .then((response) => response.json())
           .then((data) => {
             if (data.code === '400') {
+              console.log(data);
               throw new Error(data.message);
             }
-            const name = data.projectName;
-            const formData = new FormData();
-            formData.append('files', this.ifc);
-            formData.append('files', this.dataset);
-            fetch(`/api/bimiot/projects/files/${name}`, {
-              method: 'POST',
-              body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                  this.$router.push({name: 'home'});
-                })
+            this.$router.push({name: 'home'});
           })
           .catch(error => {
             this.errorMessage = error.message;

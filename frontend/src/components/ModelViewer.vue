@@ -43,7 +43,7 @@ export default {
     SensorsControlButtons,
   },
   setup() {
-    const store = roomsStateStore()
+    const store = roomsStateStore();
 
     return {store}
   },
@@ -168,7 +168,6 @@ export default {
 
     },
     subscribe: function(greeting) {
-      console.log(greeting);
 
       const response = greeting;
       if(this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
@@ -424,6 +423,7 @@ export default {
   },
 
   mounted() {
+    //TODO fix the problem  of storeNewRoomColorByType is not a function
     //this.store.storeNewRoomColorByType("1B080","Sensor1",30)
     //console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
     const container = document.getElementById('model');

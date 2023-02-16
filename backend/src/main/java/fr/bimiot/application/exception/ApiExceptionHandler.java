@@ -17,18 +17,18 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {BaseException.class})
     public ResponseEntity<Object> handleException(BaseException baseException) {
         return switch (baseException.getClass().getSimpleName()) {
-            case "DomainException" -> handleRecoverableException(baseException);
+            case "DomainException", "IOException" -> handleRecoverableException(baseException);
             default -> handleGenericException(baseException);
         };
     }
 
     private ResponseEntity<Object> handleGenericException(BaseException exception) {
         Map<String, Object> errorDetails = new LinkedHashMap<>();
-        errorDetails.put("code", "400");
+        errorDetails.put("code", "200");
         errorDetails.put("type", errorDetails.getClass().getSimpleName());
         errorDetails.put("message", exception.getMessage());
         errorDetails.put("trace", exception.getStackTrace());
-        return new ResponseEntity<>(errorDetails, requireNonNull(HttpStatus.resolve(400)));
+        return new ResponseEntity<>(errorDetails, requireNonNull(HttpStatus.resolve(200)));
     }
 
     private ResponseEntity<Object> handleRecoverableException(BaseException baseException) {

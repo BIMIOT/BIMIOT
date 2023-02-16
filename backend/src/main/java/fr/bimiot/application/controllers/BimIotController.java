@@ -1,9 +1,10 @@
-package fr.bimiot.application;
+package fr.bimiot.application.controllers;
 
 import fr.bimiot.domain.entities.*;
 
-import fr.bimiot.domain.use_cases.CreateProject;
-import fr.bimiot.domain.use_cases.GetAllProjects;
+import fr.bimiot.domain.entities.Room;
+import fr.bimiot.domain.use_cases.projects.CreateProject;
+import fr.bimiot.domain.use_cases.projects.GetAllProjects;
 import fr.bimiot.domain.use_cases.ManageData;
 import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.domain.use_cases.GetFile;
@@ -37,6 +38,7 @@ public class BimIotController {
         this.getFile = getFile;
     }
 
+    @Deprecated
     @GetMapping("/projects")
     public ResponseEntity<List<String>> getAllProjects() {
         return ResponseEntity.status(HttpStatus.OK).body(getAllProjects.execute());

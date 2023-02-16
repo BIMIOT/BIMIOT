@@ -15,12 +15,13 @@
           :key="name"
           cols="3"
       >
-        <HomeProjectCard :title="name"/>
+        <HomeProjectCard :title="name" @delete="getAllProjects"/>
       </v-col>
     </v-row>
   </v-container>
   <div class="text-center">
     <v-snackbar
+        location="top"
         v-model="snackbar"
         :timeout="timeout"
         color="success"
@@ -32,8 +33,6 @@
 
 <script>
 import HomeProjectCard from "@/components/HomeProjectCard";
-import {roomsStateStore} from "@/store/rooms";
-
 export default {
   components: {HomeProjectCard},
   data() {
@@ -44,14 +43,17 @@ export default {
   methods: {
     toCreateProjectPage() {
       this.$router.push({name: 'create-project'});
+    },
+    getAllProjects(){
+      fetch("api/bimiot/projects")
+          .then(response => response.json())
+          .then(data => {
+            this.names = data;
+          })
     }
   },
   mounted() {
-    fetch("api/bimiot/projects")
-        .then(response => response.json())
-        .then(data => {
-          this.names = data;
-        })
+    this.getAllProjects()
   }
 }
 </script>
