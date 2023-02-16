@@ -4,7 +4,7 @@
       <input type="file" id="file-input" />
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
-      <ColorPickerSensor v-on:meshcolor="updateMeshes" id="colorPickers"/>
+      <ColorPickerSensor id="colorPickers"/>
       <SensorsList :room_list="room_list"/>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -58,32 +58,6 @@ export default {
       sensorMapping: [{"roomId":1, "sensors":[{"sensorIFCid":1,"sensorDataSetId":1}]}], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]invisibleMat: new MeshLambertMaterial({
       sensor_types: {},
       room_by_color: {},
-      colors: {
-        temperature: [
-          { id: 0, value: '#fd0000', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#0000ff', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ],
-        humidity: [
-          { id: 0, value: '#f62727', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#ff5900', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ],
-        luminosity: [
-          { id: 0, value: '#ff0000', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#0000ff', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ],
-        co2: [
-          { id: 0, value: '#ff0000', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#0000ff', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ]
-      },
       room_list: {"roomId":{"type":[{IFCid:null,DataId:null,value:null}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
@@ -108,116 +82,6 @@ export default {
         color: 0x00FFFF,
         depthTest: false,
       }),
-      tempMeshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x668cff,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xffff99,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xffcc33,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xee6600,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x990000,
-          depthTest: false,
-        })
-      ],
-      humMeshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x05192C,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xD0AE8B,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xE8E4E2,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x73CCD8,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x52B1D2,
-          depthTest: false,
-        })
-      ],
-      co2Meshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x24a6f2,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xe4c844,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x10394c,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x94a651,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xb7b7b7,
-          depthTest: false,
-        })
-      ],
-      lumMeshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x000000,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xFFFF00,
-          depthTest: false,
-        })
-      ],
       currentColorRange: []
     }
   },
@@ -361,10 +225,6 @@ export default {
           depthTest: false,
         });
       });
-    },
-    updateMeshes: function (data) {
-      this.tempMeshes = this.convertHexToInt(data.temperature)
-      console.log(this.tempMeshes)
     },
     removeAll: function (room_ids, manager) {
       console.log("rooms: ", room_ids);

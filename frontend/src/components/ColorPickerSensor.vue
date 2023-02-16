@@ -85,17 +85,6 @@ export default {
     },
     saveData() {
       console.log("colors: ", this.temperatureColors);
-      const data = {
-        temperature: this.temperatureColors,
-        humidity: this.humidityColors,
-        luminosity: this.luminosityColors,
-        co2: this.co2Colors
-      }
-      this.$emit("meshcolor", data)
-      this.sendColors()
-      this.showModal = false
-    },
-    sendColors: function (){
       let config = {
         headers: {
           'Content-Type': 'application/json',
@@ -128,6 +117,8 @@ export default {
           .catch((error) => {
             console.error('Error:', error);
           });
+
+      this.showModal = false
     }
   }
 }
