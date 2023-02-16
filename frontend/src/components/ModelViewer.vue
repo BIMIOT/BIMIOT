@@ -4,7 +4,7 @@
       <input type="file" id="file-input" />
       <v-btn id="play" v-on:click="start()" >Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
-      <ColorPickerSensor v-on:meshcolor="updateMeshes" id="colorPickers"/>
+      <ColorPickerSensor id="colorPickers"/>
       <SensorsList :room_list="room_list"/>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -53,37 +53,11 @@ export default {
       client: undefined,
       viewer: undefined,
       model: undefined,
-      currentSenseType:"temp",
+      currentSenseType:"TEMPERATURE",
       structure: undefined,
       sensorMapping: [{"roomId":1, "sensors":[{"sensorIFCid":1,"sensorDataSetId":1}]}], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]invisibleMat: new MeshLambertMaterial({
       sensor_types: {},
       room_by_color: {},
-      colors: {
-        temperature: [
-          { id: 0, value: '#fd0000', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#0000ff', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ],
-        humidity: [
-          { id: 0, value: '#f62727', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#ff5900', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ],
-        luminosity: [
-          { id: 0, value: '#ff0000', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#0000ff', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ],
-        co2: [
-          { id: 0, value: '#ff0000', intList: [1,3] },
-          { id: 1, value: '#00ff00', intList: [4, 10] },
-          { id: 2, value: '#0000ff', intList: [11, 20] },
-          { id: 3, value: '#ffff00', intList: [21, 50] }
-        ]
-      },
       room_list: {"roomId":{"type":[{IFCid:null,DataId:null,value:null}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
@@ -108,116 +82,6 @@ export default {
         color: 0x00FFFF,
         depthTest: false,
       }),
-      tempMeshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x668cff,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xffff99,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xffcc33,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xee6600,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x990000,
-          depthTest: false,
-        })
-      ],
-      humMeshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x05192C,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xD0AE8B,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xE8E4E2,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x73CCD8,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x52B1D2,
-          depthTest: false,
-        })
-      ],
-      co2Meshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x24a6f2,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xe4c844,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x10394c,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x94a651,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xb7b7b7,
-          depthTest: false,
-        })
-      ],
-      lumMeshes:[
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0x000000,
-          depthTest: false,
-        }),
-        new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: 0xFFFF00,
-          depthTest: false,
-        })
-      ],
       currentColorRange: []
     }
   },
@@ -306,76 +170,23 @@ export default {
     subscribe: function(greeting) {
 
       const response = greeting;
-      if (this.model === undefined) {
-        return;
-      }
-      console.log(response["roomIfcID"])
-      console.log(response["sensorIfcID"] in this.room_list)
-      if(!(response["roomIfcID"]  in this.room_list)) {
+      if(this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
       }
 
-      let mesh  = null
-      for (let i = 0; i < this.colors.temperature.length; i++) {
-        if (response["value"] <= this.colors.temperature[i].intList[this.colors.temperature[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
+      let mesh = new MeshLambertMaterial({
             transparent: true,
             opacity: 0.3,
-            color: new THREE.Color(this.colors.temperature[i].value).getHex(),
+            color: new THREE.Color(response["color"]).getHex(),
             depthTest: false,
-          })
-          break;
-        }
-      }
-
-      for (let i = 0; i < this.colors.humidity.length; i++) {
-        if (response["value"] <= this.colors.humidity[i].intList[this.colors.humidity[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
-            transparent: true,
-            opacity: 0.3,
-            color: new THREE.Color(this.colors.humidity[i].value).getHex(),
-            depthTest: false,
-          })
-          break;
-        }
-      }
-
-      for (let i = 0; i < this.colors.co2.length; i++) {
-        if (response["value"] <= this.colors.co2[i].intList[this.colors.co2[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
-            transparent: true,
-            opacity: 0.3,
-            color: new THREE.Color(this.colors.co2[i].value).getHex(),
-            depthTest: false,
-          })
-          break;
-        }
-      }
-
-      for (let i = 0; i < this.colors.luminosity.length; i++) {
-        if (response["value"] <= this.colors.luminosity[i].intList[this.colors.luminosity[i].intList.length-1]) {
-          console.log(response["value"])
-          mesh = new MeshLambertMaterial({
-            transparent: true,
-            opacity: 0.3,
-            color: new THREE.Color(this.colors.luminosity[i].value).getHex(),
-            depthTest: false,
-          })
-          break;
-        }
-      }
+          });
 
       const manager = this.viewer.IFC.loader.ifcManager;
-      if(this.room_by_color[response["roomIfcID"]] !== undefined) {
-        console.log("hello im " ,this.room_by_color[response["roomIfcID"]][response["sensorType"]])
-        manager.removeSubset(this.model.modelID, this.room_by_color[response["roomIfcID"]][response["sensorType"]],response["roomIfcID"]+response["sensorType"]+"");
-      }
       if(this.room_by_color[response["roomIfcID"]] === undefined) {
         this.room_by_color[response["roomIfcID"]] = { [response["sensorType"]] : mesh};
       } else {
+        console.log("hello im " ,this.room_by_color[response["roomIfcID"]][response["sensorType"]])
+        manager.removeSubset(this.model.modelID, this.room_by_color[response["roomIfcID"]][response["sensorType"]],response["roomIfcID"]+response["sensorType"]+"");
         this.room_by_color[response["roomIfcID"]][response["sensorType"]] = mesh ;
       }
 
@@ -407,15 +218,13 @@ export default {
         });
       });
     },
-    updateMeshes: function (data) {
-      this.tempMeshes = this.convertHexToInt(data.temperature)
-      console.log(this.tempMeshes)
-    },
     removeAll: function (room_ids, manager) {
+      console.log("rooms: ", room_ids);
       const room_ids_iter = Object.keys(room_ids);
-      const sensorTypes = ["temp","hum","lum","co2"]
+      const sensorTypes = ["TEMPERATURE","HUMIDITY","LIGHT","CO2"];
       for (const sensorType of sensorTypes) {
         for (const id of room_ids_iter) {
+          console.log(this.room_by_color[parseInt(id, 10)]);
           manager.removeSubset(this.model.modelID,
               this.room_by_color[parseInt(id, 10)] === undefined ?
                   this.invisibleMat : this.room_by_color[parseInt(id, 10)][sensorType]
@@ -442,25 +251,28 @@ export default {
 
       const manager = this.viewer.IFC.loader.ifcManager;
       switch (type) {
-        case 'hum':
+        case 'HUMIDITY':
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.humMeshes;
           break;
-        case 'lum':
+        case 'LIGHT':
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.lumMeshes;
           break;
-        case 'co2':
+        case 'CO2':
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.co2Meshes;
           break;
-        default:
+        case "TEMPERATURE":
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.tempMeshes;
+          break;
+        default:
+          console.log("Unknown type!");
       }
     },
     newSubsetOfType: async function (viewer,category) {
@@ -498,7 +310,12 @@ export default {
             this.room_list[relIDs.expressID][type_name] = [];
           }
           this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value.split(":")[0],value:0});
-          this.sensorMapping[this.sensorMapping.length-1].sensors.push({"sensorIFCid":relIDs.children[component].expressID,"sensorDataSetId":sensor.ObjectType.value.split(":")[0]});
+          this.sensorMapping[this.sensorMapping.length-1].sensors.push({
+            "sensorIFCid":relIDs.children[component].expressID,
+            "sensorDataSetId":sensor.ObjectType.value.split(":")[0],
+            "type":"TEMPERATURE", // TODO : Use sensor type
+            "value":undefined
+          });
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
@@ -532,11 +349,6 @@ export default {
 
       console.log(JSON.stringify(this.sensorMapping));
       axios.post("/api/bimiot/mapping", JSON.stringify(this.sensorMapping), config)
-          // fetch("/api/bimiot/mapping",{
-          //   method: 'POST',
-          //   headers:{'Content-Type': 'application/json'},
-          //   body: JSON.stringify(this.sensorMapping)
-          // })
           .then((data) => {
             console.log('Success:', data);
           })

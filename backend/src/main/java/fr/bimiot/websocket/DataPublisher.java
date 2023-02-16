@@ -31,7 +31,8 @@ public class DataPublisher implements ApplicationListener<ConverterEvent> {
                 .put("sensorIfcID", Integer.parseInt(data.sensorIfcID()))
                 .put("value", Integer.parseInt(data.value()))
                 .put("roomIfcID", Integer.parseInt(data.roomIfcID()))
-                .put("sensorType", data.type());
+                .put("sensorType", data.type())
+                .put("color", data.color());
         System.out.println("before sending ws: " + sensorJson);
         this.messageSendingOperations.convertAndSend("/data/sensors", sensorJson.toString());
     }
