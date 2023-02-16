@@ -1,8 +1,8 @@
 <template>
   <section>
     <div>
-      <input type="file" id="file-input" />
-      <v-btn id="play" v-on:click="start()" >Play</v-btn>
+      <input type="file" id="file-input"/>
+      <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <ColorPickerSensor id="colorPickers"/>
       <SensorsList :room_list="room_list"/>
@@ -13,17 +13,25 @@
       ID:
       {{ entityData }}
     </p>
-    <div id="model" />
+    <div id="model"/>
   </section>
 </template>
 
 <script>
-import { IfcViewerAPI } from 'web-ifc-viewer';
-import { MeshLambertMaterial } from 'three';
+import {IfcViewerAPI} from 'web-ifc-viewer';
+import {MeshLambertMaterial} from 'three';
 import axios from 'axios';
 import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
-import { IFCSPACE,IFCSLAB,IFCOPENINGELEMENT, IFCDISTRIBUTIONCONTROLELEMENT, IFCWALLSTANDARDCASE, IFCSENSORTYPE, IFCSENSOR } from 'web-ifc';
+import {
+  IFCSPACE,
+  IFCSLAB,
+  IFCOPENINGELEMENT,
+  IFCDISTRIBUTIONCONTROLELEMENT,
+  IFCWALLSTANDARDCASE,
+  IFCSENSORTYPE,
+  IFCSENSOR
+} from 'web-ifc';
 import SensorsList from './SensorsList.vue'
 
 import * as THREE from 'three';
@@ -90,9 +98,9 @@ export default {
       const response = await axios.get(`/api/bimiot/simulation/files/${this.project}`, {
         responseType: 'blob',
       });
-      console.log(response);
+      console.log(response.data);
       const ifcURL = URL.createObjectURL(response.data);
-      this.model = await viewer.IFC.loadIfcUrl(ifcURL);
+      this.model = await this.viewer.IFC.loadIfcUrl(ifcURL);
 
       this.model.removeFromParent();
 
@@ -123,33 +131,32 @@ export default {
 
       const floor = {
         modelID: this.model.modelID,
-        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID,IFCSLAB,false),
+        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSLAB, false),
         removePrevious: true,
-        customID:"stuff"
+        customID: "stuff"
       }
-
       const sensor = {
         modelID: this.model.modelID,
-        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID,IFCDISTRIBUTIONCONTROLELEMENT,false),
+        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
         material: this.sensorColor,
         removePrevious: true,
-        customID:"stuff2"
+        customID: "stuff2"
       }
 
       const wall = {
         modelID: this.model.modelID,
-        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID,IFCWALLSTANDARDCASE,false),
+        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCWALLSTANDARDCASE, false),
         removePrevious: true,
-        customID:"stuff3"
+        customID: "stuff3"
       }
 
 
       const spaces = {
         modelID: this.model.modelID,
-        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID,IFCSPACE,false),
+        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSPACE, false),
         removePrevious: true,
         material: this.invisibleMat,
-        customID:"stuff4"
+        customID: "stuff4"
       }
 
       var floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
@@ -158,16 +165,15 @@ export default {
       var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
 
-      console.log(this.room_list);
       const scene = this.viewer.context.getScene();
       scene.add(floors);
       scene.add(sensors);
       scene.add(walls);
 
-      this.changeColor(this.room_list,manager,this.currentSenseType)
+      this.changeColor(this.room_list, manager, this.currentSenseType)
 
     },
-    subscribe: function(greeting) {
+    subscribe: function (greeting) {
 
       const response = greeting;
       if(this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
@@ -199,25 +205,20 @@ export default {
       }
 
 
-      console.log(this.room_by_color[response["roomIfcID"]])
-
-      if(response["sensorType"] === this.currentSenseType && this.room_by_color[response["roomIfcID"]][this.currentSenseType] !== this.invisibleMat ) {
-        console.log("putting a new one")
+      if (response["sensorType"] === this.currentSenseType && this.room_by_color[response["roomIfcID"]][this.currentSenseType] !== this.invisibleMat) {
         manager.createSubset({
           modelID: this.model.modelID,
           ids: [response["roomIfcID"]],
           material: this.room_by_color[response["roomIfcID"]][this.currentSenseType],
           scene: this.viewer.context.getScene(),
           removePrevious: false,
-          customID: response["roomIfcID"]+response["sensorType"]+""
+          customID: response["roomIfcID"] + response["sensorType"] + ""
         });
-        console.log(" wow im here")
       }
     },
-    convertHexToInt: function(colors) {
+    convertHexToInt: function (colors) {
       return colors.map(color => {
         var color2 = new THREE.Color(color.value);
-        console.log(color2.getHex())
         return new MeshLambertMaterial({
           transparent: true,
           opacity: 0.3,
@@ -250,7 +251,7 @@ export default {
           material: this.room_by_color[parseInt(id, 10)] === undefined ? this.invisibleMat : this.room_by_color[parseInt(id, 10)][sensorType],
           scene: this.viewer.context.getScene(),
           removePrevious: false,
-          customID: id+sensorType+""
+          customID: id + sensorType + ""
         });
       }
     },
@@ -283,10 +284,9 @@ export default {
           console.log("Unknown type!");
       }
     },
-    newSubsetOfType: async function (viewer,category) {
+    newSubsetOfType: async function (viewer, category) {
       const manager = viewer.IFC.loader.ifcManager;
       const ids = await manager.getAllItemsOfType(0, category, false);
-      console.log(ids);
 
       return manager.createSubset({
         modelID: 0,
@@ -297,17 +297,15 @@ export default {
         customID: category.toString(),
       });
     },
-    showStructure: async function(viewer, modelID) {
+    showStructure: async function (viewer, modelID) {
       const manager = viewer.IFC.loader.ifcManager;
       const relIDs = await manager.getSpatialStructure(modelID);
-      console.log(relIDs);
       return relIDs;
     },
-    getSensors: async function(relIDs, manager, modelID) {
+    getSensors: async function (relIDs, manager, modelID) {
       if (relIDs.type === "IFCSPACE") {
         this.room_list[relIDs.expressID] = {};
-        this.sensorMapping.push({"roomId":relIDs.expressID, "sensors":[]});
-        console.log(relIDs.expressID);
+        this.sensorMapping.push({"roomId": relIDs.expressID, "sensors": []});
       }
       for (let component in relIDs.children) {
         if (relIDs.type === "IFCSPACE" && relIDs.children[component].type === "IFCDISTRIBUTIONCONTROLELEMENT") {
@@ -328,40 +326,18 @@ export default {
       }
     },
     start: function () {
-      axios
-          .put(`/api/bimiot/start/${this.project}`, {})
-          .then((data) => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+      axios.put(`/api/bimiot/start/${this.project}`, {})
     },
     stop: function () {
       axios.put(`/api/bimiot/stop/${this.project}`, {})
-          .then((data) => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
     },
-
-    sendMapping: function (){
+    sendMapping: function () {
       let config = {
         headers: {
           'Content-Type': 'application/json',
         }
       }
-
-      console.log(JSON.stringify(this.sensorMapping));
-      axios.post("/api/bimiot/mapping", JSON.stringify(this.sensorMapping), config)
-          .then((data) => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+      axios.post("/api/bimiot/mapping", JSON.stringify(this.sensorMapping), config);
     },
     fromIfcType: function (ifcType) {
       switch (ifcType) {
@@ -377,10 +353,8 @@ export default {
           return undefined;
       }
     }
-
-},
-  created: function() {
-    console.log("Starting connection to WebSocket Server");
+  },
+  created: function () {
     let client = new StompJs.Client({
       brokerURL: 'ws://localhost:80/sensors-data-endpoint',
       debug: function (str) {
@@ -396,7 +370,6 @@ export default {
       // For SockJS you need to set a factory that creates a new SockJS instance
       // to be used for each (re)connect
       client.webSocketFactory = function () {
-        console.log("test");
         // Note that the URL is different from the WebSocket URL
         return new sockjs('/sensors-data-endpoint');
       };
@@ -408,12 +381,10 @@ export default {
       client.subscribe('/data/sensors', (greeting) => {
         const response = JSON.parse(greeting.body);
 
-        console.log(response, "helloo im response");
         this.subscribe(response);
 
       });
 
-      console.log("Successfully subscribed to the backend server...");
     };
 
     client.onStompError = function (frame) {
@@ -421,8 +392,6 @@ export default {
       // Bad login/passcode typically will cause an error
       // Complaint brokers will set `message` header with a brief message. Body may contain details.
       // Compliant brokers will terminate the connection after any error
-      console.log('Broker reported error: ' + frame.headers['message']);
-      console.log('Additional details: ' + frame.body);
     };
 
     client.activate();
@@ -443,12 +412,16 @@ export default {
     }
   },
 
+  unmounted() {
+    this.viewer.dispose();
+  },
+
   mounted() {
     //TODO fix the problem  of storeNewRoomColorByType is not a function
     //this.store.storeNewRoomColorByType("1B080","Sensor1",30)
     //console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
     const container = document.getElementById('model');
-    const viewer = new IfcViewerAPI({ container });
+    const viewer = new IfcViewerAPI({container});
     this.viewer = viewer;
     viewer.axes.setAxes();
     viewer.grid.setGrid();
@@ -493,7 +466,6 @@ export default {
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
 
-          console.log(this.sensorMapping);
 
           /**
            * HERE IS THE code YOU WANT IT START FROM HERE
@@ -501,33 +473,33 @@ export default {
 
           const floor = {
             modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSLAB,false),
+            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSLAB, false),
             removePrevious: true,
-            customID:"stuff"
+            customID: "stuff"
           }
 
           const sensor = {
             modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCDISTRIBUTIONCONTROLELEMENT,false),
+            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
             material: this.sensorColor,
             removePrevious: true,
-            customID:"stuff2"
+            customID: "stuff2"
           }
 
           const wall = {
             modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCWALLSTANDARDCASE,false),
+            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCWALLSTANDARDCASE, false),
             removePrevious: true,
-            customID:"stuff3"
+            customID: "stuff3"
           }
 
 
           const spaces = {
             modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID,IFCSPACE,false),
+            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false),
             removePrevious: true,
             material: this.invisibleMat,
-            customID:"stuff4"
+            customID: "stuff4"
           }
 
           var floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
@@ -536,7 +508,6 @@ export default {
           var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
 
-          console.log(this.room_list);
           const scene = this.viewer.context.getScene();
           scene.add(floors);
           scene.add(sensors);
@@ -567,14 +538,14 @@ export default {
   z-index: 10;
 }
 
-#play{
+#play {
   position: relative;
   color: blue;
   margin: 0.5em 0.5em 0.5em;
   z-index: 10;
 }
 
-#stop{
+#stop {
   position: relative;
   color: blue;
   margin: 0.5em 0.5em 0.5em;
@@ -587,10 +558,12 @@ export default {
   bottom: 0%;
   z-index: 100;
 }
+
 #colorPickers {
   position: absolute !important;
   z-index: 100 !important;
 }
+
 .v-application__wrap {
   min-height: auto;
 }
