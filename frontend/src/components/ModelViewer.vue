@@ -171,16 +171,9 @@ export default {
       console.log(greeting);
 
       const response = greeting;
-      if (this.model === undefined) {
+      if(this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
       }
-      console.log(response["color"])
-      console.log(response["roomIfcID"])
-      console.log(response["sensorIfcID"] in this.room_list)
-      if(!(response["roomIfcID"] in this.room_list)) {
-        return;
-      }
-      console.log(this.colors.temperature);
 
       let mesh = new MeshLambertMaterial({
             transparent: true,
