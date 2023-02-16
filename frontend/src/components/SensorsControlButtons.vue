@@ -1,16 +1,16 @@
 <template>
   <v-container fluid id="sensorsControl">
     <v-row class="justify-end">
-      <v-btn  v-on:click="childMethod('temp')" class="mx-3 my-3" :value="'temp'" :class="{ 'active': selected === 'temp' }">Température</v-btn>
+      <v-btn  v-on:click="childMethod('TEMPERATURE')" class="mx-3 my-3" :value="'TEMPERATURE'" :class="{ 'active': selected === 'TEMPERATURE' }">Température</v-btn>
     </v-row>
     <v-row class="justify-end">
-      <v-btn v-on:click="childMethod('hum')" class="mx-3 my-3" :value="'hum'" :class="{ 'active': selected === 'hum' }">Humidité</v-btn>
+      <v-btn v-on:click="childMethod('HUMIDITY')" class="mx-3 my-3" :value="'HUMIDITY'" :class="{ 'active': selected === 'HUMIDITY' }">Humidité</v-btn>
     </v-row>
     <v-row class="justify-end">
-      <v-btn v-on:click="childMethod('co2')" class="mx-3 my-3" :value="'co2'" :class="{ 'active': selected === 'co2' }">Co2</v-btn>
+      <v-btn v-on:click="childMethod('CO2')" class="mx-3 my-3" :value="'CO2'" :class="{ 'active': selected === 'CO2' }">Co2</v-btn>
     </v-row>
     <v-row class="justify-end">
-      <v-btn class="mx-3 my-3" v-on:click="childMethod('lum')" :value="'lum'" :class="{ 'active': selected === 'lum' }">Luminosité</v-btn>
+      <v-btn class="mx-3 my-3" v-on:click="childMethod('LIGHT')" :value="'LIGHT'" :class="{ 'active': selected === 'LIGHT' }">Luminosité</v-btn>
     </v-row>
   </v-container>
 </template>
@@ -21,7 +21,7 @@
 export default {
   data() {
     return {
-      selected: "temp",
+      selected: "TEMPERATURE",
     }
   },
   name: "SensorsControlButtons",

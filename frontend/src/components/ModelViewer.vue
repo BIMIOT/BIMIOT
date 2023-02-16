@@ -53,7 +53,7 @@ export default {
       client: undefined,
       viewer: undefined,
       model: undefined,
-      currentSenseType:"temp",
+      currentSenseType:"TEMPERATURE",
       structure: undefined,
       sensorMapping: [{"roomId":1, "sensors":[{"sensorIFCid":1,"sensorDataSetId":1}]}], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]invisibleMat: new MeshLambertMaterial({
       sensor_types: {},
@@ -367,10 +367,12 @@ export default {
       console.log(this.tempMeshes)
     },
     removeAll: function (room_ids, manager) {
+      console.log("rooms: ", room_ids);
       const room_ids_iter = Object.keys(room_ids);
-      const sensorTypes = ["temp","hum","lum","co2"]
+      const sensorTypes = ["TEMPERATURE","HUMIDITY","LIGHT","CO2"];
       for (const sensorType of sensorTypes) {
         for (const id of room_ids_iter) {
+          console.log(this.room_by_color[parseInt(id, 10)]);
           manager.removeSubset(this.model.modelID,
               this.room_by_color[parseInt(id, 10)] === undefined ?
                   this.invisibleMat : this.room_by_color[parseInt(id, 10)][sensorType]
@@ -397,17 +399,17 @@ export default {
 
       const manager = this.viewer.IFC.loader.ifcManager;
       switch (type) {
-        case 'hum':
+        case 'HUMIDITY':
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.humMeshes;
           break;
-        case 'lum':
+        case 'LIGHT':
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.lumMeshes;
           break;
-        case 'co2':
+        case 'CO2':
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.co2Meshes;
