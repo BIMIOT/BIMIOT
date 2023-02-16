@@ -101,10 +101,23 @@ export default {
           'Content-Type': 'application/json',
         }
       }
+
       let typesColors = {"typesColor":{}};
       typesColors["typesColor"]["TEMPERATURE"] = {"colors":[],"values":this.temperatureValues};
       for (let i in this.temperatureColors) {
         typesColors["typesColor"]["TEMPERATURE"]["colors"].push(this.temperatureColors[i].value);
+      }
+      typesColors["typesColor"]["HUMIDITY"] = {"colors":[],"values":this.humidityValues};
+      for (let i in this.humidityColors) {
+        typesColors["typesColor"]["HUMIDITY"]["colors"].push(this.humidityColors[i].value);
+      }
+      typesColors["typesColor"]["LIGHT"] = {"colors":[],"values":this.luminosityValues};
+      for (let i in this.luminosityColors) {
+        typesColors["typesColor"]["LIGHT"]["colors"].push(this.luminosityColors[i].value);
+      }
+      typesColors["typesColor"]["CO2"] = {"colors":[],"values":this.co2Values};
+      for (let i in this.co2Colors) {
+        typesColors["typesColor"]["CO2"]["colors"].push(this.co2Colors[i].value);
       }
 
       console.log(JSON.stringify(typesColors));

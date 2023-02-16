@@ -414,10 +414,12 @@ export default {
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.co2Meshes;
           break;
-        default:
+        case "TEMPERATURE":
           this.removeAll(this.room_list,manager)
           this.changeColor(this.room_list, manager,type);
           this.currentColorRange = this.tempMeshes;
+        default:
+          console.log("Unknown type!");
       }
     },
     newSubsetOfType: async function (viewer,category) {
