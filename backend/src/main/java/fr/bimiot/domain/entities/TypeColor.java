@@ -8,8 +8,19 @@ public class TypeColor {
     private ArrayList<String> colors;
     private ArrayList<Float> values;
 
+    public TypeColor() {
+    }
+
     public TypeColor(ArrayList<String> colors, ArrayList<Float> values) {
         this.colors = colors;
+        this.values = values;
+    }
+
+    public void setColors(ArrayList<String> colors) {
+        this.colors = colors;
+    }
+
+    public void setValues(ArrayList<Float> values) {
         this.values = values;
     }
 

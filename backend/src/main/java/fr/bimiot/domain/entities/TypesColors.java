@@ -9,6 +9,10 @@ public class TypesColors {
     public TypesColors() {
     }
 
+    public TypesColors(HashMap<SensorType, TypeColor> typesColor) {
+        this.typesColor = typesColor;
+    }
+
     public void setTypesColor(HashMap<SensorType, TypeColor> typesColor) {
         this.typesColor = typesColor;
     }
