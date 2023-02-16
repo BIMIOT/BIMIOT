@@ -7,6 +7,14 @@ public class Room {
     private String roomId;
     private Set<Sensor> sensors;
 
+    public Room() {
+    }
+
+    public Room(String roomId, Set<Sensor> sensors) {
+        this.roomId = roomId;
+        this.sensors = sensors;
+    }
+
     public String getRoomId() {
         return roomId;
     }
