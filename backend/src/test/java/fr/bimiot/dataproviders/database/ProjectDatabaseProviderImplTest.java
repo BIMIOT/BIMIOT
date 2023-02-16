@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +54,30 @@ class ProjectDatabaseProviderImplTest {
         verify(projectJpaRepository).insert(projectJpaArgumentCaptor.capture());
         assertEquals(project.getName(), projectJpaArgumentCaptor.getValue().getName());
         assertEquals("projectId", projectId);
+    }
+
+
+    @Test
+    void find_shouldFoundByProjectName() throws IOException {
+        //Given
+        Project project = new Project(null, "project1", IFC_FILE, DATASET_FILE);
+        ProjectJpa projectJpaInput = new ProjectJpa();
+        projectJpaInput.setName(project.getName());
+        projectJpaInput.setIfc(toBinary(IFC_FILE));
+        projectJpaInput.setDataset(toBinary(DATASET_FILE));
+
+        ProjectJpa projectJpaOutput = new ProjectJpa();
+        projectJpaOutput.setId("projectId");
+        projectJpaOutput.setName(project.getName());
+
+        BDDMockito.doReturn(projectJpaOutput).when(projectJpaRepository).findByName(projectJpaInput.getName());
+
+        //When
+        var result = projectJpaRepository.findByName("project1");
+
+        //Then
+        assertNotNull(result);
+        assertEquals("project1",result.getName());
     }
 
     private Binary toBinary(MultipartFile file) throws IOException {
