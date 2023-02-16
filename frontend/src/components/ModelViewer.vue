@@ -55,10 +55,10 @@ export default {
       model: undefined,
       currentSenseType:"TEMPERATURE",
       structure: undefined,
-      sensorMapping: [{"roomId":1, "sensors":[{"sensorIFCid":1,"sensorDataSetId":1}]}], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]invisibleMat: new MeshLambertMaterial({
+      sensorMapping: [], // roomId:[{IFCsensorId:"1",DatasetId:"1"}]
       sensor_types: {},
       room_by_color: {},
-      room_list: {"roomId":{"type":[{IFCid:null,DataId:null,value:null}]}}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
+      room_list: {}, // roomId:{type:[IFCid:"val", DataId:"val", value:"val"]}
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.4,
@@ -172,6 +172,14 @@ export default {
       const response = greeting;
       if(this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
+      }
+
+      // Update last recorded value for this sensor
+      console.log(this.room_list);
+      for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
+        if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
+          this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
+        }
       }
 
       let mesh = new MeshLambertMaterial({
@@ -304,16 +312,15 @@ export default {
       for (let component in relIDs.children) {
         if (relIDs.type === "IFCSPACE" && relIDs.children[component].type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           const sensor = await manager.getItemProperties(modelID, relIDs.children[component].expressID);
-          console.log(sensor);
-          const type_name = this.sensor_types[sensor.ObjectType.value];
+          const type_name = this.fromIfcType(this.sensor_types[sensor.ObjectType.value]);
           if (this.room_list[relIDs.expressID][type_name] == undefined) {
             this.room_list[relIDs.expressID][type_name] = [];
           }
-          this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value.split(":")[0],value:0});
+          this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value.split(":")[0],value:undefined});
           this.sensorMapping[this.sensorMapping.length-1].sensors.push({
             "sensorIFCid":relIDs.children[component].expressID,
             "sensorDataSetId":sensor.ObjectType.value.split(":")[0],
-            "type":"TEMPERATURE", // TODO : Use sensor type
+            "type":type_name,
             "value":undefined
           });
         }
@@ -322,7 +329,7 @@ export default {
     },
     start: function () {
       axios
-          .put(`/api/bimiot/start/${this.project}`, {}) // TODO : replace "etienne" with project name
+          .put(`/api/bimiot/start/${this.project}`, {})
           .then((data) => {
             console.log('Success:', data);
           })
@@ -331,7 +338,7 @@ export default {
           });
     },
     stop: function () {
-      axios.put(`/api/bimiot/stop/${this.project}`, {}) // TODO : replace "etienne" with project name
+      axios.put(`/api/bimiot/stop/${this.project}`, {})
           .then((data) => {
             console.log('Success:', data);
           })
@@ -355,6 +362,20 @@ export default {
           .catch((error) => {
             console.error('Error:', error);
           });
+    },
+    fromIfcType: function (ifcType) {
+      switch (ifcType) {
+        case "TEMPERATURESENSOR":
+          return "TEMPERATURE";
+        case "HUMIDITYSENSOR":
+          return "HUMIDITY";
+        case "CO2SENSOR":
+          return "CO2";
+        case "LIGHTSENSOR":
+          return "LIGHT";
+        default:
+          return undefined;
+      }
     }
 
 },
