@@ -43,7 +43,7 @@ export default {
     SensorsControlButtons,
   },
   setup() {
-    const store = roomsStateStore()
+    const store = roomsStateStore();
 
     return {store}
   },
@@ -611,8 +611,9 @@ export default {
   },
 
   mounted() {
-    this.store.storeNewRoomColorByType("1B080","Sensor1",30)
-    console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
+    //TODO fix the problem  of storeNewRoomColorByType is not a function
+    //this.store.storeNewRoomColorByType("1B080","Sensor1",30)
+    //console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({ container });
     this.viewer = viewer;
