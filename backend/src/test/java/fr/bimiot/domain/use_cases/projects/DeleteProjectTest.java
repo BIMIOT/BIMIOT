@@ -1,5 +1,6 @@
 package fr.bimiot.domain.use_cases.projects;
 
+import fr.bimiot.dataproviders.database.ProjectJpaRepository;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.DeleteProject;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,6 +39,11 @@ public class DeleteProjectTest {
 
         //Then
         verify(projectFileProvider, times(1)).delete(PROJECT_NAME);
+    }
+
+    public void findProject_byGivenName() {
+
+
     }
 
 }

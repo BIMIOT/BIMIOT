@@ -5,6 +5,8 @@ import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.DeleteProject;
 import fr.bimiot.domain.use_cases.projects.CreateProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/bimiot/projects")
 public class ProjectController {
+    Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
     private final CreateProject createProject;
 
@@ -42,8 +45,14 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectName}")
-    public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
+    public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName){
         deleteProject.execute(projectName);
+
+        logger.trace("A TRACE Message");
+        logger.info("An INFO Message");
+        logger.warn("A WARN Message");
+        logger.error("An ERROR Message");
+
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
 }
