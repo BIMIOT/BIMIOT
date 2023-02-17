@@ -1,8 +1,6 @@
 package fr.bimiot.domain.use_cases;
 
-import fr.bimiot.domain.entities.Data;
-import fr.bimiot.domain.entities.Room;
-import fr.bimiot.domain.entities.WebSocketData;
+import fr.bimiot.domain.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -14,19 +12,38 @@ public class ManageData {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
     private List<Room> roomListDTO;
+    private TypesColors typesColors;
 
     public WebSocketData execute(Data data) {
+        var found = false;
+        String ifcID = null;
         for (var room : roomListDTO) {
+            var nb = 0;
+            var sum = 0f;
             for (var sensor : room.getSensors()) {
                 if (sensor.getSensorDataSetId().equals(data.getId())) {
-                    return new WebSocketData(sensor.getSensorIFCid(), data.getValue(), room.getRoomId(), data.getType());
+                    sensor.setValue(data.getValue());
+                    ifcID = sensor.getSensorIFCid();
+                    found = true;
+                }
+                if (SensorType.valueOf(data.getType()).equals(sensor.getType())) {
+                    nb++;
+                    sum+=Float.parseFloat(sensor.getValue());
                 }
             }
+            if (found) {
+                return new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
+                        typesColors.getColor(SensorType.valueOf(data.getType()), sum/nb));
+            }
         }
-        return new WebSocketData("0","0","0","0"); // TODO : Handle error when sensor not found
+        return new WebSocketData("0","0","0","0", "0"); // TODO : Handle error when sensor not found
     }
 
     public void setRoomListDTO(List<Room> roomListDTO) {
         this.roomListDTO = roomListDTO;
+    }
+
+    public void setTypesColors(TypesColors typesColors) {
+        this.typesColors = typesColors;
     }
 }

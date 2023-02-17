@@ -33,7 +33,7 @@ public class ManageSimulation {
         if (result == null) {
             throw new IllegalArgumentException("Simulation with name : " + simulation_name + " doesn't exist.");
         }
-        var simulation = Arrays.stream(result).filter(s -> !s.id().equals(simulation_name)).findFirst();
+        var simulation = Arrays.stream(result).filter(s -> s.name().equalsIgnoreCase(simulation_name)).findFirst();
         if (simulation.isEmpty()) {
             throw new IllegalArgumentException("Simulation with name : " + simulation_name + " doesn't exist.");
         }
