@@ -7,46 +7,41 @@
             Créer / Modifier un projet
           </v-card-title>
           <v-card-text>
-            <form novalidate>
-              <div>
-                <input
-                    id="projectName"
-                    type="text"
-                    placeholder="Project Name"
-                    v-model="projectName"/>
-              </div>
-              <div>
-                <label for="ifcFile">IFC File</label>
-                <input
-                    id="ifcFile"
-                    type="file"
-                    ref="ifcFile"
-                    @change="handleIFCFile">
-              </div>
-              <div>
-                <label for="datasetFile">Dataset File</label>
-                <input
-                    id="datasetFile"
-                    type="file"
-                    ref="datasetFile"
-                    @change="handleDatasetFile">
-              </div>
-              <div>
-                <v-btn
-                    color="success"
-                    dark
-                    v-on:click="saveDatas"
-                >
-                  Save
-                </v-btn>
-              </div>
-            </form>
+            <v-form v-model="valid" @submit.prevent="saveDatas">
+              <v-text-field
+                v-model="projectName"
+                label="Nom du projet"
+                @change="validateForm"
+                required
+              ></v-text-field>
+              <v-file-input
+                v-model="ifc"
+                label="Fichier IFC"
+                accept=".ifc"
+                clearable:true
+                @change="test"
+                required
+              ></v-file-input>
+              <v-file-input
+                v-model="dataset"
+                label="Dataset"
+                accept="application/json"
+                @change="validateForm"
+                required
+              ></v-file-input>
+              <v-btn 
+                color="success"
+                dark
+                type="submit" 
+                :disabled=!valid
+                > Sauvegarder </v-btn>
+            </v-form>
           </v-card-text>
           <v-card-actions>
-            <!-- add something here-->
+            <!-- add buttons here-->
           </v-card-actions>
         </v-card>
-        <div class="centered-component">
+        <!-- <div>
           <div>
             <v-snackbar
                 location="top"
@@ -57,11 +52,12 @@
               {{ errorMessage }}
             </v-snackbar>
           </div>
-        </div>
+        </div> -->
       </v-col>
     </v-row>
   </v-container>
 </template>
+
 <script>
 
 export default {
@@ -73,21 +69,25 @@ export default {
       dataset: null,
       snackbar: false,
       timeout: 5000,
-      errorMessage: null
+      errorMessage: null,
+      valid: false
     }
   },
   methods: {
-    handleIFCFile() {
-      this.ifc = this.$refs.ifcFile.files[0];
+    test(files) {
+      console.log(files);
     },
-    handleDatasetFile() {
-      this.dataset = this.$refs.datasetFile.files[0];
+    validateForm() {
+      // Check if all form fields are filled in
+      this.valid = !!this.projectName && !!this.ifc && !!this.dataset;
+      console.log(!!this.ifc);
     },
     async saveDatas() {
+      console.log(this.ifc);
       const formData = new FormData();
       formData.append('name', this.projectName);
-      formData.append('ifc', this.ifc);
-      formData.append('dataset', this.dataset);
+      formData.append('ifc', this.ifc[0]);
+      formData.append('dataset', this.dataset[0]);
       fetch('/api/bimiot/projects', {
         method: 'POST',
         body: formData
@@ -103,18 +103,15 @@ export default {
           .catch(error => {
             this.errorMessage = error.message;
             this.snackbar = true;
-          })
-
+          });
     }
+  },
+  mounted() {
+    this.validateForm();
   }
 }
 </script>
 
 <style scoped>
-.centered-component {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
+
 </style>
