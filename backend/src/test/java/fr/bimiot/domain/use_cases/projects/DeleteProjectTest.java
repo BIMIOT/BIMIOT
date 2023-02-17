@@ -41,9 +41,16 @@ public class DeleteProjectTest {
         verify(projectFileProvider, times(1)).delete(PROJECT_NAME);
     }
 
-    public void findProject_byGivenName() {
 
-
-    }
+//    @Test
+//    public void deleteProject_fromDB_byGivenProjectName() throws DomainException {
+//        //Given
+//
+//        //When
+//        deleteProject.execute(PROJECT_NAME);
+//
+//        //Then
+//        verify(projectDatabaseProvider, times(1)).delete(PROJECT_NAME);
+//    }
 
 }

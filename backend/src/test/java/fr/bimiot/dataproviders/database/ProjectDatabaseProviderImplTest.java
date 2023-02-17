@@ -66,18 +66,16 @@ class ProjectDatabaseProviderImplTest {
         projectJpaInput.setIfc(toBinary(IFC_FILE));
         projectJpaInput.setDataset(toBinary(DATASET_FILE));
 
-        ProjectJpa projectJpaOutput = new ProjectJpa();
-        projectJpaOutput.setId("projectId");
-        projectJpaOutput.setName(project.getName());
+        long toReturn = 1;
 
-        BDDMockito.doReturn(projectJpaOutput).when(projectJpaRepository).findByName(projectJpaInput.getName());
+        BDDMockito.doReturn(toReturn).when(projectJpaRepository).deleteByName(projectJpaInput.getName());
 
         //When
-        var result = projectJpaRepository.findByName("project1");
+        var result = projectJpaRepository.deleteByName("project1");
 
         //Then
         assertNotNull(result);
-        assertEquals("project1",result.getName());
+        assertEquals(1,result);
     }
 
     private Binary toBinary(MultipartFile file) throws IOException {
