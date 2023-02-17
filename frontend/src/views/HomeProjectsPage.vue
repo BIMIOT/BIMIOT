@@ -1,14 +1,13 @@
 <template>
   <v-container fluid>
-    <v-row dense>
+    <v-row dense align="center">
       <v-btn
           fab
           dark
+          prepend-icon="mdi-plus"
           color="indigo"
           @click="toCreateProjectPage">
-        <v-icon dark>
-          mdi-plus
-        </v-icon>
+        Ajouter un projet
       </v-btn>
       <v-col
           v-for="name in names"

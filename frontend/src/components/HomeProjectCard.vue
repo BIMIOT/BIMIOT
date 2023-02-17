@@ -3,19 +3,27 @@
     <v-card-title>
       {{ title }}
     </v-card-title>
-    <v-card-actions>
+    <v-card-actions class="justify-center">
       <v-btn
+        variant="outlined"
         color="green"
         @click="sendProjectName"
       >
         Simulation
       </v-btn>
+      <v-btn
+            variant="outlined"
+            color="blue"
+            @click="this.dialog = true"
+        >
+          Modifier
+        </v-btn>
         <v-btn
-            variant="text"
+            variant="outlined"
             color="red"
             @click="this.dialog = true"
         >
-          Supprime
+          Supprimer
         </v-btn>
     </v-card-actions>
   </v-card>
@@ -27,11 +35,11 @@
   >
     <v-card>
       <v-card-text>
-        Êtes-vous sûr de supprimer cet projet ?
+        Êtes-vous sûr de vouloir supprimer ce projet ?
       </v-card-text>
       <v-card-actions>
-        <v-btn color="success"  @click="dialog = false">Annuler</v-btn>
-        <v-btn color="blue"  @click="deleteProject">Confirmer</v-btn>
+        <v-btn color="red"  @click="deleteProject">Confirmer</v-btn>
+        <v-btn color="blue"  @click="dialog = false">Annuler</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
