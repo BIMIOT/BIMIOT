@@ -8,6 +8,6 @@ import java.io.IOException;
 public interface ProjectDatabaseProvider {
     String create(Project project) throws IOException;
 
-    void deleteByName(String projectName) throws DomainException;
+    void delete(String projectName);
 
 }

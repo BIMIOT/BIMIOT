@@ -17,8 +17,6 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/bimiot/projects")
 public class ProjectController {
-    Logger logger = LoggerFactory.getLogger(ProjectController.class);
-
     private final CreateProject createProject;
 
     private final DeleteProject deleteProject;
@@ -45,14 +43,8 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectName}")
-    public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName){
+    public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
         deleteProject.execute(projectName);
-
-        logger.trace("A TRACE Message");
-        logger.info("An INFO Message");
-        logger.warn("A WARN Message");
-        logger.error("An ERROR Message");
-
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
 }
