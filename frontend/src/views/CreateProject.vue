@@ -1,51 +1,66 @@
 <template>
-  <div>
-    <h3>Create/Update Project Form</h3>
-    <form novalidate>
-      <div>
-        <input
-            id="projectName"
-            type="text"
-            placeholder="Project Name"
-            v-model="projectName">
-      </div>
-      <div>
-        <label for="ifcFile">IFC File</label>
-        <input
-            id="ifcFile"
-            type="file"
-            ref="ifcFile"
-            @change="handleIFCFile">
-      </div>
-      <div>
-        <label for="datasetFile">Dataset File</label>
-        <input
-            id="datasetFile"
-            type="file"
-            ref="datasetFile"
-            @change="handleDatasetFile">
-      </div>
-      <div>
-        <v-btn
-            color="success"
-            dark
-            v-on:click="saveDatas"
-        >
-          Save
-        </v-btn>
-      </div>
-    </form>
-    <div>
-      <v-snackbar
-          location="top"
-          v-model="snackbar"
-          :timeout="timeout"
-          color="error"
-      >
-        {{ errorMessage }}
-      </v-snackbar>
-    </div>
-  </div>
+  <v-container fill-height fill-width>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-card class="text-center mx-auto">
+          <v-card-title>
+            Créer / Modifier un projet
+          </v-card-title>
+          <v-card-text>
+            <form novalidate>
+              <div>
+                <input
+                    id="projectName"
+                    type="text"
+                    placeholder="Project Name"
+                    v-model="projectName"/>
+              </div>
+              <div>
+                <label for="ifcFile">IFC File</label>
+                <input
+                    id="ifcFile"
+                    type="file"
+                    ref="ifcFile"
+                    @change="handleIFCFile">
+              </div>
+              <div>
+                <label for="datasetFile">Dataset File</label>
+                <input
+                    id="datasetFile"
+                    type="file"
+                    ref="datasetFile"
+                    @change="handleDatasetFile">
+              </div>
+              <div>
+                <v-btn
+                    color="success"
+                    dark
+                    v-on:click="saveDatas"
+                >
+                  Save
+                </v-btn>
+              </div>
+            </form>
+          </v-card-text>
+          <v-card-actions>
+            <!-- add something here-->
+          </v-card-actions>
+        </v-card>
+        <div class="centered-component">
+          <div>
+            <v-snackbar
+                location="top"
+                v-model="snackbar"
+                :timeout="timeout"
+                color="error"
+            >
+              {{ errorMessage }}
+            </v-snackbar>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 <script>
 
@@ -96,5 +111,10 @@ export default {
 </script>
 
 <style scoped>
-
+.centered-component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 </style>
