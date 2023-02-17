@@ -32,22 +32,23 @@
           <v-card-title class="text-h5">
             Liste des capteurs
           </v-card-title>
-  
+
           <v-card-text>
-            <ul>
-              <li v-for="(type,roomId) in room_list " :key="type.id">
+            <ul  v-for="(type,roomId) in room_list " :key="type.id">
+              <li v-if='roomId!=="roomId"'>
                 Pièce : {{ roomId }}
-                <ul>
-                  <li v-for="(sensor,type2) in room_list[roomId]" :key="sensor.id">
+                <ul v-for="(sensor,type2) in room_list[roomId]" :key="sensor.id">
+                  <li v-if='type2!=="type"'>
                     Type : {{ type2 }}
-                    <ul>
-                      <li v-for="sensor in room_list[roomId][type2]" :key="sensor.id">
-                        Capteur : {{ sensor.IFCid }} / {{ sensor.DataId }}, valeur : {{ sensor.value }}
+                    <ul v-for="sensor in room_list[roomId][type2]" :key="sensor.id">
+                      <li v-if="sensor.IFCid">
+                        Capteur : {{ sensor.IFCid }} / {{ sensor.DataId }}, valeur : {{ sensor.value === undefined ? "Aucune" : sensor.value }}
                       </li>
                     </ul>
                   </li>
                 </ul>
               </li>
+              <br>
             </ul>
           </v-card-text>
   

@@ -1,51 +1,63 @@
 <template>
-  <div>
-    <h3>Create/Update Project Form</h3>
-    <form novalidate>
-      <div>
-        <input
-            id="projectName"
-            type="text"
-            placeholder="Project Name"
-            v-model="projectName">
-      </div>
-      <div>
-        <label for="ifcFile">IFC File</label>
-        <input
-            id="ifcFile"
-            type="file"
-            ref="ifcFile"
-            @change="handleIFCFile">
-      </div>
-      <div>
-        <label for="datasetFile">Dataset File</label>
-        <input
-            id="datasetFile"
-            type="file"
-            ref="datasetFile"
-            @change="handleDatasetFile">
-      </div>
-      <div>
-        <v-btn
-            color="success"
-            dark
-            v-on:click="saveDatas"
-        >
-          Save
-        </v-btn>
-      </div>
-    </form>
-    <div>
-      <v-snackbar
-          v-model="snackbar"
-          :timeout="timeout"
-          color="error"
-      >
-        {{ errorMessage }}
-      </v-snackbar>
-    </div>
-  </div>
+  <v-container fill-height fill-width>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-card class="text-center mx-auto">
+          <v-card-title>
+            Créer / Modifier un projet
+          </v-card-title>
+          <v-card-text>
+            <v-form v-model="valid" @submit.prevent="saveDatas">
+              <v-text-field
+                v-model="projectName"
+                label="Nom du projet"
+                @change="validateForm"
+                required
+              ></v-text-field>
+              <v-file-input
+                v-model="ifc"
+                label="Fichier IFC"
+                accept=".ifc"
+                clearable:true
+                @change="test"
+                required
+              ></v-file-input>
+              <v-file-input
+                v-model="dataset"
+                label="Dataset"
+                accept="application/json"
+                @change="validateForm"
+                required
+              ></v-file-input>
+              <v-btn 
+                color="success"
+                dark
+                type="submit" 
+                :disabled=!valid
+                > Sauvegarder </v-btn>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <!-- add buttons here-->
+          </v-card-actions>
+        </v-card>
+        <!-- <div>
+          <div>
+            <v-snackbar
+                location="top"
+                v-model="snackbar"
+                :timeout="timeout"
+                color="error"
+            >
+              {{ errorMessage }}
+            </v-snackbar>
+          </div>
+        </div> -->
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
+
 <script>
 
 export default {
@@ -57,51 +69,45 @@ export default {
       dataset: null,
       snackbar: false,
       timeout: 5000,
-      errorMessage: null
+      errorMessage: null,
+      valid: false
     }
   },
   methods: {
-    handleIFCFile() {
-      this.ifc = this.$refs.ifcFile.files[0];
+    test(files) {
+      console.log(files);
     },
-    handleDatasetFile() {
-      this.dataset = this.$refs.datasetFile.files[0];
+    validateForm() {
+      // Check if all form fields are filled in
+      this.valid = !!this.projectName && !!this.ifc && !!this.dataset;
+      console.log(!!this.ifc);
     },
     async saveDatas() {
-      fetch('/api/bimiot/projects/folder', {
+      console.log(this.ifc);
+      const formData = new FormData();
+      formData.append('name', this.projectName);
+      formData.append('ifc', this.ifc[0]);
+      formData.append('dataset', this.dataset[0]);
+      fetch('/api/bimiot/projects', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          projectName: this.projectName,
-        }),
+        body: formData
       })
           .then((response) => response.json())
           .then((data) => {
             if (data.code === '400') {
+              console.log(data);
               throw new Error(data.message);
             }
-            const name = data.projectName;
-            const formData = new FormData();
-            formData.append('files', this.ifc);
-            formData.append('files', this.dataset);
-            fetch(`/api/bimiot/projects/files/${name}`, {
-              method: 'POST',
-              body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                  this.$router.push({name: 'home'});
-                })
+            this.$router.push({name: 'home'});
           })
-
           .catch(error => {
             this.errorMessage = error.message;
             this.snackbar = true;
-          })
-
+          });
     }
+  },
+  mounted() {
+    this.validateForm();
   }
 }
 </script>

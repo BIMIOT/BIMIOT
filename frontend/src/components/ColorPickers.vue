@@ -13,7 +13,7 @@
         <div>
           <p>Int List</p>
           <ul>
-            <li v-for="int in colors[selectedColorId].intList" :key="int">{{ int }}</li>
+            <li v-for="int in values" :key="int">{{ int }}</li>
           </ul>
           <div>
             <v-text-field v-model="newInt" placeholder="Add a new int"></v-text-field>
@@ -37,18 +37,23 @@ export default {
         this.$emit('colors',newValue);
       },
       deep: true
+    },
+    values: {
+      handler: function(newValue) {
+        this.$emit('values',newValue);
+      },
+      deep: true
     }
   },
   data() {
-
-
     return {
       colors: [
-        { id: 0, value: '#ff0000', intList: [] },
-        { id: 1, value: '#00ff00', intList: [] },
-        { id: 2, value: '#0000ff', intList: [] },
-        { id: 3, value: '#ffff00', intList: [] }
+        { id: 0, value: '#ff0000' },
+        { id: 1, value: '#00ff00' },
+        { id: 2, value: '#0000ff' },
+        { id: 3, value: '#ffff00' }
       ],
+      values: [3,10,20],
       selectedColorId: null,
       selectedTab: 0,
       newInt: ''
@@ -56,6 +61,7 @@ export default {
   },
   mounted() {
     this.$emit('colors',this.colors);
+    this.$emit('values',this.values);
     console.log("hello")
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
@@ -75,7 +81,7 @@ export default {
       }
     },
     addInt(id) {
-      this.colors[id].intList.push(Number(this.newInt))
+      this.values.push(Number(this.newInt))
       this.newInt = ''
     }
   }

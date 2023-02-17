@@ -1,8 +1,23 @@
-version: '2'
+version: '3.8'
 
 services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27020:27017"
+    volumes:
+      - data:/data
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
   bimiot:
     image: 'bimiot'
+    depends_on:
+      - mongodb
     build:
       context: .
     container_name: bimiot
@@ -12,3 +27,10 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./Projects:/Projects
+
+volumes:
+  data: {}
+
+networks:
+  default:
+    name: mongodb_network
