@@ -7,7 +7,7 @@
             Créer / Modifier un projet
           </v-card-title>
           <v-card-text>
-            <v-form v-model="valid" @submit.prevent="saveDatas">
+            <v-form @submit.prevent="saveDatas">
               <v-text-field
                 v-model="projectName"
                 label="Nom du projet"
@@ -19,7 +19,7 @@
                 label="Fichier IFC"
                 accept=".ifc"
                 clearable:true
-                @change="test"
+                @change="validateForm"
                 required
               ></v-file-input>
               <v-file-input
@@ -33,7 +33,7 @@
                 color="success"
                 dark
                 type="submit" 
-                :disabled=!valid
+                :disabled="!this.valid"
                 > Sauvegarder </v-btn>
             </v-form>
           </v-card-text>
@@ -79,7 +79,10 @@ export default {
     },
     validateForm() {
       // Check if all form fields are filled in
+      console.log("first valid: ",this.valid)
       this.valid = !!this.projectName && !!this.ifc && !!this.dataset;
+      console.log("valid: ",this.valid)
+      console.log("!valid: ",!this.valid)
       console.log(!!this.ifc);
     },
     async saveDatas() {
