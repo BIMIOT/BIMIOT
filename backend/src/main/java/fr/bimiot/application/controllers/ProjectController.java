@@ -1,12 +1,11 @@
 package fr.bimiot.application.controllers;
 
 import fr.bimiot.application.ProjectApi;
+import fr.bimiot.application.SensorsColorsApi;
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.DeleteProject;
 import fr.bimiot.domain.use_cases.projects.CreateProject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +45,10 @@ public class ProjectController {
     public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
         deleteProject.execute(projectName);
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
+    }
+
+    @PutMapping("/colors/{projectName}")
+    public ResponseEntity<SensorsColorsApi> updateProjectColors(@PathVariable("projectName") String projectName, @RequestBody SensorsColorsApi sensorsColorsApi){
+        return ResponseEntity.ok(sensorsColorsApi);
     }
 }

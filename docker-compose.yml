@@ -8,12 +8,6 @@ services:
       - "27020:27017"
     volumes:
       - data:/data
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    restart: always
-    ports:
-      - "8081:8081"
   bimiot:
     image: 'bimiot'
     depends_on:
