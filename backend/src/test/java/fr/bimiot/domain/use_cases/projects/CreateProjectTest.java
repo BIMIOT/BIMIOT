@@ -2,8 +2,10 @@ package fr.bimiot.domain.use_cases.projects;
 
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
+import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import fr.bimiot.domain.use_cases.providers.ProjectFileProvider;
+import fr.bimiot.fixtures.ProjectFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -30,7 +32,7 @@ class CreateProjectTest {
 
     @Test
     void execute_shouldReturnProjectId() throws IOException, DomainException {
-        Project project = new Project(null, "Project 1", null, null);
+        Project project = ProjectFixture.aProjectForCreation();
         BDDMockito.doReturn(PROJECT_ID).when(projectDatabaseProvider).create(project);
         String result = createProject.execute(project);
         assertNotNull(result);

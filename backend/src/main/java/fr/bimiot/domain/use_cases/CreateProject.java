@@ -1,4 +1,4 @@
-package fr.bimiot.domain.use_cases.projects;
+package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;

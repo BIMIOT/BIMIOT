@@ -7,6 +7,10 @@ public class Project{
     private String name;
     private MultipartFile ifc;
     private MultipartFile dataset;
+    private TypesColors typesColors;
+
+    public Project() {
+    }
 
     public Project(String id, String name, MultipartFile ifc, MultipartFile dataset) {
         this.id = id;
@@ -45,5 +49,13 @@ public class Project{
 
     public void setDataset(MultipartFile dataset) {
         this.dataset = dataset;
+    }
+
+    public TypesColors getTypesColors() {
+        return typesColors;
+    }
+
+    public void setTypesColors(TypesColors typesColors) {
+        this.typesColors = typesColors;
     }
 }

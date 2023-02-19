@@ -13,4 +13,5 @@ public class ProjectJpa {
     private String name;
     private Binary ifc;
     private Binary dataset;
+    private SensorsColorsJpa sensorsColorsJpa;
 }

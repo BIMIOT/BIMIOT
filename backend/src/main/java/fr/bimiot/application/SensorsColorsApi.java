@@ -2,9 +2,9 @@ package fr.bimiot.application;
 
 import lombok.Data;
 
-import java.util.HashMap;
+import java.util.Map;
 
 @Data
 public class SensorsColorsApi {
-    private HashMap<SensorTypeApi, SensorColorsApi> sensorsColors;
+    private Map<String, SensorColorsApi> sensorsColors;
 }
