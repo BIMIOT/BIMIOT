@@ -71,6 +71,5 @@
 #showSensors{
   position: relative;
   color: blue;
-  z-index: 10;
 }
 </style>

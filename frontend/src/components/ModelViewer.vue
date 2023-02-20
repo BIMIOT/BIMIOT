@@ -92,6 +92,11 @@ export default {
     return {store};
   },
   methods: {
+    moveComponentToSubDiv() {
+      const subContainer = document.getElementById('sub-container');
+      const childComponent =  document.getElementById('model');
+      subContainer.appendChild(childComponent);
+    },
     async loadFile(viewer) {
       const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProjectName}`, {
         responseType: 'blob',
@@ -411,6 +416,7 @@ export default {
   },
 
   mounted() {
+    this.moveComponentToSubDiv()
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
     this.viewer = viewer;
@@ -525,33 +531,28 @@ export default {
   position: relative;
   /*left: 10%;*/
   /*top: 10%;*/
-  z-index: 10;
 }
 
 #play {
   position: relative;
   color: blue;
   margin: 0.5em 0.5em 0.5em;
-  z-index: 10;
 }
 
 #stop {
   position: relative;
   color: blue;
   margin: 0.5em 0.5em 0.5em;
-  z-index: 10;
 }
 
 #properties-text {
   position: absolute;
   left: 0%;
   bottom: 0%;
-  z-index: 100;
 }
 
 #colorPickers {
   position: absolute !important;
-  z-index: 100 !important;
 }
 
 .v-application__wrap {
