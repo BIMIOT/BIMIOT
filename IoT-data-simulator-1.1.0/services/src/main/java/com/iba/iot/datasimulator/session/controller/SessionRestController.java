@@ -32,6 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import com.iba.iot.datasimulator.definition.controller.DatasetController;
 import com.iba.iot.datasimulator.definition.controller.DataDefinitionController;
 import com.iba.iot.datasimulator.definition.model.DataDefinitionCreateUpdateRequest;
+import com.iba.iot.datasimulator.definition.model.DataDefinition;
+import com.iba.iot.datasimulator.session.model.active.timer.DatasetTimer;
+import com.iba.iot.datasimulator.session.model.active.generator.SchemaBasedGenerator;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -78,21 +81,38 @@ public class SessionRestController {
 
     /* Annotation */
     @RequestMapping(value = "/create/{name}", method = RequestMethod.POST, consumes = {"multipart/form-data"})
-    public boolean createStepByStep(HttpServletRequest request, @PathVariable("name") @NotNull String name) throws IOException, InvalidKeyException, NoSuchAlgorithmException,
+    public Session createStepByStep(HttpServletRequest request, @PathVariable("name") @NotNull String name) throws IOException, InvalidKeyException, NoSuchAlgorithmException,
             XmlPullParserException, InvalidArgumentException, InternalException, NoResponseException, InvalidBucketNameException,
             InsufficientDataException, ErrorResponseException, RegionConflictException, InvalidPortException, InvalidEndpointException, InvalidObjectPrefixException, FileUploadException {
 
+        // Upload dataset
         Dataset dataset = datasetController.upload(request);
+
+        // Create definition
         Schema schema = datasetController.deriveSchema(dataset.getId().toString());
         DataDefinitionCreateUpdateRequest ddCreateUpdate = new DataDefinitionCreateUpdateRequest();
         ddCreateUpdate.setName(name);
         ddCreateUpdate.setDatasetId(dataset.getId().toString());
         ddCreateUpdate.setSchema(schema);
-        dataDefinitionController.create(ddCreateUpdate);
-        /*
-        Create session
-         */
-        return true;
+        DataDefinition dataDefinition = dataDefinitionController.create(ddCreateUpdate);
+
+        // Create session
+        SessionCreateUpdateRequest ssCreateUpdate = new SessionCreateUpdateRequest();
+        ssCreateUpdate.setName(name);
+        ssCreateUpdate.setDataDefinitionId(dataDefinition.getId().toString());
+        ssCreateUpdate.setIsReplayLooped(false);
+        ssCreateUpdate.setTargetSystemId("63efadc4d193183e33294ea1");
+
+        DatasetTimer timer = new DatasetTimer();
+        timer.setDatePosition("timestamp");
+        ssCreateUpdate.setTimer(timer);
+
+        SchemaBasedGenerator generator = new SchemaBasedGenerator();
+        Schema sessionSchema = dataDefinitionController.populateSchemaDefaultRules(dataDefinition.getId().toString());
+        generator.setSchema(sessionSchema);
+        ssCreateUpdate.setGenerator(generator);
+
+        return sessionManager.create(ssCreateUpdate);
     }
 
 
