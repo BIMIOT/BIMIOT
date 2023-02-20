@@ -35,6 +35,9 @@ import com.iba.iot.datasimulator.definition.model.DataDefinitionCreateUpdateRequ
 import com.iba.iot.datasimulator.definition.model.DataDefinition;
 import com.iba.iot.datasimulator.session.model.active.timer.DatasetTimer;
 import com.iba.iot.datasimulator.session.model.active.generator.SchemaBasedGenerator;
+import com.iba.iot.datasimulator.target.controller.TargetSystemController;
+import com.iba.iot.datasimulator.target.model.TargetSystem;
+import com.iba.iot.datasimulator.target.model.TargetSystemEntity;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -63,6 +66,9 @@ public class SessionRestController {
 
     @Autowired
     private DataDefinitionController dataDefinitionController;
+
+    @Autowired
+    private TargetSystemController targetSystemController;
 
     @RequestMapping(method = RequestMethod.POST)
     public Session create(@RequestBody @Valid @NotNull SessionCreateUpdateRequest sessionCreateUpdateRequest) {
@@ -101,7 +107,15 @@ public class SessionRestController {
         ssCreateUpdate.setName(name);
         ssCreateUpdate.setDataDefinitionId(dataDefinition.getId().toString());
         ssCreateUpdate.setIsReplayLooped(false);
-        ssCreateUpdate.setTargetSystemId("63efadc4d193183e33294ea1");
+
+        // Find target ID
+        for (TargetSystem target : targetSystemController.get()) {
+            if (target.getName().equalsIgnoreCase("bimiot")) {
+                TargetSystemEntity entity = (TargetSystemEntity) target;
+                ssCreateUpdate.setTargetSystemId(target.getId().toString());
+                break;
+            }
+        };
 
         DatasetTimer timer = new DatasetTimer();
         timer.setDatePosition("timestamp");
