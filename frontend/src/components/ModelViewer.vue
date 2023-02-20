@@ -1,6 +1,11 @@
 <template>
   <section>
-    <div>
+    <div class="container">
+      <v-app>
+        <v-app-bar color="grey" :elevation="2">      <v-btn icon>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn></v-app-bar>
+      </v-app>
       <input type="file" id="file-input"/>
       <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
@@ -567,5 +572,9 @@ export default {
 
 .v-application__wrap {
   min-height: auto;
+}
+
+.container {
+  margin-top: 80px;
 }
 </style>

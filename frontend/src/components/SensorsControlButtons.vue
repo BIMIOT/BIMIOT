@@ -1,6 +1,6 @@
 <template>
   <v-container fluid id="sensorsControl">
-    <v-row class="justify-end">
+  <div class="fill-content">
       <v-btn
           icon
           v-on:click="childMethod('TEMPERATURE')"
@@ -12,8 +12,8 @@
           mdi-home-thermometer
         </v-icon>
       </v-btn>
-    </v-row>
-    <v-row class="justify-end">
+  </div>
+    <div class="fill-content">
       <v-btn
           icon
           v-on:click="childMethod('HUMIDITY')"
@@ -27,8 +27,8 @@
           mdi-water-percent
         </v-icon>
       </v-btn>
-    </v-row>
-    <v-row class="justify-end">
+    </div>
+    <div class="fill-content">
       <v-btn
           icon
           v-on:click="childMethod('CO2')"
@@ -40,8 +40,8 @@
           mdi-molecule-co2
         </v-icon>
       </v-btn>
-    </v-row>
-    <v-row class="justify-end">
+    </div>
+    <div class="fill-content">
       <v-btn
           icon
           v-on:click="childMethod('LIGHT')"
@@ -53,7 +53,7 @@
           mdi-home-lightbulb
         </v-icon>
       </v-btn>
-    </v-row>
+    </div>
   </v-container>
 </template>
 
@@ -92,9 +92,25 @@ export default {
   justify-content: flex-end;
 }
 
-#sensorsControl{
-  position: relative;
-  color: blue;
+#sensorsControl {
+  position: fixed;
+  bottom: 0;
+  float: right;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: max-content;
+}
+
+
+.fill-content{
+  float: left;
+}
+
+
+div {
+  display : flex;
 }
 
 .active {
