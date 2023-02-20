@@ -4,21 +4,39 @@
     <v-app v-if="selectedColorId !== null" id="colorPicker">
       <v-tabs v-model="selectedTab">
         <v-tab>Color Picker</v-tab>
-        <v-tab>Int List</v-tab>
+        <v-tab>Interval List</v-tab>
       </v-tabs>
       <v-tab-item v-if="selectedTab === 0">
         <v-color-picker v-model="colors[selectedColorId].value" mode="hexa" @input="closeColorPicker"></v-color-picker>
       </v-tab-item>
       <v-tab-item v-if="selectedTab === 1">
         <div>
-          <p>Int List</p>
-          <ul>
-            <li v-for="int in values" :key="int">{{ int }}</li>
-          </ul>
-          <div>
-            <v-text-field v-model="newInt" placeholder="Add a new int"></v-text-field>
-            <v-btn @click="addInt(selectedColorId)">Add</v-btn>
-          </div>
+          <p>Modify the interval</p>
+          <v-text-field
+              v-model="values[0]"
+              :placeholder="values[0]"
+              type="number"
+          />
+          <v-text-field
+              v-model="values[1]"
+              :placeholder="values[1]"
+              type="number"
+          />
+          <v-text-field
+              v-model="values[2]"
+              :placeholder="values[2]"
+              type="number"
+          />
+          <v-text-field
+              v-model="values[3]"
+              :placeholder="values[3]"
+              type="number"
+          />
+
+<!--          <div>-->
+<!--            <v-text-field v-model="newInt" placeholder="Add a new int"></v-text-field>-->
+<!--            <v-btn @click="addInt(selectedColorId)">Add</v-btn>-->
+<!--          </div>-->
         </div>
       </v-tab-item>
     </v-app>
@@ -53,10 +71,9 @@ export default {
         { id: 2, value: '#0000ff' },
         { id: 3, value: '#ffff00' }
       ],
-      values: [3,10,20],
+      values: [0,3,10,20],
       selectedColorId: null,
       selectedTab: 0,
-      newInt: ''
     }
   },
   mounted() {
@@ -80,9 +97,9 @@ export default {
         this.selectedColorId = null
       }
     },
-    addInt(id) {
-      this.values.push(Number(this.newInt))
-      this.newInt = ''
+    updateInterval(index,value) {
+      this.values.splice(index,1,value)
+      console.log("!!!!values are: ",this.values)
     }
   }
 }

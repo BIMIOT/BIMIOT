@@ -11,6 +11,7 @@
             <div class="sensor-item">
               <v-icon icon="mdi-vuetify"></v-icon>
               <color-pickers v-on:colors="updateTemp" v-on:values="updateTempValues"/>
+
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'tint']" class="my-3" />
@@ -84,7 +85,10 @@ export default {
       this.luminosityValues = values;
     },
     saveData() {
-      console.log("colors: ", this.temperatureColors);
+      //TODO first icon doesn't display correctly
+      //console.log("colors: ", this.temperatureColors);
+
+      console.log("ints: ",this.temperatureValues)
       let config = {
         headers: {
           'Content-Type': 'application/json',
@@ -109,16 +113,16 @@ export default {
         typesColors["typesColor"]["CO2"]["colors"].push(this.co2Colors[i].value);
       }
 
-      console.log(JSON.stringify(typesColors));
-      axios.post("/api/bimiot/colors", JSON.stringify(typesColors), config)
-          .then((data) => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-
-      this.showModal = false
+      // console.log(JSON.stringify(typesColors));
+      // axios.post("/api/bimiot/colors", JSON.stringify(typesColors), config)
+      //     .then((data) => {
+      //       console.log('Success:', data);
+      //     })
+      //     .catch((error) => {
+      //       console.error('Error:', error);
+      //     });
+      //
+      // this.showModal = false
     }
   }
 }
