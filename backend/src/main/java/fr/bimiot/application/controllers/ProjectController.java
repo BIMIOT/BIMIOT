@@ -7,9 +7,12 @@ import fr.bimiot.domain.use_cases.DeleteProject;
 import fr.bimiot.domain.use_cases.projects.CreateProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,6 +31,18 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.set("File-Size", Long.toString(dataset.getSize()));
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", dataset.getResource());
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        restTemplate.postForEntity("http://host.docker.internal:8090/api/sessions/create/" + projectName, requestEntity, String.class);
+
         var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
         return ResponseEntity.ok(toProjectApi(projectResponse));
     }
