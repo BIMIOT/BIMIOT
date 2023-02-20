@@ -16,13 +16,16 @@
 
 <template>
     <v-row justify="center">
-      <v-btn id="showSensors"
-        color="primary"
+      <v-btn icon id="showSensors"
+        color='#0A0046'
         dark
         @click.stop="dialog = true"
       >
-        Lister les capteurs
+        <v-icon color="white">
+          mdi-access-point
+        </v-icon>
       </v-btn>
+
   
       <v-dialog
         v-model="dialog"
@@ -69,7 +72,8 @@
 
 <style>
 #showSensors{
-  position: relative;
+  bottom: 125px;
+  left: 35px;
   color: blue;
 }
 </style>

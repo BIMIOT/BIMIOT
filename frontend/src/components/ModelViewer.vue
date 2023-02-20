@@ -14,7 +14,9 @@
       <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <ColorPickerSensor id="colorPickers"/>
-      <SensorsList :room_list="room_list"/>
+      <div  style="position: absolute; bottom: 0; left: 0;">
+        <SensorsList :room_list="room_list"/>
+      </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
@@ -44,6 +46,7 @@ import {
 import SensorsList from './SensorsList.vue'
 
 import * as THREE from 'three';
+
 
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickers from "@/components/ColorPickers";
