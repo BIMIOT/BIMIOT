@@ -18,9 +18,9 @@
                 v-model="ifc"
                 label="Fichier IFC"
                 accept=".ifc"
-                clearable:true
                 @change="validateForm"
                 required
+                @click:clear="this.valid = false"
               ></v-file-input>
               <v-file-input
                 v-model="dataset"
@@ -28,6 +28,7 @@
                 accept="application/json"
                 @change="validateForm"
                 required
+                @click:clear="this.valid = false"
               ></v-file-input>
               <v-btn 
                 color="success"
@@ -70,7 +71,7 @@ export default {
       snackbar: false,
       timeout: 5000,
       errorMessage: null,
-      valid: false
+      valid: false,
     }
   },
   methods: {
@@ -79,14 +80,9 @@ export default {
     },
     validateForm() {
       // Check if all form fields are filled in
-      console.log("first valid: ",this.valid)
       this.valid = !!this.projectName && !!this.ifc && !!this.dataset;
-      console.log("valid: ",this.valid)
-      console.log("!valid: ",!this.valid)
-      console.log(!!this.ifc);
     },
     async saveDatas() {
-      console.log(this.ifc);
       const formData = new FormData();
       formData.append('name', this.projectName);
       formData.append('ifc', this.ifc[0]);
