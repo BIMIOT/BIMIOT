@@ -1,11 +1,22 @@
 <template>
   <section>
-    <div>
+    <div class="container">
+      <v-app>
+        <v-app-bar color="grey" :elevation="2">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <bim-iot-logo class="mx-3"></bim-iot-logo>
+            <span style="color: #0A0046; font-size: 150%">BimIot</span>
+          </div>
+        </v-app-bar>
+
+      </v-app>
       <input type="file" id="file-input"/>
       <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <ColorPickerSensor id="colorPickers"/>
-      <SensorsList :room_list="room_list"/>
+      <div  style="position: absolute; bottom: 0; left: 0;">
+        <SensorsList :room_list="room_list"/>
+      </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
@@ -35,6 +46,7 @@ import {
 import SensorsList from './SensorsList.vue'
 
 import * as THREE from 'three';
+
 
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickers from "@/components/ColorPickers";
@@ -567,5 +579,9 @@ export default {
 
 .v-application__wrap {
   min-height: auto;
+}
+
+.container {
+  margin-top: 80px;
 }
 </style>
