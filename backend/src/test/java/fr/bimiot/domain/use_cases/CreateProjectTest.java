@@ -1,8 +1,7 @@
-package fr.bimiot.domain.use_cases.projects;
+package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import fr.bimiot.domain.use_cases.providers.ProjectFileProvider;
 import fr.bimiot.fixtures.ProjectFixture;
@@ -15,7 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class CreateProjectTest {
@@ -32,7 +32,7 @@ class CreateProjectTest {
 
     @Test
     void execute_shouldReturnProjectId() throws IOException, DomainException {
-        Project project = ProjectFixture.aProjectForCreation();
+        Project project = ProjectFixture.aProjectWithoutSensorsAndWithoutId();
         BDDMockito.doReturn(PROJECT_ID).when(projectDatabaseProvider).create(project);
         String result = createProject.execute(project);
         assertNotNull(result);

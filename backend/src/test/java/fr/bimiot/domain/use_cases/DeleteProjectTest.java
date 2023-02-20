@@ -1,7 +1,6 @@
-package fr.bimiot.domain.use_cases.projects;
+package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.DeleteProject;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import fr.bimiot.domain.use_cases.providers.ProjectFileProvider;
 import org.junit.jupiter.api.Test;
