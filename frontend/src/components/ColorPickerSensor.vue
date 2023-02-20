@@ -110,7 +110,7 @@ export default {
       }
 
       console.log(JSON.stringify(typesColors));
-      axios.post("/api/bimiot/colors", JSON.stringify(typesColors), config)
+      axios.post("/api/bimiot/projects/colors/", JSON.stringify(typesColors), config)
           .then((data) => {
             console.log('Success:', data);
           })
