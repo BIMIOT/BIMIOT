@@ -9,20 +9,20 @@
         <v-card-text>
           <div class="sensor-container">
             <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'thermometer-half']"  class="my-3"/>
+              <font-awesome-icon :icon="['fas', 'thermometer-half']" class="my-3"/>
               <color-pickers v-on:colors="updateTemp" v-on:values="updateTempValues"/>
             </div>
             <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'tint']" class="my-3" />
-              <color-pickers v-on:colors="updateHum" v-on:values="updateHumValues" v-model="humidityColors"  />
+              <font-awesome-icon :icon="['fas', 'tint']" class="my-3"/>
+              <color-pickers v-on:colors="updateHum" v-on:values="updateHumValues" v-model="humidityColors"/>
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'lightbulb']" class="my-3"/>
-              <color-pickers v-on:colors="updateLight" v-on:values="updateLightValues" v-model="luminosityColors" />
+              <color-pickers v-on:colors="updateLight" v-on:values="updateLightValues" v-model="luminosityColors"/>
             </div>
             <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'leaf']" class="my-3" />
-              <color-pickers  v-on:colors="updateCo2" v-on:values="updateCo2Values" v-model="co2Colors" />
+              <font-awesome-icon :icon="['fas', 'leaf']" class="my-3"/>
+              <color-pickers v-on:colors="updateCo2" v-on:values="updateCo2Values" v-model="co2Colors"/>
             </div>
           </div>
         </v-card-text>
@@ -39,6 +39,8 @@
 
 import ColorPickers from "@/components/ColorPickers";
 import axios from 'axios';
+import {sensorsStore} from "@/store/sensors";
+import {projectStore} from "@/store/project";
 
 export default {
   name: "ColorPickerSensor",
@@ -58,6 +60,11 @@ export default {
       co2Values: []
     }
   },
+  setup() {
+    const projectStore1 = projectStore();
+    const sensorsStore1 = sensorsStore();
+    return {projectStore1, sensorsStore1};
+  },
   methods: {
     updateTemp(colors) {
       this.temperatureColors = colors;
@@ -72,7 +79,7 @@ export default {
       this.luminosityColors = colors;
     },
     updateTempValues(values) {
-      this.temperatureValues= values;
+      this.temperatureValues = values;
     },
     updateHumValues(values) {
       this.humidityValues = values;
@@ -91,26 +98,26 @@ export default {
         }
       }
 
-      let typesColors = {"typesColor":{}};
-      typesColors["typesColor"]["TEMPERATURE"] = {"colors":[],"values":this.temperatureValues};
+      let sensorsColors = {"sensorsColors": {}};
+      sensorsColors["sensorsColors"]["TEMPERATURE"] = {"colors": [], "values": this.temperatureValues};
       for (let i in this.temperatureColors) {
-        typesColors["typesColor"]["TEMPERATURE"]["colors"].push(this.temperatureColors[i].value);
+        sensorsColors["sensorsColors"]["TEMPERATURE"]["colors"].push(this.temperatureColors[i].value);
       }
-      typesColors["typesColor"]["HUMIDITY"] = {"colors":[],"values":this.humidityValues};
+      sensorsColors["sensorsColors"]["HUMIDITY"] = {"colors": [], "values": this.humidityValues};
       for (let i in this.humidityColors) {
-        typesColors["typesColor"]["HUMIDITY"]["colors"].push(this.humidityColors[i].value);
+        sensorsColors["sensorsColors"]["HUMIDITY"]["colors"].push(this.humidityColors[i].value);
       }
-      typesColors["typesColor"]["LIGHT"] = {"colors":[],"values":this.luminosityValues};
+      sensorsColors["sensorsColors"]["LIGHT"] = {"colors": [], "values": this.luminosityValues};
       for (let i in this.luminosityColors) {
-        typesColors["typesColor"]["LIGHT"]["colors"].push(this.luminosityColors[i].value);
+        sensorsColors["sensorsColors"]["LIGHT"]["colors"].push(this.luminosityColors[i].value);
       }
-      typesColors["typesColor"]["CO2"] = {"colors":[],"values":this.co2Values};
+      sensorsColors["sensorsColors"]["CO2"] = {"colors": [], "values": this.co2Values};
       for (let i in this.co2Colors) {
-        typesColors["typesColor"]["CO2"]["colors"].push(this.co2Colors[i].value);
+        sensorsColors["sensorsColors"]["CO2"]["colors"].push(this.co2Colors[i].value);
       }
 
-      console.log(JSON.stringify(typesColors));
-      axios.post("/api/bimiot/projects/colors/", JSON.stringify(typesColors), config)
+      console.log(JSON.stringify(sensorsColors));
+      axios.put(`/api/bimiot/projects/colors/${this.projectStore1.currentProjectName}`, JSON.stringify(sensorsColors), config)
           .then((data) => {
             console.log('Success:', data);
           })
