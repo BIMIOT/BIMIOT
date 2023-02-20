@@ -34,10 +34,11 @@ public class ApiCaller {
         body.add("file", new FileSystemResource(filePath));
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:8083/v1/datasets/upload/", requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:8090/api/sessions/create/Auto test", requestEntity, String.class);
 
         String dataset = responseEntity.getBody();
         System.out.println("Dataset created. Response: " + dataset);
+
         return dataset;
     }
 }

@@ -20,6 +20,18 @@ import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionsStat
 import com.iba.iot.datasimulator.session.model.active.command.ActiveSessionManagementCommand;
 import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionManagementCommandResultMessage;
 import com.iba.iot.datasimulator.session.model.active.command.SessionManagementCommand;
+import com.iba.iot.datasimulator.definition.model.Dataset;
+import com.iba.iot.datasimulator.common.model.schema.Schema;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import org.xmlpull.v1.XmlPullParserException;
+import io.minio.errors.*;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import com.iba.iot.datasimulator.definition.controller.DatasetController;
+import com.iba.iot.datasimulator.definition.controller.DataDefinitionController;
+import com.iba.iot.datasimulator.definition.model.DataDefinitionCreateUpdateRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -43,6 +55,12 @@ public class SessionRestController {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private DatasetController datasetController;
+
+    @Autowired
+    private DataDefinitionController dataDefinitionController;
+
     @RequestMapping(method = RequestMethod.POST)
     public Session create(@RequestBody @Valid @NotNull SessionCreateUpdateRequest sessionCreateUpdateRequest) {
 
@@ -64,9 +82,14 @@ public class SessionRestController {
             XmlPullParserException, InvalidArgumentException, InternalException, NoResponseException, InvalidBucketNameException,
             InsufficientDataException, ErrorResponseException, RegionConflictException, InvalidPortException, InvalidEndpointException, InvalidObjectPrefixException, FileUploadException {
 
+        Dataset dataset = datasetController.upload(request);
+        Schema schema = datasetController.deriveSchema(dataset.getId().toString());
+        DataDefinitionCreateUpdateRequest ddCreateUpdate = new DataDefinitionCreateUpdateRequest();
+        ddCreateUpdate.setName(name);
+        ddCreateUpdate.setDatasetId(dataset.getId().toString());
+        ddCreateUpdate.setSchema(schema);
+        dataDefinitionController.create(ddCreateUpdate);
         /*
-        Upload file
-        Create definition
         Create session
          */
         return true;
