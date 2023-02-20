@@ -26,6 +26,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: "ColorPickers",
   props: {
@@ -60,6 +62,7 @@ export default {
     }
   },
   mounted() {
+
     this.$emit('colors',this.colors);
     this.$emit('values',this.values);
     console.log("hello")

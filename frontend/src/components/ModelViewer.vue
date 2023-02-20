@@ -2,9 +2,13 @@
   <section>
     <div class="container">
       <v-app>
-        <v-app-bar color="grey" :elevation="2">      <v-btn icon>
-          <v-icon>mdi-heart</v-icon>
-        </v-btn></v-app-bar>
+        <v-app-bar color="grey" :elevation="2">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <bim-iot-logo class="mx-3"></bim-iot-logo>
+            <span style="color: #0A0046; font-size: 150%">BimIot</span>
+          </div>
+        </v-app-bar>
+
       </v-app>
       <input type="file" id="file-input"/>
       <v-btn id="play" v-on:click="start()">Play</v-btn>
