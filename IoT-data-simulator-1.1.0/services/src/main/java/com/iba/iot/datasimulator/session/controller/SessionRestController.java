@@ -57,6 +57,22 @@ public class SessionRestController {
     }
 
     // --- Methods to connect to BIMIOT app --- //
+
+    /* Annotation */
+    @RequestMapping(value = "/create/{name}", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public boolean createStepByStep(HttpServletRequest request, @PathVariable("name") @NotNull String name) throws IOException, InvalidKeyException, NoSuchAlgorithmException,
+            XmlPullParserException, InvalidArgumentException, InternalException, NoResponseException, InvalidBucketNameException,
+            InsufficientDataException, ErrorResponseException, RegionConflictException, InvalidPortException, InvalidEndpointException, InvalidObjectPrefixException, FileUploadException {
+
+        /*
+        Upload file
+        Create definition
+        Create session
+         */
+        return true;
+    }
+
+
     @RequestMapping(value = "/getStatus/{sessionId}", method = RequestMethod.GET)
     public ActiveSessionsStatusCommandResultMessage getStatuses(@PathVariable("sessionId") @NotNull String sessionId) throws Exception {
 
