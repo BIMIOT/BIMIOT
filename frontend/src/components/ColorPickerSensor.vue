@@ -9,7 +9,7 @@
         <v-card-text>
           <div class="sensor-container">
             <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'thermometer-half']"  class="my-3"/>
+              <v-icon icon="mdi-vuetify"></v-icon>
               <color-pickers v-on:colors="updateTemp" v-on:values="updateTempValues"/>
             </div>
             <div class="sensor-item">
