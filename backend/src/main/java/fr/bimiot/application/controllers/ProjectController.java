@@ -1,11 +1,15 @@
 package fr.bimiot.application.controllers;
 
-import fr.bimiot.application.*;
+import fr.bimiot.application.dtos.ProjectApi;
+import fr.bimiot.application.dtos.SensorColorApi;
+import fr.bimiot.application.dtos.SensorColorApiMap;
+import fr.bimiot.application.dtos.SensorTypeApi;
 import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.*;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.DeleteProject;
+import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.domain.use_cases.UpdateSensorsColors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +25,20 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/bimiot/projects")
 public class ProjectController {
     private final CreateProject createProject;
-
     private final DeleteProject deleteProject;
+    private final ManageSimulation manageSimulation;
     private final UpdateSensorsColors updateSensorsColors;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, UpdateSensorsColors updateSensorsColors) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, UpdateSensorsColors updateSensorsColors) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
+        this.manageSimulation = manageSimulation;
         this.updateSensorsColors = updateSensorsColors;
     }
 
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
+        manageSimulation.executeCreate(projectName, dataset);
         var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
         return ResponseEntity.ok(toProjectApi(projectResponse));
     }
@@ -49,6 +55,7 @@ public class ProjectController {
 
     @DeleteMapping("/{projectName}")
     public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
+        manageSimulation.executeDelete(projectName);
         deleteProject.execute(projectName);
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
@@ -66,17 +73,16 @@ public class ProjectController {
         return projectApi;
     }
 
-    private Map<String, List<SensorColorApi>> toSensorColorApiMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
+    private Map<SensorTypeApi, List<SensorColorApi>> toSensorColorApiMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
         return sensorTypeListMap.entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().name(), entry -> toSensorColorApiList(entry.getValue())));
+                .collect(Collectors.toMap(entry -> SensorTypeApi.valueOf(entry.getKey().name()), entry -> toSensorColorApiList(entry.getValue())));
     }
 
     private List<SensorColorApi> toSensorColorApiList(List<SensorColor> sensorColors) {
         return sensorColors.stream()
                 .map(sensorColor -> new SensorColorApi(
                         sensorColor.colorCode(),
-                        sensorColor.rangeStart(),
-                        sensorColor.rangeEnd()))
+                        sensorColor.threshold()))
                 .collect(Collectors.toList());
     }
 
@@ -89,8 +95,7 @@ public class ProjectController {
         return sensorColorApis.stream()
                 .map(sensorColorApi -> new SensorColor(
                         sensorColorApi.getColorCode(),
-                        sensorColorApi.getRangeStart(),
-                        sensorColorApi.getRangeEnd()))
+                        sensorColorApi.getThreshold() == null ? Float.POSITIVE_INFINITY : sensorColorApi.getThreshold()))
                 .collect(Collectors.toList());
     }
 }

@@ -16,5 +16,5 @@ public class ProjectJpa {
     private String name;
     private Binary ifc;
     private Binary dataset;
-    private Map<String, List<SensorColorJpa>> sensorColorJpaMap;
+    private Map<SensorTypeJpa, List<SensorColorJpa>> sensorColorJpaMap;
 }

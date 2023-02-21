@@ -105,18 +105,18 @@ export default {
 
 
       console.log(" sensorColors: ", JSON.stringify(sensorsColors));
+      console.log(" sensorColors: ",JSON.stringify(sensorsColors));
 
-      // console.log(JSON.stringify(sensorsColors));
-      // axios.put(`/api/bimiot/projects/colors/${this.projectStore1.currentProjectName}`, JSON.stringify(sensorsColors), config)
-      //     .then((data) => {
-      //       console.log('Success:', data);
-      //     })
-      //     .catch((error) => {
-      //       console.error('Error:', error);
-      //     });
-      //
-      // this.showModal = false
+      console.log(JSON.stringify(sensorsColors));
+      axios.put(`/api/bimiot/projects/colors/${this.projectStore1.currentProjectName}`, JSON.stringify(sensorsColors), config)
+          .then((data) => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
 
+      this.showModal = false
     }
   }
 }

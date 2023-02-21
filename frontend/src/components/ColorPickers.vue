@@ -42,10 +42,10 @@ export default {
   props: {},
   watch: {
     colorToValue: {
-      handler: function (newValue) {
+      handler:function (newValue){
         this.$emit('colorToValue', newValue)
       },
-      deep: true
+      deep:true
     }
   },
   data() {
@@ -74,7 +74,9 @@ export default {
   },
   mounted() {
     this.$emit('colorToValue', this.colorToValue)
+    this.$emit('colorToValue',this.colorToValue)
     console.log("colorToValue", this.colorToValue)
+    console.log("colorToValue",this.colorToValue)
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
   beforeUnmount() {

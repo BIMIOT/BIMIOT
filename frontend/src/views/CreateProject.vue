@@ -2,47 +2,49 @@
   <v-container fill-height fill-width>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card class="text-center mx-auto">
-          <v-card-title>
-            Créer / Modifier un projet
-          </v-card-title>
-          <v-card-text>
-            <v-form @submit.prevent="saveDatas">
-              <v-text-field
-                v-model="projectName"
-                label="Nom du projet"
-                @change="validateForm"
-                required
-              ></v-text-field>
-              <v-file-input
-                v-model="ifc"
-                label="Fichier IFC"
-                accept=".ifc"
-                @change="validateForm"
-                required
-                @click:clear="this.valid = false"
-              ></v-file-input>
-              <v-file-input
-                v-model="dataset"
-                label="Dataset"
-                accept="application/json"
-                @change="validateForm"
-                required
-                @click:clear="this.valid = false"
-              ></v-file-input>
-              <v-btn 
-                color="success"
-                dark
-                type="submit" 
-                :disabled="!this.valid"
-                > Sauvegarder </v-btn>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <!-- add buttons here-->
-          </v-card-actions>
-        </v-card>
-        <!-- <div>
+        <v-form @submit.prevent="saveDatas">
+          <v-card class="text-center mx-auto">
+            <v-card-title>
+              Créer un projet
+            </v-card-title>
+            <v-card-text>
+                <v-text-field
+                  v-model="projectName"
+                  label="Nom du projet"
+                  @change="validateForm"
+                  required
+                ></v-text-field>
+                <v-file-input
+                  v-model="ifc"
+                  label="Fichier IFC"
+                  accept=".ifc"
+                  @change="validateForm"
+                  required
+                  @click:clear="this.valid = false"
+                ></v-file-input>
+                <v-file-input
+                  v-model="dataset"
+                  label="Dataset"
+                  accept="application/json"
+                  @change="validateForm"
+                  required
+                  @click:clear="this.valid = false"
+                ></v-file-input>
+
+            </v-card-text>
+            <v-card-actions class="justify-center">
+              <v-btn
+                  variant="elevated"
+                  :loading="loading"
+                  :disabled="!this.valid || loading"
+                  color="success"
+                  dark
+                  type="submit"
+              > Créer </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+        <div>
           <div>
             <v-snackbar
                 location="top"
@@ -53,7 +55,7 @@
               {{ errorMessage }}
             </v-snackbar>
           </div>
-        </div> -->
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -72,17 +74,16 @@ export default {
       timeout: 5000,
       errorMessage: null,
       valid: false,
+      loading: false
     }
   },
   methods: {
-    test(files) {
-      console.log(files);
-    },
     validateForm() {
       // Check if all form fields are filled in
       this.valid = !!this.projectName && !!this.ifc && !!this.dataset;
     },
     async saveDatas() {
+      this.loading = true;
       const formData = new FormData();
       formData.append('name', this.projectName);
       formData.append('ifc', this.ifc[0]);

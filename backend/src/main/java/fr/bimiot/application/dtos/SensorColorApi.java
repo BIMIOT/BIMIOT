@@ -1,11 +1,11 @@
-package fr.bimiot.dataproviders.database;
+package fr.bimiot.application.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SensorColorJpa {
+public class SensorColorApi {
     private String colorCode;
-    private float threshold;
+    private Float threshold;
 }

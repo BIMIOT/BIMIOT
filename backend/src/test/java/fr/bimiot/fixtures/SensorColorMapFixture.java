@@ -16,10 +16,10 @@ public class SensorColorMapFixture {
 
     private static List<SensorColor> aCompletePaletteSensorColor() {
         var list = new ArrayList<SensorColor>();
-        list.add(new SensorColor("#8ecae6", Float.NEGATIVE_INFINITY, 10f));
-        list.add(new SensorColor("#219ebc", 10f, 20f));
-        list.add(new SensorColor("#023047", 20f, 30f));
-        list.add(new SensorColor("#ffb703", 30f, Float.POSITIVE_INFINITY));
+        list.add(new SensorColor("#8ecae6", 10f));
+        list.add(new SensorColor("#219ebc", 20f));
+        list.add(new SensorColor("#023047", 30f));
+        list.add(new SensorColor("#ffb703", Float.POSITIVE_INFINITY));
         return list;
     }
 }

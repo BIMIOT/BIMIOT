@@ -49,8 +49,7 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         return sensorColors.stream()
                 .map(sensorColor -> new SensorColorJpa(
                         sensorColor.colorCode(),
-                        sensorColor.rangeStart(),
-                        sensorColor.rangeEnd()
+                        sensorColor.threshold()
                 )).collect(Collectors.toList());
     }
 
@@ -62,22 +61,21 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         return project;
     }
 
-    private Map<String, List<SensorColorJpa>> toSensorColorJpaMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
+    private Map<SensorTypeJpa, List<SensorColorJpa>> toSensorColorJpaMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
         return sensorTypeListMap.entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().name(), entry -> toSensorColorJpaList(entry.getValue())));
+                .collect(Collectors.toMap(entry -> SensorTypeJpa.valueOf(entry.getKey().name()), entry -> toSensorColorJpaList(entry.getValue())));
     }
 
-    private Map<SensorType, List<SensorColor>> toSensorColorMap(Map<String, List<SensorColorJpa>> sensorColorJpaMap) {
+    private Map<SensorType, List<SensorColor>> toSensorColorMap(Map<SensorTypeJpa, List<SensorColorJpa>> sensorColorJpaMap) {
         return sensorColorJpaMap.entrySet().stream()
-                .collect(Collectors.toMap(entry -> SensorType.valueOf(entry.getKey()), entry -> toSensorColorList(entry.getValue())));
+                .collect(Collectors.toMap(entry -> SensorType.valueOf(entry.getKey().name()), entry -> toSensorColorList(entry.getValue())));
     }
 
     private List<SensorColor> toSensorColorList(List<SensorColorJpa> sensorColorJpas) {
         return sensorColorJpas.stream()
                 .map(sensorColorJpa -> new SensorColor(
                         sensorColorJpa.getColorCode(),
-                        sensorColorJpa.getRangeStart(),
-                        sensorColorJpa.getRangeEnd())).collect(Collectors.toList());
+                        sensorColorJpa.getThreshold())).collect(Collectors.toList());
     }
 
     private ProjectJpa toProjectJpa(Project project) throws IOException {

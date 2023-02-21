@@ -69,11 +69,4 @@ public class BimIotController {
         manageData.setRoomListDTO(roomListDTO);
         return 0;
     }
-
-    @PostMapping("/colors")
-    public int createColors(@RequestBody TypesColors typesColors) {
-        System.out.println(typesColors);
-        manageData.setTypesColors(typesColors);
-        return 0;
-    }
 }
