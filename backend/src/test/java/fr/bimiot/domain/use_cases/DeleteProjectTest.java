@@ -1,8 +1,6 @@
-package fr.bimiot.domain.use_cases.projects;
+package fr.bimiot.domain.use_cases;
 
-import fr.bimiot.dataproviders.database.ProjectJpaRepository;
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.DeleteProject;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import fr.bimiot.domain.use_cases.providers.ProjectFileProvider;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,25 +29,12 @@ public class DeleteProjectTest {
 
     @Test
     public void deleteProject_byGivenProjectName() throws DomainException {
-        //Given
-
         //When
         deleteProject.execute(PROJECT_NAME);
 
         //Then
         verify(projectFileProvider, times(1)).delete(PROJECT_NAME);
+        verify(projectDatabaseProvider, times(1)).delete(PROJECT_NAME);
     }
-
-
-//    @Test
-//    public void deleteProject_fromDB_byGivenProjectName() throws DomainException {
-//        //Given
-//
-//        //When
-//        deleteProject.execute(PROJECT_NAME);
-//
-//        //Then
-//        verify(projectDatabaseProvider, times(1)).delete(PROJECT_NAME);
-//    }
 
 }

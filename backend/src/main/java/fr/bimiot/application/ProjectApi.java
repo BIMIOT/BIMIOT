@@ -1,13 +1,13 @@
 package fr.bimiot.application;
 
+import lombok.Data;
+
+import java.util.List;
+import java.util.Map;
+
+@Data
 public class ProjectApi {
     private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String name;
+    private Map<String, List<SensorColorApi>> sensorsColorsApi;
 }

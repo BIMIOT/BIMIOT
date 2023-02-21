@@ -2,7 +2,7 @@
   <div>
     <div class="color-block" v-for="(color,index) in colorToValue"
          :key="index"
-         :style="{ background: color.colorHex }"
+         :style="{ background: color.colorCode }"
          @click="openColorPicker(index)">
 
     </div>
@@ -12,33 +12,20 @@
         <v-tab>Interval List</v-tab>
       </v-tabs>
       <v-tab-item v-if="selectedTab === 0">
-        <v-color-picker v-model="colorToValue[selectedColorIndex].colorHex" mode="hexa" @input="closeColorPicker"></v-color-picker>
+        <v-color-picker v-model="colorToValue[selectedColorIndex].colorCode" mode="hexa" @input="closeColorPicker"></v-color-picker>
       </v-tab-item>
       <v-tab-item v-if="selectedTab === 1">
         <div>
           <p>Modify the interval</p>
-<!--          <v-text-field-->
-<!--              v-model="colorToValue[0].end"-->
-<!--              :placeholder="colorToValue[0].end"-->
-<!--              type="number"-->
-<!--          />-->
-<!--          <v-text-field-->
-<!--              v-model="colorToValue[1].end"-->
-<!--              :placeholder="colorToValue[1].end"-->
-<!--              type="number"-->
-<!--          />-->
-<!--          <v-text-field-->
-<!--              v-model="colorToValue[2].end"-->
-<!--              :placeholder="colorToValue[2].end"-->
-<!--              type="number"-->
-<!--          />-->
 
           <v-text-field
               v-for="(value,index) in colorToValue.slice(0,3)"
               :key="index"
-              v-model="value.end"
-              :placeholder="value.end"
+              v-model="value.threshold"
+              :placeholder="value.threshold"
               type="number"
+              :rules= "[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
+              validate-on="input"
           />
 
 <!--          <div>-->
@@ -60,18 +47,6 @@ export default {
     datas: []
   },
   watch: {
-    colors: {
-      handler: function(newValue) {
-        this.$emit('colors',newValue);
-      },
-      deep: true
-    },
-    values: {
-      handler: function(newValue) {
-        this.$emit('values',newValue);
-      },
-      deep: true
-    },
     colorToValue: {
       handler:function (newValue){
         this.$emit('colorToValue',newValue)
@@ -81,35 +56,24 @@ export default {
   },
   data() {
     return {
-      // colors: [
-      //   { id: 0, value: '#ff0000' },
-      //   { id: 1, value: '#00ff00' },
-      //   { id: 2, value: '#0000ff' },
-      //   { id: 3, value: '#ffff00' }
-      // ],
-      // values: [0,3,10,20],
       selectedColorIndex: null,
       selectedTab: 0,
       colorToValue:[
         {
-          colorHex:'#ff0000',
-          start: null,
-          end: 3
+          colorCode:'#ff0000',
+          threshold: 3
         },
         {
-          colorHex:'#00ff00',
-          start: 3,
-          end: 10
+          colorCode:'#00ff00',
+          threshold: 10
         },
         {
-          colorHex:'#0000ff',
-          start: 10,
-          end: 20
+          colorCode:'#0000ff',
+          threshold: 20
         },
         {
-          colorHex:'#ffff00',
-          start: 20,
-          end: null
+          colorCode:'#ffff00',
+          threshold: Infinity
         }
       ]
     }
