@@ -328,7 +328,7 @@ export default {
         if (relIDs.type === "IFCSPACE" && relIDs.children[component].type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           const sensor = await manager.getItemProperties(modelID, relIDs.children[component].expressID);
           const type_name = this.fromIfcType(this.sensor_types[sensor.ObjectType.value]);
-          if (this.room_list[relIDs.expressID][type_name] == undefined) {
+          if (this.room_list[relIDs.expressID][type_name] === undefined) {
             this.room_list[relIDs.expressID][type_name] = [];
           }
           this.room_list[relIDs.expressID][type_name].push({IFCid:relIDs.children[component].expressID,DataId:sensor.ObjectType.value.split(":")[0],value:undefined});
@@ -373,7 +373,7 @@ export default {
   },
   created: function () {
     let client = new StompJs.Client({
-      brokerURL: 'ws://localhost:80/sensors-data-endpoint',
+      brokerURL: 'ws://localhost:8080/sensors-data-endpoint',
       debug: function (str) {
         //console.log(str);
       },
@@ -434,7 +434,7 @@ export default {
   },
 
   mounted() {
-    this.moveComponentToSubDiv()
+    this.moveComponentToSubDiv();
     //TODO fix the problem  of storeNewRoomColorByType is not a function
     //this.store.storeNewRoomColorByType("1B080","Sensor1",30)
     //console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
@@ -450,6 +450,8 @@ export default {
     });
 
     this.loadFile(viewer);
+    window.onmousemove = () => {this.viewer.IFC.selector.prePickIfcItem()};
+
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -530,6 +532,7 @@ export default {
           scene.add(floors);
           scene.add(sensors);
           scene.add(walls);
+          scene.add(sp);
 
 
         },
