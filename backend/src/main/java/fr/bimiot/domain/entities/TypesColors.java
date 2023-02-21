@@ -1,10 +1,11 @@
 package fr.bimiot.domain.entities;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class TypesColors {
-    private HashMap<SensorType, TypeColor> typesColor;
+    private Map<SensorType, TypeColor> typesColor;
 
     public TypesColors() {
     }
@@ -13,7 +14,11 @@ public class TypesColors {
         this.typesColor = typesColor;
     }
 
-    public void setTypesColor(HashMap<SensorType, TypeColor> typesColor) {
+    public Map<SensorType, TypeColor> getTypesColor() {
+        return typesColor;
+    }
+
+    public void setTypesColor(Map<SensorType, TypeColor> typesColor) {
         this.typesColor = typesColor;
     }
 

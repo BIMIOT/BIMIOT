@@ -1,4 +1,4 @@
-package fr.bimiot.domain.use_cases.projects;
+package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import org.springframework.stereotype.Component;
