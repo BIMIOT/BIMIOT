@@ -170,17 +170,19 @@ public class SessionRestController {
         return message;
     }
 
+    @RequestMapping(value = "/{sessionId}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("sessionId") @NotNull String sessionId) {
+        Session session = get(sessionId);
+        sessionManager.remove(sessionId); // Only this before
+        dataDefinitionController.delete(session.getDataDefinition().getId().toString());
+        datasetController.remove(session.getDataDefinition().getDataset().getId().toString());
+    }
+
     // --- //
 
     @RequestMapping(value = "/{sessionId}", method = RequestMethod.GET)
     public Session get(@PathVariable("sessionId") @NotNull String sessionId) {
-
         return sessionManager.get(sessionId);
-    }
-
-    @RequestMapping(value = "/{sessionId}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("sessionId") @NotNull String sessionId) {
-        sessionManager.remove(sessionId);
     }
 
     @RequestMapping(value = "/{sessionId}", method = RequestMethod.PUT)
