@@ -1,15 +1,16 @@
 package fr.bimiot.fixtures;
 
 import fr.bimiot.dataproviders.database.SensorColorJpa;
+import fr.bimiot.dataproviders.database.SensorTypeJpa;
 import fr.bimiot.domain.entities.SensorType;
 
 import java.util.*;
 
 public class SensorColorJpaMapFixture {
-    public static Map<String, List<SensorColorJpa>> sensorTypeListMapDataProviders() {
-        var map = new HashMap<String, List<SensorColorJpa>>();
+    public static Map<SensorTypeJpa, List<SensorColorJpa>> sensorTypeListMapDataProviders() {
+        var map = new HashMap<SensorTypeJpa, List<SensorColorJpa>>();
         Arrays.stream(SensorType.values())
-                .forEach(sensorType -> map.put(sensorType.name(), aCompletePaletteSensorColor()));
+                .forEach(sensorType -> map.put(SensorTypeJpa.valueOf(sensorType.name()), aCompletePaletteSensorColor()));
         return map;
     }
 

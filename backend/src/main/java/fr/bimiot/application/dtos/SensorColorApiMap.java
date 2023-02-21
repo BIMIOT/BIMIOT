@@ -1,4 +1,4 @@
-package fr.bimiot.application;
+package fr.bimiot.application.dtos;
 
 import lombok.Data;
 

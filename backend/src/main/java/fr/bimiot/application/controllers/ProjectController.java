@@ -1,6 +1,9 @@
 package fr.bimiot.application.controllers;
 
-import fr.bimiot.application.*;
+import fr.bimiot.application.dtos.ProjectApi;
+import fr.bimiot.application.dtos.SensorColorApi;
+import fr.bimiot.application.dtos.SensorColorApiMap;
+import fr.bimiot.application.dtos.SensorTypeApi;
 import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.*;
 import fr.bimiot.domain.exception.DomainException;
@@ -66,9 +69,9 @@ public class ProjectController {
         return projectApi;
     }
 
-    private Map<String, List<SensorColorApi>> toSensorColorApiMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
+    private Map<SensorTypeApi, List<SensorColorApi>> toSensorColorApiMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
         return sensorTypeListMap.entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().name(), entry -> toSensorColorApiList(entry.getValue())));
+                .collect(Collectors.toMap(entry -> SensorTypeApi.valueOf(entry.getKey().name()), entry -> toSensorColorApiList(entry.getValue())));
     }
 
     private List<SensorColorApi> toSensorColorApiList(List<SensorColor> sensorColors) {

@@ -1,4 +1,4 @@
-package fr.bimiot.application;
+package fr.bimiot.application.dtos;
 
 import lombok.Data;
 
@@ -9,5 +9,5 @@ import java.util.Map;
 public class ProjectApi {
     private String id;
     private String name;
-    private Map<String, List<SensorColorApi>> sensorsColorsApi;
+    private Map<SensorTypeApi, List<SensorColorApi>> sensorsColorsApi;
 }
