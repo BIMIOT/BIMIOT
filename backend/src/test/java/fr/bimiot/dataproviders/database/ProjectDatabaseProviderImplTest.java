@@ -3,7 +3,7 @@ package fr.bimiot.dataproviders.database;
 import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.fixtures.ProjectJpaFixture;
-import fr.bimiot.fixtures.TypesColorsFixture;
+import fr.bimiot.fixtures.SensorColorMapFixture;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.junit.jupiter.api.Test;
@@ -91,13 +91,13 @@ class ProjectDatabaseProviderImplTest {
         BDDMockito.doReturn(saveOutput).when(projectJpaRepository).save(ProjectJpaFixture.aCompleteProjectJpa());
 
         //  When
-        Project result = projectDatabaseProvider.updateSensorsColorsByProjectName("Project X", TypesColorsFixture.allSensors());
+        Project result = projectDatabaseProvider.updateSensorsColorsByProjectName("Project X", SensorColorMapFixture.sensorTypeListMapDomain());
 
         //  Then
         verify(projectJpaRepository).findProjectJpaByName(projectNameCaptor.capture());
         assertEquals("Project X", projectNameCaptor.getValue());
         assertEquals("ProjectID", result.getId());
-        assertNotNull(result.getTypesColors());
+        assertNotNull(result.getSensorColors());
     }
 
     @Test
@@ -106,7 +106,7 @@ class ProjectDatabaseProviderImplTest {
         String projectName = "Project XX";
         BDDMockito.doReturn(null).when(projectJpaRepository).findProjectJpaByName(projectName);
         //  When
-        Exception exception = assertThrows(DataBaseException.class, () -> projectDatabaseProvider.updateSensorsColorsByProjectName(projectName, TypesColorsFixture.allSensors()));
+        Exception exception = assertThrows(DataBaseException.class, () -> projectDatabaseProvider.updateSensorsColorsByProjectName(projectName, SensorColorMapFixture.sensorTypeListMapDomain()));
         //  Then
         assertNotNull(exception);
         assertEquals("Project doesn't exist", exception.getMessage());

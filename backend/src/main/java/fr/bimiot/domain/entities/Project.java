@@ -2,6 +2,8 @@ package fr.bimiot.domain.entities;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Project{
@@ -9,7 +11,7 @@ public class Project{
     private String name;
     private MultipartFile ifc;
     private MultipartFile dataset;
-    private TypesColors typesColors;
+    private Map<SensorType, List<SensorColor>> sensorColors;
 
     public Project() {
     }
@@ -53,12 +55,12 @@ public class Project{
         this.dataset = dataset;
     }
 
-    public TypesColors getTypesColors() {
-        return typesColors;
+    public Map<SensorType, List<SensorColor>> getSensorColors() {
+        return sensorColors;
     }
 
-    public void setTypesColors(TypesColors typesColors) {
-        this.typesColors = typesColors;
+    public void setSensorColors(Map<SensorType, List<SensorColor>> sensorColors) {
+        this.sensorColors = sensorColors;
     }
 
     @Override

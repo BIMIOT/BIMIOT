@@ -13,7 +13,7 @@ public class ProjectJpaFixture {
         return projectJpa;
     }
 
-    public static ProjectJpa aProjectJpaWithoutSensors(){
+    public static ProjectJpa aProjectJpaWithoutSensors() {
         ProjectJpa projectJpa = aProjectJpaWithoutSensorsAndWithoutId();
         projectJpa.setId("ProjectID");
         return projectJpa;
@@ -22,7 +22,7 @@ public class ProjectJpaFixture {
     public static ProjectJpa aCompleteProjectJpa() {
         ProjectJpa projectJpa = aProjectJpaWithoutSensors();
         projectJpa.setId("ProjectID");
-        projectJpa.setSensorsColorsJpa(SensorsColorsJpaFixture.aCompleteSensorsColorsJpa());
+        projectJpa.setSensorColorJpaMap(SensorColorJpaMapFixture.sensorTypeListMapDataProviders());
         return projectJpa;
     }
 

@@ -15,7 +15,7 @@ public class ProjectFixture {
     public static Project aProjectWithOnlyTemperatureSensor(){
         var project = aProjectWithoutSensorsAndWithoutId();
         project.setId("ProjectID");
-        project.setTypesColors(TypesColorsFixture.allSensors());
+        project.setSensorColors(SensorColorMapFixture.sensorTypeListMapDomain());
         return project;
     }
 
