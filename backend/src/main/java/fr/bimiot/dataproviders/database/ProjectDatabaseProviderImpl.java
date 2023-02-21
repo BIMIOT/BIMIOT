@@ -49,8 +49,7 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         return sensorColors.stream()
                 .map(sensorColor -> new SensorColorJpa(
                         sensorColor.colorCode(),
-                        sensorColor.rangeStart(),
-                        sensorColor.rangeEnd()
+                        sensorColor.threshold()
                 )).collect(Collectors.toList());
     }
 
@@ -76,8 +75,7 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         return sensorColorJpas.stream()
                 .map(sensorColorJpa -> new SensorColor(
                         sensorColorJpa.getColorCode(),
-                        sensorColorJpa.getRangeStart(),
-                        sensorColorJpa.getRangeEnd())).collect(Collectors.toList());
+                        sensorColorJpa.getThreshold())).collect(Collectors.toList());
     }
 
     private ProjectJpa toProjectJpa(Project project) throws IOException {

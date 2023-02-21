@@ -75,8 +75,7 @@ public class ProjectController {
         return sensorColors.stream()
                 .map(sensorColor -> new SensorColorApi(
                         sensorColor.colorCode(),
-                        sensorColor.rangeStart(),
-                        sensorColor.rangeEnd()))
+                        sensorColor.threshold()))
                 .collect(Collectors.toList());
     }
 
@@ -89,8 +88,7 @@ public class ProjectController {
         return sensorColorApis.stream()
                 .map(sensorColorApi -> new SensorColor(
                         sensorColorApi.getColorCode(),
-                        sensorColorApi.getRangeStart(),
-                        sensorColorApi.getRangeEnd()))
+                        sensorColorApi.getThreshold() == null ? Float.POSITIVE_INFINITY : sensorColorApi.getThreshold()))
                 .collect(Collectors.toList());
     }
 }

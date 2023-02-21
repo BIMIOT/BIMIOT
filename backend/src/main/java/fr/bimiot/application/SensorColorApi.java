@@ -7,6 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class SensorColorApi {
     private String colorCode;
-    private float rangeStart;
-    private float rangeEnd;
+    private Float threshold;
 }
