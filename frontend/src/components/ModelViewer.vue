@@ -79,7 +79,6 @@ export default {
       sensor_types: {},
       room_by_color: {},
       currentPlan: "3D",
-      currentPlanBool: false,
       room_list: {},
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
@@ -117,21 +116,19 @@ export default {
         return;
       }
       const controls = this.viewer.context.ifcCamera.cameraControls;
-      if(!this.currentPlanBool) {
+      if(this.currentPlan === "3D") {
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
         await this.viewer.context.ifcCamera.toggleProjection();
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
       } else {
-
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
         await controls.setPosition(0, 1, 0, false)
         await this.viewer.context.ifcCamera.toggleProjection()
         this.currentPlan = "3D"
       }
-      this.currentPlanBool = !this.currentPlanBool;
     },
     moveComponentToSubDiv() {
       const subContainer = document.getElementById('sub-container');
