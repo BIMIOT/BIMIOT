@@ -1,12 +1,13 @@
 package fr.bimiot.domain.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class TypeColor {
-    private ArrayList<String> colors;
-    private ArrayList<Float> values;
+    private List<String> colors;
+    private List<Float> values;
 
     public TypeColor() {
     }
@@ -16,11 +17,19 @@ public class TypeColor {
         this.values = values;
     }
 
-    public void setColors(ArrayList<String> colors) {
+    public List<String> getColors() {
+        return colors;
+    }
+
+    public void setColors(List<String> colors) {
         this.colors = colors;
     }
 
-    public void setValues(ArrayList<Float> values) {
+    public List<Float> getValues() {
+        return values;
+    }
+
+    public void setValues(List<Float> values) {
         this.values = values;
     }
 

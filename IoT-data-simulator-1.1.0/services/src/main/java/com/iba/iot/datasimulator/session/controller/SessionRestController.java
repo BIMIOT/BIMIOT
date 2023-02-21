@@ -20,6 +20,24 @@ import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionsStat
 import com.iba.iot.datasimulator.session.model.active.command.ActiveSessionManagementCommand;
 import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionManagementCommandResultMessage;
 import com.iba.iot.datasimulator.session.model.active.command.SessionManagementCommand;
+import com.iba.iot.datasimulator.definition.model.Dataset;
+import com.iba.iot.datasimulator.common.model.schema.Schema;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import org.xmlpull.v1.XmlPullParserException;
+import io.minio.errors.*;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import com.iba.iot.datasimulator.definition.controller.DatasetController;
+import com.iba.iot.datasimulator.definition.controller.DataDefinitionController;
+import com.iba.iot.datasimulator.definition.model.DataDefinitionCreateUpdateRequest;
+import com.iba.iot.datasimulator.definition.model.DataDefinition;
+import com.iba.iot.datasimulator.session.model.active.timer.DatasetTimer;
+import com.iba.iot.datasimulator.session.model.active.generator.SchemaBasedGenerator;
+import com.iba.iot.datasimulator.target.controller.TargetSystemController;
+import com.iba.iot.datasimulator.target.model.TargetSystem;
+import com.iba.iot.datasimulator.target.model.TargetSystemEntity;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -43,6 +61,15 @@ public class SessionRestController {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private DatasetController datasetController;
+
+    @Autowired
+    private DataDefinitionController dataDefinitionController;
+
+    @Autowired
+    private TargetSystemController targetSystemController;
+
     @RequestMapping(method = RequestMethod.POST)
     public Session create(@RequestBody @Valid @NotNull SessionCreateUpdateRequest sessionCreateUpdateRequest) {
 
@@ -57,6 +84,52 @@ public class SessionRestController {
     }
 
     // --- Methods to connect to BIMIOT app --- //
+
+    /* Annotation */
+    @RequestMapping(value = "/create/{name}", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public Session createStepByStep(HttpServletRequest request, @PathVariable("name") @NotNull String name) throws IOException, InvalidKeyException, NoSuchAlgorithmException,
+            XmlPullParserException, InvalidArgumentException, InternalException, NoResponseException, InvalidBucketNameException,
+            InsufficientDataException, ErrorResponseException, RegionConflictException, InvalidPortException, InvalidEndpointException, InvalidObjectPrefixException, FileUploadException {
+
+        // Upload dataset
+        Dataset dataset = datasetController.upload(request);
+
+        // Create definition
+        Schema schema = datasetController.deriveSchema(dataset.getId().toString());
+        DataDefinitionCreateUpdateRequest ddCreateUpdate = new DataDefinitionCreateUpdateRequest();
+        ddCreateUpdate.setName(name);
+        ddCreateUpdate.setDatasetId(dataset.getId().toString());
+        ddCreateUpdate.setSchema(schema);
+        DataDefinition dataDefinition = dataDefinitionController.create(ddCreateUpdate);
+
+        // Create session
+        SessionCreateUpdateRequest ssCreateUpdate = new SessionCreateUpdateRequest();
+        ssCreateUpdate.setName(name);
+        ssCreateUpdate.setDataDefinitionId(dataDefinition.getId().toString());
+        ssCreateUpdate.setIsReplayLooped(false);
+
+        // Find target ID
+        for (TargetSystem target : targetSystemController.get()) {
+            if (target.getName().equalsIgnoreCase("bimiot")) {
+                TargetSystemEntity entity = (TargetSystemEntity) target;
+                ssCreateUpdate.setTargetSystemId(target.getId().toString());
+                break;
+            }
+        };
+
+        DatasetTimer timer = new DatasetTimer();
+        timer.setDatePosition("timestamp");
+        ssCreateUpdate.setTimer(timer);
+
+        SchemaBasedGenerator generator = new SchemaBasedGenerator();
+        Schema sessionSchema = dataDefinitionController.populateSchemaDefaultRules(dataDefinition.getId().toString());
+        generator.setSchema(sessionSchema);
+        ssCreateUpdate.setGenerator(generator);
+
+        return sessionManager.create(ssCreateUpdate);
+    }
+
+
     @RequestMapping(value = "/getStatus/{sessionId}", method = RequestMethod.GET)
     public ActiveSessionsStatusCommandResultMessage getStatuses(@PathVariable("sessionId") @NotNull String sessionId) throws Exception {
 
@@ -97,17 +170,19 @@ public class SessionRestController {
         return message;
     }
 
+    @RequestMapping(value = "/{sessionId}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("sessionId") @NotNull String sessionId) {
+        Session session = get(sessionId);
+        sessionManager.remove(sessionId); // Only this before
+        dataDefinitionController.delete(session.getDataDefinition().getId().toString());
+        datasetController.remove(session.getDataDefinition().getDataset().getId().toString());
+    }
+
     // --- //
 
     @RequestMapping(value = "/{sessionId}", method = RequestMethod.GET)
     public Session get(@PathVariable("sessionId") @NotNull String sessionId) {
-
         return sessionManager.get(sessionId);
-    }
-
-    @RequestMapping(value = "/{sessionId}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("sessionId") @NotNull String sessionId) {
-        sessionManager.remove(sessionId);
     }
 
     @RequestMapping(value = "/{sessionId}", method = RequestMethod.PUT)
