@@ -1,6 +1,6 @@
 <template>
   <v-container fluid id="sensorsControl">
-  <div class="fill-content">
+    <div class="fill-content">
       <v-btn
           icon
           v-on:click="childMethod('TEMPERATURE')"
@@ -12,7 +12,7 @@
           mdi-home-thermometer
         </v-icon>
       </v-btn>
-  </div>
+    </div>
     <div class="fill-content">
       <v-btn
           icon
@@ -68,16 +68,16 @@ export default {
   },
   name: "SensorsControlButtons",
   methods: {
-    childMethod: function(type) {
+    childMethod: function (type) {
       this.$emit('child-method', type)
       this.selected = type;
       console.log(this.selected);
     },
-    pickColor: function(value) {
+    pickColor: function (value) {
       if (this.selected === value) {
-        return '#a3a3a2'; // red color for selected button
+        return '#0A0046'; // red color for selected button
       } else {
-        return '#0A0046'; // default color for unselected button
+        return '#a3a3a2'; // default color for unselected button
       }
     }
 
@@ -103,14 +103,12 @@ export default {
   width: max-content;
 }
 
-
-.fill-content{
+.fill-content {
   float: left;
 }
 
-
 div {
-  display : flex;
+  display: flex;
 }
 
 .active {

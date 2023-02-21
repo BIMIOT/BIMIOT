@@ -13,8 +13,8 @@
       <input type="file" id="file-input"/>
       <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
-      <ColorPickerSensor id="colorPickers"/>
-      <div  style="position: absolute; bottom: 0; left: 0;">
+      <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
+      <div style="position: absolute; bottom: 0; left: 0;">
         <SensorsList :room_list="room_list"/>
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
@@ -106,7 +106,7 @@ export default {
   methods: {
     moveComponentToSubDiv() {
       const subContainer = document.getElementById('sub-container');
-      const childComponent =  document.getElementById('model');
+      const childComponent = document.getElementById('model');
       subContainer.appendChild(childComponent);
     },
     async loadFile(viewer) {
@@ -565,6 +565,7 @@ export default {
 
 #colorPickers {
   position: absolute !important;
+  left: 70%;
 }
 
 .v-application__wrap {
