@@ -320,7 +320,7 @@ export default {
         if (relIDs.type === "IFCSPACE" && relIDs.children[component].type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           const sensor = await manager.getItemProperties(modelID, relIDs.children[component].expressID);
           const type_name = this.fromIfcType(this.sensor_types[sensor.ObjectType.value]);
-          if (this.room_list[relIDs.expressID][type_name] == undefined) {
+          if (this.room_list[relIDs.expressID][type_name] === undefined) {
             this.room_list[relIDs.expressID][type_name] = [];
           }
           this.room_list[relIDs.expressID][type_name].push({
@@ -339,10 +339,10 @@ export default {
       }
     },
     start: function () {
-      axios.put(`/api/bimiot/start/${this.project}`, {})
+      axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
     },
     stop: function () {
-      axios.put(`/api/bimiot/stop/${this.project}`, {})
+      axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {})
     },
     sendMapping: function () {
       let config = {
