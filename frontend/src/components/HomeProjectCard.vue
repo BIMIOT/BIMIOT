@@ -5,26 +5,26 @@
     </v-card-title>
     <v-card-actions class="justify-center">
       <v-btn
-          variant="outlined"
-          color="green"
+          variant="elevated"
+          color="primary"
           @click="sendProjectName"
       >
         Simulation
       </v-btn>
       <v-btn
           variant="outlined"
-          color="blue"
+          icon="mdi-pencil"
+          color="secondary"
+          size="x-small"
           @click="this.dialog = true"
-      >
-        Modifier
-      </v-btn>
+      ></v-btn>
       <v-btn
           variant="outlined"
-          color="red"
+          icon="mdi-delete"
+          color="error"
+          size="x-small"
           @click="this.dialog = true"
-      >
-        Supprimer
-      </v-btn>
+      ></v-btn>
     </v-card-actions>
   </v-card>
 
