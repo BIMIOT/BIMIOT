@@ -10,20 +10,20 @@
           <div class="sensor-container">
             <div class="sensor-item">
               <v-icon icon="mdi-vuetify"></v-icon>
-              <color-pickers v-on:colors="updateTemp" v-on:values="updateTempValues"/>
+              <color-pickers v-on:colorToValue="updateTempColorToValue"/>
 
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'tint']" class="my-3" />
-              <color-pickers v-on:colors="updateHum" v-on:values="updateHumValues" v-model="humidityColors"  />
+              <color-pickers v-on:colorToValue="updateHumColorToValue" />
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'lightbulb']" class="my-3"/>
-              <color-pickers v-on:colors="updateLight" v-on:values="updateLightValues" v-model="luminosityColors" />
+              <color-pickers v-on:colorToValue="updateLumColorToValue"/>
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'leaf']" class="my-3" />
-              <color-pickers  v-on:colors="updateCo2" v-on:values="updateCo2Values" v-model="co2Colors" />
+              <color-pickers  v-on:colorToValue="updateCo2ColorToValue" />
             </div>
           </div>
         </v-card-text>
@@ -56,10 +56,27 @@ export default {
       temperatureValues: [],
       humidityValues: [],
       luminosityValues: [],
-      co2Values: []
+      co2Values: [],
+      temperatureColorToValue:[],
+      humidityColorToValue:[],
+      luminosityColorToValue:[],
+      co2ColorToValue:[],
+
     }
   },
   methods: {
+    updateTempColorToValue(colorToValue){
+      this.temperatureColorToValue = colorToValue;
+    },
+    updateHumColorToValue(colorToValue){
+      this.humidityColorToValue = colorToValue;
+    },
+    updateCo2ColorToValue(colorToValue){
+      this.luminosityColorToValue = colorToValue;
+    },
+    updateLumColorToValue(colorToValue){
+      this.co2ColorToValue = colorToValue;
+    },
     updateTemp(colors) {
       this.temperatureColors = colors;
     },
@@ -87,8 +104,15 @@ export default {
     saveData() {
       //TODO first icon doesn't display correctly
       //console.log("colors: ", this.temperatureColors);
+      console.log("temp color to value: ",this.temperatureColorToValue)
 
-      console.log("ints: ",this.temperatureValues)
+
+      console.log(JSON.stringify(this.temperatureColorToValue));
+      console.log(JSON.stringify(this.humidityColorToValue));
+      console.log(JSON.stringify(this.co2ColorToValue));
+      console.log(JSON.stringify(this.luminosityColorToValue));
+
+
       let config = {
         headers: {
           'Content-Type': 'application/json',
