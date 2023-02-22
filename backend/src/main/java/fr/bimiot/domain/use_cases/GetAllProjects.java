@@ -19,13 +19,14 @@ public class GetAllProjects {
     }
 
     public List<String> execute() {
-        try {
-            return Files.list(Paths.get("Projects"))
-                    .filter(Files::isDirectory)
-                    .map(path -> path.getFileName().toString())
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new RuntimeException("I/O error occurred");
-        }
+//        try {
+//            return Files.list(Paths.get("Projects"))
+//                    .filter(Files::isDirectory)
+//                    .map(path -> path.getFileName().toString())
+//                    .collect(Collectors.toList());
+//        } catch (IOException e) {
+//            throw new RuntimeException("I/O error occurred");
+//        }
+        return projectDatabaseProvider.getAllProjects();
     }
 }
