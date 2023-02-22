@@ -206,20 +206,16 @@ export default {
       var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
       var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
-      window.ondblclick = async () => {
-        if (viewer.clipper.active) {
-          viewer.clipper.createPlane();
+      window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
+      window.onclick = async () => {
+        const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
+        const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+        if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+          this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
         } else {
-          const result = await viewer.IFC.selector.pickIfcItem(true);
-          if (!result) return;
-          const { modelID, id } = result;
-          const props = await viewer.IFC.getProperties(modelID, id, true, false);
-          console.log(props);
+          viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
-      };
-
-      window.onmousemove = () => viewer.IFC.selector.unpickIfcItems()
-
+      }
 
       const scene = this.viewer.context.getScene();
       scene.add(floors);
@@ -479,29 +475,16 @@ export default {
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
     this.viewer = viewer;
-   // viewer.axes.setAxes();
-   // viewer.grid.setGrid();
+    viewer.axes.setAxes();
+    viewer.grid.setGrid();
     viewer.IFC.setWasmPath('../../IFCjs/');
-
 
     viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
       [IFCSPACE]: true,
       [IFCOPENINGELEMENT]: false
     });
 
-
-
     this.loadFile(viewer);
-    window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
-    window.onclick = async () => {
-      const {modelID, id} = await viewer.IFC.selector.pickIfcItem();
-      const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
-      if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
-        this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
-      } else {
-        viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
-      }
-    }
 
     const input = document.getElementById("file-input");
 
@@ -564,7 +547,6 @@ export default {
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
 
-
           /**
            * HERE IS THE code YOU WANT IT START FROM HERE
            * */
@@ -591,7 +573,6 @@ export default {
             customID: "stuff3"
           }
 
-
           const spaces = {
             modelID: model.modelID,
             ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false),
@@ -600,20 +581,16 @@ export default {
             customID: "stuff4"
           }
 
-
-
           let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
           let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
           let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
           let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces)
-
 
           const scene = this.viewer.context.getScene();
           scene.add(floors);
           scene.add(sensors);
           scene.add(walls);
           scene.add(sp);
-
 
         },
 
