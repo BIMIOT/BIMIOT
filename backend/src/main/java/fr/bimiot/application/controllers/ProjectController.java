@@ -10,6 +10,7 @@ import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.DeleteProject;
 import fr.bimiot.domain.use_cases.GetSensorColorMap;
+import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.domain.use_cases.UpdateSensorsColors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,20 +26,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/bimiot/projects")
 public class ProjectController {
     private final CreateProject createProject;
-
     private final DeleteProject deleteProject;
+    private final ManageSimulation manageSimulation;
     private final UpdateSensorsColors updateSensorsColors;
     private final GetSensorColorMap getSensorColorMap;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
+        this.manageSimulation = manageSimulation;
         this.updateSensorsColors = updateSensorsColors;
         this.getSensorColorMap = getSensorColorMap;
     }
 
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
+        manageSimulation.executeCreate(projectName, dataset);
         var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
         return ResponseEntity.ok(toProjectApi(projectResponse));
     }
@@ -55,6 +58,7 @@ public class ProjectController {
 
     @DeleteMapping("/{projectName}")
     public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
+        manageSimulation.executeDelete(projectName);
         deleteProject.execute(projectName);
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
