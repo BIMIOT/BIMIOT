@@ -16,4 +16,8 @@ public interface ProjectDatabaseProvider {
     Project updateSensorsColorsByProjectName(String projectName, Map<SensorType, List<SensorColor>> sensorTypeListMap) throws DataBaseException;
 
     Map<SensorType, List<SensorColor>> findSensorColorMapByProjectName(String projectName);
+
+    List<String> getAllProjects();
+
+    byte[] loadFile(String projectName);
 }

@@ -50,6 +50,16 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         return toSensorColorMap(projectJpaRepository.findProjectJpaByName(projectName).getSensorColorJpaMap());
     }
 
+    @Override
+    public List<String> getAllProjects() {
+        return projectJpaRepository.findAll().stream().map(ProjectJpa::getName).toList();
+    }
+
+    @Override
+    public byte[] loadFile(String projectName) {
+        return  projectJpaRepository.findProjectJpaByName(projectName).getIfc().getData();
+    }
+
     private List<SensorColorJpa> toSensorColorJpaList(List<SensorColor> sensorColors) {
         return sensorColors.stream()
                 .map(sensorColor -> new SensorColorJpa(
