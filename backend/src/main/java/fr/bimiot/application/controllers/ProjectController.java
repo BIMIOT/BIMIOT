@@ -63,7 +63,9 @@ public class ProjectController {
 
     @PutMapping("/colors/{projectName}")
     public ResponseEntity<ProjectApi> updateProjectColors(@PathVariable("projectName") String projectName, @RequestBody SensorColorApiMap sensorColorApiMap) throws DataBaseException {
-        return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(updateSensorsColors.execute(projectName, toSensorColorMap(sensorColorApiMap))));
+        var project = updateSensorsColors.execute(projectName, toSensorColorMap(sensorColorApiMap));
+        manageData.setSensorTypeListMap(project.getSensorColors());
+        return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(project));
     }
 
     @GetMapping("/colors/{projectName}")
