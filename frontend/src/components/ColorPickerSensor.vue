@@ -13,16 +13,16 @@
               <color-pickers v-on:colorToValue="updateTempColorToValue"/>
             </div>
             <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'tint']" class="my-3" />
-              <color-pickers v-on:colorToValue="updateHumColorToValue" />
+              <font-awesome-icon :icon="['fas', 'tint']" class="my-3"/>
+              <color-pickers v-on:colorToValue="updateHumColorToValue"/>
             </div>
             <div class="sensor-item">
               <font-awesome-icon :icon="['fas', 'lightbulb']" class="my-3"/>
               <color-pickers v-on:colorToValue="updateLumColorToValue"/>
             </div>
             <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'leaf']" class="my-3" />
-              <color-pickers  v-on:colorToValue="updateCo2ColorToValue" />
+              <font-awesome-icon :icon="['fas', 'leaf']" class="my-3"/>
+              <color-pickers v-on:colorToValue="updateCo2ColorToValue"/>
             </div>
           </div>
         </v-card-text>
@@ -38,8 +38,6 @@
 <script>
 
 import ColorPickers from "@/components/ColorPickers";
-import axios from 'axios';
-import {sensorsStore} from "@/store/sensors";
 import {projectStore} from "@/store/project";
 
 export default {
@@ -47,69 +45,40 @@ export default {
   components: {
     ColorPickers
   },
+  setup() {
+    const store = projectStore();
+    return {store};
+  },
   data() {
     return {
       showModal: false,
-      temperatureColorToValue:[],
-      humidityColorToValue:[],
-      luminosityColorToValue:[],
-      co2ColorToValue:[],
-
+      temperatureColorToValue: [],
+      humidityColorToValue: [],
+      luminosityColorToValue: [],
+      co2ColorToValue: [],
     }
   },
-  setup() {
-    const projectStore1 = projectStore();
-    const sensorsStore1 = sensorsStore();
-    return {projectStore1, sensorsStore1};
-  },
   methods: {
-    updateTempColorToValue(colorToValue){
+    updateTempColorToValue(colorToValue) {
       this.temperatureColorToValue = colorToValue;
     },
-    updateHumColorToValue(colorToValue){
+    updateHumColorToValue(colorToValue) {
       this.humidityColorToValue = colorToValue;
     },
-    updateCo2ColorToValue(colorToValue){
+    updateCo2ColorToValue(colorToValue) {
       this.luminosityColorToValue = colorToValue;
     },
-    updateLumColorToValue(colorToValue){
+    updateLumColorToValue(colorToValue) {
       this.co2ColorToValue = colorToValue;
     },
     saveData() {
-      //TODO first icon doesn't display correctly
-      //console.log("colors: ", this.temperatureColors);
-      console.log("temp color to value: ",this.temperatureColorToValue)
-
-
-      console.log(JSON.stringify(this.temperatureColorToValue));
-      console.log(JSON.stringify(this.humidityColorToValue));
-      console.log(JSON.stringify(this.co2ColorToValue));
-      console.log(JSON.stringify(this.luminosityColorToValue));
-
-
-      let config = {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-
-      let sensorsColors = {"sensorColorApis":{}};
+      let sensorsColors = {"sensorColorApis": {}};
       sensorsColors["sensorColorApis"]["TEMPERATURE"] = this.temperatureColorToValue;
       sensorsColors["sensorColorApis"]["LIGHT"] = this.luminosityColorToValue;
       sensorsColors["sensorColorApis"]["HUMIDITY"] = this.humidityColorToValue;
       sensorsColors["sensorColorApis"]["CO2"] = this.co2ColorToValue;
 
-
-      console.log(" sensorColors: ",JSON.stringify(sensorsColors));
-
-      console.log(JSON.stringify(sensorsColors));
-      axios.put(`/api/bimiot/projects/colors/${this.projectStore1.currentProjectName}`, JSON.stringify(sensorsColors), config)
-          .then((data) => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+      this.store.updateProjectColors(sensorsColors);
 
       this.showModal = false
 

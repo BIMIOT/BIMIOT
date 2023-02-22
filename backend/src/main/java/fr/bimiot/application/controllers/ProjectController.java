@@ -9,6 +9,7 @@ import fr.bimiot.domain.entities.*;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.DeleteProject;
+import fr.bimiot.domain.use_cases.GetSensorColorMap;
 import fr.bimiot.domain.use_cases.UpdateSensorsColors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +28,13 @@ public class ProjectController {
 
     private final DeleteProject deleteProject;
     private final UpdateSensorsColors updateSensorsColors;
+    private final GetSensorColorMap getSensorColorMap;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, UpdateSensorsColors updateSensorsColors) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
         this.updateSensorsColors = updateSensorsColors;
+        this.getSensorColorMap = getSensorColorMap;
     }
 
     @PostMapping
@@ -61,6 +64,11 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(updateSensorsColors.execute(projectName, toSensorColorMap(sensorColorApiMap))));
     }
 
+    @GetMapping("/colors/{projectName}")
+    public ResponseEntity<Map<SensorTypeApi, List<SensorColorApi>>> getSensorColorMap(@PathVariable("projectName") String projectName) {
+        return ResponseEntity.status(HttpStatus.OK).body(toSensorColorApiMap(getSensorColorMap.execute(projectName)));
+    }
+
     private ProjectApi toProjectApi(Project project) {
         var projectApi = new ProjectApi();
         projectApi.setId(project.getId());
@@ -78,8 +86,7 @@ public class ProjectController {
         return sensorColors.stream()
                 .map(sensorColor -> new SensorColorApi(
                         sensorColor.colorCode(),
-                        sensorColor.threshold()))
-                .collect(Collectors.toList());
+                        sensorColor.threshold())).toList();
     }
 
     private Map<SensorType, List<SensorColor>> toSensorColorMap(SensorColorApiMap sensorColorApiMap) {
@@ -91,7 +98,6 @@ public class ProjectController {
         return sensorColorApis.stream()
                 .map(sensorColorApi -> new SensorColor(
                         sensorColorApi.getColorCode(),
-                        sensorColorApi.getThreshold() == null ? Float.POSITIVE_INFINITY : sensorColorApi.getThreshold()))
-                .collect(Collectors.toList());
+                        sensorColorApi.getThreshold() == null ? Float.POSITIVE_INFINITY : sensorColorApi.getThreshold())).toList();
     }
 }

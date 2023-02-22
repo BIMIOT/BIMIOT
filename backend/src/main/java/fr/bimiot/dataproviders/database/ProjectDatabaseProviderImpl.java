@@ -45,12 +45,17 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         return toProject(projectJpaRepository.save(projectExisted));
     }
 
+    @Override
+    public Map<SensorType, List<SensorColor>> findSensorColorMapByProjectName(String projectName) {
+        return toSensorColorMap(projectJpaRepository.findProjectJpaByName(projectName).getSensorColorJpaMap());
+    }
+
     private List<SensorColorJpa> toSensorColorJpaList(List<SensorColor> sensorColors) {
         return sensorColors.stream()
                 .map(sensorColor -> new SensorColorJpa(
                         sensorColor.colorCode(),
                         sensorColor.threshold()
-                )).collect(Collectors.toList());
+                )).toList();
     }
 
     private Project toProject(ProjectJpa projectJpa) {
@@ -75,7 +80,7 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         return sensorColorJpas.stream()
                 .map(sensorColorJpa -> new SensorColor(
                         sensorColorJpa.getColorCode(),
-                        sensorColorJpa.getThreshold())).collect(Collectors.toList());
+                        sensorColorJpa.getThreshold())).toList();
     }
 
     private ProjectJpa toProjectJpa(Project project) throws IOException {

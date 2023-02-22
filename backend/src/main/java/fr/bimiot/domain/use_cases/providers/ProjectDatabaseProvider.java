@@ -15,4 +15,5 @@ public interface ProjectDatabaseProvider {
     void delete(String projectName);
     Project updateSensorsColorsByProjectName(String projectName, Map<SensorType, List<SensorColor>> sensorTypeListMap) throws DataBaseException;
 
+    Map<SensorType, List<SensorColor>> findSensorColorMapByProjectName(String projectName);
 }
