@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 @Component
 public class ManageSimulation {
-    private static final String URL = "http://host.docker.internal:8090";
+    private static final String URL = "http://188.166.194.147";
     private final RestTemplate restTemplate = new RestTemplate();
 
     public void executeStart(String simulation_name) {
