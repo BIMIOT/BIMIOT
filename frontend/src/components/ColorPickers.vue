@@ -1,13 +1,20 @@
 <template>
-  <div>
+
+
+
+  <div class="color-block-container">
     <div class="color-block" v-for="(color,index) in colorToValue"
          :key="index"
          :style="{ background: color.colorCode }"
          @click="openColorPicker(index)">
 
     </div>
-    <v-app v-if="selectedColorIndex !== null" id="colorPicker">
-      <v-tabs v-model="selectedTab">
+    <v-app class="color-picker-container" :style="{
+        position: 'absolute',
+        left: '-45px'
+
+      }" v-if="selectedColorIndex !== null" id="colorPicker">
+      <v-tabs v-model="selectedTab" >
         <v-tab>Color Picker</v-tab>
         <v-tab>Interval List</v-tab>
       </v-tabs>
@@ -17,7 +24,7 @@
                         @input="closeColorPicker"></v-color-picker>
       </v-tab-item>
 
-      <v-tab-item v-if="selectedTab === 1">
+      <v-tab-item  v-if="selectedTab === 1">
         <div class="value-inputs">
           <p>Modify the interval</p>
           <v-text-field
@@ -31,6 +38,7 @@
           />
         </div>
       </v-tab-item>
+
     </v-app>
   </div>
 </template>
@@ -72,6 +80,7 @@ export default {
       ]
     }
   },
+
   mounted() {
     this.$emit('colorToValue', this.colorToValue)
     this.$emit('colorToValue',this.colorToValue)
@@ -99,12 +108,29 @@ export default {
 </script>
 
 <style>
+
+.color-block-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-picker-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  align-items: center;
+}
+
 .color-block {
   width: 50px;
   height: 18px;
-  display: inline-block;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
 }
+
 
 .tab-item {
   margin-bottom: 18px;

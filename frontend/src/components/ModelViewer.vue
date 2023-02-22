@@ -13,7 +13,7 @@
       <input type="file" id="file-input"/>
       <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
-      <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
+      <ColorPickerSensor id="colorPickers"/>
       <div style="position: absolute; bottom: 0; left: 0;">
         <SensorsList :room_list="room_list"/>
         <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
@@ -21,10 +21,13 @@
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
-    <p id="properties-text">
-      ID:
-      {{ entityData }}
-    </p>
+    <div id="properties-text">
+      <p>
+        ID:
+        {{ entityData }}
+      </p>
+      <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
+    </div>
     <div id="model"/>
   </section>
 </template>
@@ -66,7 +69,6 @@ export default {
     SensorsControlButtons,
     TwoDToThreeDButton,
   },
-
   data() {
     return {
       entityData: '',
@@ -108,6 +110,8 @@ export default {
   },
   setup() {
     const store = projectStore();
+    store.fetchSensorColors();
+    console.log(store.colors);
     return {store};
   },
   methods: {
@@ -132,7 +136,7 @@ export default {
     },
     moveComponentToSubDiv() {
       const subContainer = document.getElementById('sub-container');
-      const childComponent = document.getElementById('model');
+      const childComponent =  document.getElementById('model');
       subContainer.appendChild(childComponent);
     },
     async loadFile(viewer) {
@@ -144,16 +148,8 @@ export default {
 
       this.model.removeFromParent();
 
-      /*
-      this.model = model;
-      model.removeFromParent();
-      */
-
       const structure = await this.showStructure(viewer, this.model.modelID);
       this.structure = structure;
-
-
-      //const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
 
       const types = await viewer.IFC.getAllItemsOfType(this.model.modelID, IFCSENSORTYPE, true);
       for (let type in types) {
@@ -198,25 +194,21 @@ export default {
         customID: "stuff4"
       }
 
-      var floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
-      var sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
-      var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
-      var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+      let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
+      let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
+      let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
+      let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
+      window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
       window.ondblclick = async () => {
-        if (viewer.clipper.active) {
-          viewer.clipper.createPlane();
+        const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
+        const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+        if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+          this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
         } else {
-          const result = await viewer.IFC.selector.pickIfcItem(true);
-          if (!result) return;
-          const { modelID, id } = result;
-          const props = await viewer.IFC.getProperties(modelID, id, true, false);
-          console.log(props);
+          viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
-      };
-
-      window.onmousemove = () => viewer.IFC.selector.unpickIfcItems()
-
+      }
 
       const scene = this.viewer.context.getScene();
       scene.add(floors);
@@ -269,7 +261,7 @@ export default {
     },
     convertHexToInt: function (colors) {
       return colors.map(color => {
-        var color2 = new THREE.Color(color.value);
+        let color2 = new THREE.Color(color.value);
         return new MeshLambertMaterial({
           transparent: true,
           opacity: 0.3,
@@ -405,6 +397,10 @@ export default {
         default:
           return undefined;
       }
+    },
+    resetSelection: function() {
+      this.entityData = "";
+      this.viewer.IFC.selector.unpickIfcItems();
     }
   },
   created: function () {
@@ -472,25 +468,22 @@ export default {
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
     this.viewer = viewer;
-   // viewer.axes.setAxes();
-   // viewer.grid.setGrid();
+    viewer.axes.setAxes();
+    viewer.grid.setGrid();
     viewer.IFC.setWasmPath('../../IFCjs/');
-
 
     viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
       [IFCSPACE]: true,
       [IFCOPENINGELEMENT]: false
     });
 
-
-
     this.loadFile(viewer);
+
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
 
         async (changed) => {
-          //await ifcapi.Init();
           const file = changed.target.files[0];
           const ifcURL = URL.createObjectURL(file);
           const model = await viewer.IFC.loadIfcUrl(ifcURL);
@@ -501,41 +494,36 @@ export default {
 
 
 
-        /*
-          this.model.material.forEach(mat => mat.side = 2);
-
-
-          await this.viewer.plans.computeAllPlanViews(model.modelID);
-
-          const edgesName = 'exampleEdges';
-
-
-          this.viewer.edges.toggle(edgesName, true);
-
-
-          let planNames = [];
-          const currentPlans = this.viewer.plans.planLists[0];
-
-          planNames = Object.keys(currentPlans);
-
-
-          await this.viewer.plans.goTo(this.model.modelID, planNames[0], false);
-
-         // await viewer.shadowDropper.renderShadow(model.modelID);
-        */
-
-          model.removeFromParent();
-
           /*
-          this.model = model;
-          model.removeFromParent();
+            this.model.material.forEach(mat => mat.side = 2);
+
+
+            await this.viewer.plans.computeAllPlanViews(model.modelID);
+
+            const edgesName = 'exampleEdges';
+
+
+            this.viewer.edges.toggle(edgesName, true);
+
+
+            let planNames = [];
+            const currentPlans = this.viewer.plans.planLists[0];
+
+            planNames = Object.keys(currentPlans);
+
+
+            await this.viewer.plans.goTo(this.model.modelID, planNames[0], false);
+
+           // await viewer.shadowDropper.renderShadow(model.modelID);
           */
+
+          model.removeFromParent();
+
 
           const structure = await this.showStructure(viewer, model.modelID);
           this.structure = structure;
 
 
-          //const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
 
           const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
           for (let type in types) {
@@ -545,7 +533,6 @@ export default {
           const manager = this.viewer.IFC.loader.ifcManager;
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
-
 
           /**
            * HERE IS THE code YOU WANT IT START FROM HERE
@@ -573,7 +560,6 @@ export default {
             customID: "stuff3"
           }
 
-
           const spaces = {
             modelID: model.modelID,
             ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false),
@@ -582,19 +568,17 @@ export default {
             customID: "stuff4"
           }
 
-
-
           let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
           let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
-          let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
-          let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces)
+          let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
+          let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
 
           const scene = this.viewer.context.getScene();
           scene.add(floors);
           scene.add(sensors);
           scene.add(walls);
-
+          scene.add(sp);
 
         },
 
@@ -607,8 +591,8 @@ export default {
 <style>
 #model {
   position: absolute;
-  left: 0%;
-  top: 0%;
+  left: 0;
+  top: 0;
   width: 100% !important;
   height: 100% !important;
 }
@@ -634,14 +618,15 @@ export default {
 }
 
 #properties-text {
+  display:flex;
   position: absolute;
-  left: 0%;
-  bottom: 0%;
+  align-items: center;
+  left: 0;
+  bottom: 0;
 }
 
 #colorPickers {
   position: absolute !important;
-  left: 70%;
 }
 
 .v-application__wrap {
