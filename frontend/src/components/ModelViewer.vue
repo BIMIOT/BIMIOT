@@ -14,17 +14,20 @@
       <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <ColorPickerSensor id="colorPickers"/>
-      <div  style="position: absolute; bottom: 0; left: 0;">
+      <div style="position: absolute; bottom: 0; left: 0;">
         <SensorsList :room_list="room_list"/>
         <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
-    <p id="properties-text">
-      ID:
-      {{ entityData }}
-    </p>
+    <div id="properties-text">
+      <p>
+        ID:
+        {{ entityData }}
+      </p>
+      <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
+    </div>
     <div id="model"/>
   </section>
 </template>
@@ -203,20 +206,16 @@ export default {
       var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
       var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
+      window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
       window.ondblclick = async () => {
-        if (viewer.clipper.active) {
-          viewer.clipper.createPlane();
+        const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
+        const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+        if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+          this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
         } else {
-          const result = await viewer.IFC.selector.pickIfcItem(true);
-          if (!result) return;
-          const { modelID, id } = result;
-          const props = await viewer.IFC.getProperties(modelID, id, true, false);
-          console.log(props);
+          viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
-      };
-
-      window.onmousemove = () => viewer.IFC.selector.unpickIfcItems()
-
+      }
 
       const scene = this.viewer.context.getScene();
       scene.add(floors);
@@ -405,6 +404,10 @@ export default {
         default:
           return undefined;
       }
+    },
+    resetSelection: function() {
+      this.entityData = "";
+      this.viewer.IFC.selector.unpickIfcItems();
     }
   },
   created: function () {
@@ -472,19 +475,17 @@ export default {
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
     this.viewer = viewer;
-   // viewer.axes.setAxes();
-   // viewer.grid.setGrid();
+    viewer.axes.setAxes();
+    viewer.grid.setGrid();
     viewer.IFC.setWasmPath('../../IFCjs/');
-
 
     viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
       [IFCSPACE]: true,
       [IFCOPENINGELEMENT]: false
     });
 
-
-
     this.loadFile(viewer);
+
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -546,7 +547,6 @@ export default {
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
 
-
           /**
            * HERE IS THE code YOU WANT IT START FROM HERE
            * */
@@ -573,7 +573,6 @@ export default {
             customID: "stuff3"
           }
 
-
           const spaces = {
             modelID: model.modelID,
             ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false),
@@ -582,19 +581,16 @@ export default {
             customID: "stuff4"
           }
 
-
-
           let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
           let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
           let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
           let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces)
 
-
           const scene = this.viewer.context.getScene();
           scene.add(floors);
           scene.add(sensors);
           scene.add(walls);
-
+          scene.add(sp);
 
         },
 
@@ -607,8 +603,8 @@ export default {
 <style>
 #model {
   position: absolute;
-  left: 0%;
-  top: 0%;
+  left: 0;
+  top: 0;
   width: 100% !important;
   height: 100% !important;
 }
@@ -634,9 +630,11 @@ export default {
 }
 
 #properties-text {
+  display:flex;
   position: absolute;
-  left: 0%;
-  bottom: 0%;
+  align-items: center;
+  left: 0;
+  bottom: 0;
 }
 
 #colorPickers {
