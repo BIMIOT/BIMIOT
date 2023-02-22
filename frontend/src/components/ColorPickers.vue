@@ -27,11 +27,6 @@
               :rules= "[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
               validate-on="input"
           />
-
-<!--          <div>-->
-<!--            <v-text-field v-model="newInt" placeholder="Add a new int"></v-text-field>-->
-<!--            <v-btn @click="addInt(selectedColorId)">Add</v-btn>-->
-<!--          </div>-->
         </div>
       </v-tab-item>
     </v-app>
@@ -39,7 +34,6 @@
 </template>
 
 <script>
-
 
 export default {
   name: "ColorPickers",

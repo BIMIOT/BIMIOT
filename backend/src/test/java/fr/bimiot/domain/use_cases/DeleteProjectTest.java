@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DeleteProjectTest {
+class DeleteProjectTest {
     @InjectMocks
     DeleteProject deleteProject;
 
@@ -28,7 +28,7 @@ public class DeleteProjectTest {
     private final static String PROJECT_NAME = "deleteTest";
 
     @Test
-    public void deleteProject_byGivenProjectName() throws DomainException {
+    void deleteProject_byGivenProjectName() throws DomainException {
         //When
         deleteProject.execute(PROJECT_NAME);
 

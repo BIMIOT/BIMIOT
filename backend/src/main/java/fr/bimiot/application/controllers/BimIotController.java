@@ -1,13 +1,10 @@
 package fr.bimiot.application.controllers;
 
-import fr.bimiot.domain.entities.*;
-
+import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.Room;
-import fr.bimiot.domain.use_cases.CreateProject;
 import fr.bimiot.domain.use_cases.GetAllProjects;
 import fr.bimiot.domain.use_cases.ManageData;
 import fr.bimiot.domain.use_cases.ManageSimulation;
-import fr.bimiot.domain.use_cases.GetFile;
 import fr.bimiot.simulator.ConverterEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,22 +17,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/bimiot")
 public class BimIotController {
-    private final CreateProject createProjectUseCase;
     private final GetAllProjects getAllProjects;
     private final ManageData manageData;
     private final ManageSimulation manageSimulation;
-    private final GetFile getFile;
-
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public BimIotController(CreateProject createProject, GetAllProjects getAllProjects, GetFile getFile,ManageData manageData, ManageSimulation manageSimulation) {
-        this.createProjectUseCase = createProject;
+    public BimIotController(GetAllProjects getAllProjects, ManageData manageData, ManageSimulation manageSimulation) {
         this.getAllProjects = getAllProjects;
         this.manageData = manageData;
         this.manageSimulation = manageSimulation;
-        this.getFile = getFile;
     }
 
     @Deprecated
@@ -47,7 +39,6 @@ public class BimIotController {
     @PutMapping(value = "/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
         var event = new ConverterEvent(this, manageData.execute(data));
-        System.out.println("before publish : " + event.getMessage());
         applicationEventPublisher.publishEvent(event);
     }
 
@@ -65,7 +56,6 @@ public class BimIotController {
 
     @PostMapping("/mapping")
     public int createMapping(@RequestBody List<Room> roomListDTO) {
-        System.out.println(roomListDTO);
         manageData.setRoomListDTO(roomListDTO);
         return 0;
     }

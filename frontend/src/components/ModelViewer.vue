@@ -69,7 +69,6 @@ export default {
     SensorsControlButtons,
     TwoDToThreeDButton,
   },
-
   data() {
     return {
       entityData: '',
@@ -111,6 +110,8 @@ export default {
   },
   setup() {
     const store = projectStore();
+    store.fetchSensorColors();
+    console.log(store.colors);
     return {store};
   },
   methods: {
@@ -147,16 +148,8 @@ export default {
 
       this.model.removeFromParent();
 
-      /*
-      this.model = model;
-      model.removeFromParent();
-      */
-
       const structure = await this.showStructure(viewer, this.model.modelID);
       this.structure = structure;
-
-
-      //const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
 
       const types = await viewer.IFC.getAllItemsOfType(this.model.modelID, IFCSENSORTYPE, true);
       for (let type in types) {
@@ -201,10 +194,10 @@ export default {
         customID: "stuff4"
       }
 
-      var floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
-      var sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
-      var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
-      var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+      let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
+      let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
+      let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
+      let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
       window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
       window.ondblclick = async () => {
@@ -268,7 +261,7 @@ export default {
     },
     convertHexToInt: function (colors) {
       return colors.map(color => {
-        var color2 = new THREE.Color(color.value);
+        let color2 = new THREE.Color(color.value);
         return new MeshLambertMaterial({
           transparent: true,
           opacity: 0.3,
@@ -491,7 +484,6 @@ export default {
     input.addEventListener("change",
 
         async (changed) => {
-          //await ifcapi.Init();
           const file = changed.target.files[0];
           const ifcURL = URL.createObjectURL(file);
           const model = await viewer.IFC.loadIfcUrl(ifcURL);
@@ -527,16 +519,11 @@ export default {
 
           model.removeFromParent();
 
-          /*
-          this.model = model;
-          model.removeFromParent();
-          */
 
           const structure = await this.showStructure(viewer, model.modelID);
           this.structure = structure;
 
 
-          //const spaces = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSPACE, true);
 
           const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
           for (let type in types) {
@@ -583,8 +570,9 @@ export default {
 
           let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
           let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
-          let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
-          let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces)
+          let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
+          let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+
 
           const scene = this.viewer.context.getScene();
           scene.add(floors);
