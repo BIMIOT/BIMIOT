@@ -371,10 +371,12 @@ export default {
       }
     },
     start: function () {
+      window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
       axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
     },
     stop: function () {
-      axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {})
+      window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
+      axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {});
     },
     sendMapping: function () {
       let config = {
@@ -401,6 +403,11 @@ export default {
     resetSelection: function() {
       this.entityData = "";
       this.viewer.IFC.selector.unpickIfcItems();
+    },
+    beforeUnloadListener: function(event) {
+      this.stop();
+      event.preventDefault();
+      return event.returnValue = '';
     }
   },
   created: function () {
@@ -460,6 +467,7 @@ export default {
 
   unmounted() {
     this.viewer.dispose();
+    this.stop();
     this.store.currentProjectName = null;
   },
 
