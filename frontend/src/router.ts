@@ -18,10 +18,9 @@ export default createRouter({
             component: createProject
         },
         {
-            path: '/simulation/:project',
+            path: '/simulation',
             name:'simulation',
             component: ModelViewer,
-            props: true
         },
         {
             path: '/:pathMatch(.*)*',

@@ -5,6 +5,9 @@ import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @Document(collection = "project")
 public class ProjectJpa {
@@ -13,4 +16,5 @@ public class ProjectJpa {
     private String name;
     private Binary ifc;
     private Binary dataset;
+    private Map<SensorTypeJpa, List<SensorColorJpa>> sensorColorJpaMap;
 }
