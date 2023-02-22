@@ -3,23 +3,18 @@ package fr.bimiot.domain.use_cases;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.Room;
-import fr.bimiot.domain.entities.Sensor;
 import fr.bimiot.domain.entities.TypesColors;
+import fr.bimiot.fixtures.SensorColorMapFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class ColorManagingTest {
@@ -46,7 +41,7 @@ class ColorManagingTest {
                         "\"values\":[3,10,20]}}}"
                 , TypesColors.class);
         manageData.setRoomListDTO(Arrays.stream(rooms).toList());
-        manageData.setTypesColors(colors);
+        manageData.setSensorTypeListMap(SensorColorMapFixture.sensorTypeListMapDomain());
 
         var data = new Data("sensor3", "TEMPERATURE", "4", new Timestamp(1675847798));
         var websocketdata = manageData.execute(data);
@@ -54,6 +49,6 @@ class ColorManagingTest {
         assertEquals("TEMPERATURE", websocketdata.type());
         assertEquals("207", websocketdata.roomIfcID());
         assertEquals("4", websocketdata.value());
-        assertEquals("#00FFF1", websocketdata.color());
+        assertEquals("#8ecae6", websocketdata.color());
     }
 }
