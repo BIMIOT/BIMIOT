@@ -14,16 +14,19 @@
       <v-btn id="play" v-on:click="start()">Play</v-btn>
       <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
       <ColorPickerSensor id="colorPickers"/>
-      <div  style="position: absolute; bottom: 0; left: 0;">
+      <div style="position: absolute; bottom: 0; left: 0;">
         <SensorsList :room_list="room_list"/>
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
-    <p id="properties-text">
-      ID:
-      {{ entityData }}
-    </p>
+    <div id="properties-text">
+      <p>
+        ID:
+        {{ entityData }}
+      </p>
+      <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
+    </div>
     <div id="model"/>
   </section>
 </template>
@@ -369,6 +372,10 @@ export default {
         default:
           return undefined;
       }
+    },
+    resetSelection: function() {
+      this.entityData = "";
+      this.viewer.IFC.selector.unpickIfcItems();
     }
   },
   created: function () {
@@ -435,7 +442,7 @@ export default {
 
   mounted() {
     this.moveComponentToSubDiv();
-    //TODO fix the problem  of storeNewRoomColorByType is not a function
+    //TODO fix the problem of storeNewRoomColorByType is not a function
     //this.store.storeNewRoomColorByType("1B080","Sensor1",30)
     //console.log(this.store.getLastRoomColorByType("1B080","Sensor1"), "hello")
     const container = document.getElementById('model');
@@ -450,7 +457,16 @@ export default {
     });
 
     this.loadFile(viewer);
-    window.onmousemove = () => {this.viewer.IFC.selector.prePickIfcItem()};
+    window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
+    window.onclick = async () => {
+      const {modelID, id} = await viewer.IFC.selector.pickIfcItem();
+      const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+      if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+        this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
+      } else {
+        viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+      }
+    }
 
     const input = document.getElementById("file-input");
 
@@ -546,8 +562,8 @@ export default {
 <style>
 #model {
   position: absolute;
-  left: 0%;
-  top: 0%;
+  left: 0;
+  top: 0;
   width: 100% !important;
   height: 100% !important;
 }
@@ -571,9 +587,11 @@ export default {
 }
 
 #properties-text {
+  display:flex;
   position: absolute;
-  left: 0%;
-  bottom: 0%;
+  align-items: center;
+  left: 0;
+  bottom: 0;
 }
 
 #colorPickers {
