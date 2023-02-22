@@ -207,7 +207,7 @@ export default {
       var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
       window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
-      window.onclick = async () => {
+      window.ondblclick = async () => {
         const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
         const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
