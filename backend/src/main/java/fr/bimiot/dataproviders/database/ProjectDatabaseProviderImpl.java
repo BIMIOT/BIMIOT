@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,7 +99,53 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         projectJpa.setIfc(toBinary(project.getIfc()));
         projectJpa.setDataset(toBinary(project.getDataset()));
         projectJpa.setName(project.getName());
+        projectJpa.setSensorColorJpaMap(getDefaultSensorsColors());
         return projectJpa;
+    }
+
+    private Map<SensorTypeJpa, List<SensorColorJpa>> getDefaultSensorsColors() {
+        Map<SensorTypeJpa, List<SensorColorJpa>> map = new EnumMap<>(SensorTypeJpa.class);
+        map.put(SensorTypeJpa.TEMPERATURE, getDefaultTemperatureSensorColor());
+        map.put(SensorTypeJpa.HUMIDITY, getDefaultHumiditySensorColor());
+        map.put(SensorTypeJpa.LIGHT, getDefaultLightSensorColor());
+        map.put(SensorTypeJpa.CO2, getDefaultCo2SensorColor());
+        return map;
+    }
+
+    private List<SensorColorJpa> getDefaultTemperatureSensorColor() {
+        return List.of(
+                new SensorColorJpa("#7F00FF", -10f),
+                new SensorColorJpa("#00FFFF", 20f),
+                new SensorColorJpa("#80FF00", 30f),
+                new SensorColorJpa("#FE0000", Float.POSITIVE_INFINITY)
+        );
+    }
+
+    private List<SensorColorJpa> getDefaultHumiditySensorColor() {
+        return List.of(
+                new SensorColorJpa("#FE0000", 1f),
+                new SensorColorJpa("#80FF00", 40f),
+                new SensorColorJpa("#00FFFF", 70f),
+                new SensorColorJpa("#0000FF", Float.POSITIVE_INFINITY)
+        );
+    }
+
+    private List<SensorColorJpa> getDefaultLightSensorColor() {
+        return List.of(
+                new SensorColorJpa("#000000", 1f),
+                new SensorColorJpa("#6D6D00", 30f),
+                new SensorColorJpa("#B6B600", 60f),
+                new SensorColorJpa("#FFFF00", Float.POSITIVE_INFINITY)
+        );
+    }
+
+    private List<SensorColorJpa> getDefaultCo2SensorColor() {
+        return List.of(
+                new SensorColorJpa("#CFFF2E", 1100f),
+                new SensorColorJpa("#FFE72E", 1400f),
+                new SensorColorJpa("#FF9F2E", 5000f),
+                new SensorColorJpa("#FF582E", Float.POSITIVE_INFINITY)
+        );
     }
 
     private Binary toBinary(MultipartFile file) throws IOException {

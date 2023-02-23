@@ -7,11 +7,7 @@ import fr.bimiot.application.dtos.SensorTypeApi;
 import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.*;
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.CreateProject;
-import fr.bimiot.domain.use_cases.DeleteProject;
-import fr.bimiot.domain.use_cases.GetSensorColorMap;
-import fr.bimiot.domain.use_cases.ManageSimulation;
-import fr.bimiot.domain.use_cases.UpdateSensorsColors;
+import fr.bimiot.domain.use_cases.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +24,15 @@ public class ProjectController {
     private final CreateProject createProject;
     private final DeleteProject deleteProject;
     private final ManageSimulation manageSimulation;
+    private final ManageData manageData;
     private final UpdateSensorsColors updateSensorsColors;
     private final GetSensorColorMap getSensorColorMap;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
         this.manageSimulation = manageSimulation;
+        this.manageData = manageData;
         this.updateSensorsColors = updateSensorsColors;
         this.getSensorColorMap = getSensorColorMap;
     }
@@ -65,12 +63,16 @@ public class ProjectController {
 
     @PutMapping("/colors/{projectName}")
     public ResponseEntity<ProjectApi> updateProjectColors(@PathVariable("projectName") String projectName, @RequestBody SensorColorApiMap sensorColorApiMap) throws DataBaseException {
-        return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(updateSensorsColors.execute(projectName, toSensorColorMap(sensorColorApiMap))));
+        var project = updateSensorsColors.execute(projectName, toSensorColorMap(sensorColorApiMap));
+        manageData.setSensorTypeListMap(project.getSensorColors());
+        return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(project));
     }
 
     @GetMapping("/colors/{projectName}")
     public ResponseEntity<Map<SensorTypeApi, List<SensorColorApi>>> getSensorColorMap(@PathVariable("projectName") String projectName) {
-        return ResponseEntity.status(HttpStatus.OK).body(toSensorColorApiMap(getSensorColorMap.execute(projectName)));
+        var map = getSensorColorMap.execute(projectName);
+        manageData.setSensorTypeListMap(map);
+        return ResponseEntity.status(HttpStatus.OK).body(toSensorColorApiMap(map));
     }
 
     private ProjectApi toProjectApi(Project project) {
