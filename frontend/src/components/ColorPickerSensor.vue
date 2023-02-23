@@ -4,25 +4,25 @@
       <div class="sensor-icon">
         <v-icon color="#0A0046" size="28">mdi-home-thermometer</v-icon>
       </div>
-      <color-pickers v-on:save="saveData" class="color-pickers" v-on:colorToValue="updateTempColorToValue" v-on:click="this.showModal=true"/>
+      <color-pickers sensor-type="TEMPERATURE" v-on:save="saveData" class="color-pickers" v-on:colorToValue="updateTempColorToValue" v-on:click="this.showModal=true"/>
     </div>
     <div class="sensor-item" v-show="this.selectedType === 'HUMIDITY'">
       <div class="sensor-icon">
         <v-icon color="#0A0046" size="28">mdi-water-percent</v-icon>
       </div>
-      <color-pickers  v-on:save="saveData"  class="color-pickers" v-on:colorToValue="updateHumColorToValue" v-on:click="this.showModal=true"/>
+      <color-pickers  sensor-type="HUMIDITY" v-on:save="saveData"  class="color-pickers" v-on:colorToValue="updateHumColorToValue" v-on:click="this.showModal=true"/>
     </div>
     <div class="sensor-item" v-show="this.selectedType === 'LIGHT'">
       <div class="sensor-icon">
         <v-icon color="#0A0046" size="28">mdi-home-lightbulb</v-icon>
       </div>
-      <color-pickers v-on:save="saveData"  v-on:colorToValue="updateLumColorToValue" v-on:click="this.showModal=true"/>
+      <color-pickers  sensor-type="LIGHT" v-on:save="saveData"  v-on:colorToValue="updateLumColorToValue" v-on:click="this.showModal=true"/>
     </div>
     <div class="sensor-item" v-show="this.selectedType === 'CO2'">
       <div class="sensor-icon">
         <v-icon color="#0A0046" size="28">mdi-molecule-co2</v-icon>
       </div>
-      <color-pickers v-on:save="saveData"  v-on:colorToValue="updateCo2ColorToValue" v-on:click="this.showModal=true"/>
+      <color-pickers sensor-type="CO2" v-on:save="saveData"  v-on:colorToValue="updateCo2ColorToValue" v-on:click="this.showModal=true"/>
     </div>
 
   </div>
@@ -55,9 +55,9 @@ export default {
     }
   },
   setup() {
-    const projectStore1 = projectStore();
-    const sensorsStore1 = sensorsStore();
-    return {projectStore1, sensorsStore1};
+    const store = projectStore();
+    store.fetchSensorColors();
+    return {store};
   },
 
   methods: {
@@ -115,38 +115,14 @@ export default {
       this.co2ColorToValue = colorToValue;
     },
 
-    saveData(action) {
-
-      console.log(JSON.stringify(this.temperatureColorToValue));
-      console.log(JSON.stringify(this.humidityColorToValue));
-      console.log(JSON.stringify(this.co2ColorToValue));
-      console.log(JSON.stringify(this.luminosityColorToValue));
-
-      let config = {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-
+    saveData() {
       let sensorsColors = {"sensorColorApis": {}};
       sensorsColors["sensorColorApis"]["TEMPERATURE"] = this.temperatureColorToValue;
       sensorsColors["sensorColorApis"]["LIGHT"] = this.luminosityColorToValue;
       sensorsColors["sensorColorApis"]["HUMIDITY"] = this.humidityColorToValue;
       sensorsColors["sensorColorApis"]["CO2"] = this.co2ColorToValue;
 
-
-      console.log(" sensorColors: ", JSON.stringify(sensorsColors));
-      console.log(" sensorColors: ",JSON.stringify(sensorsColors));
-
-      console.log(JSON.stringify(sensorsColors));
-      axios.put(`/api/bimiot/projects/colors/${this.projectStore1.currentProjectName}`, JSON.stringify(sensorsColors), config)
-          .then((data) => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-
+      this.store.updateProjectColors(sensorsColors);
     }
   }
 }

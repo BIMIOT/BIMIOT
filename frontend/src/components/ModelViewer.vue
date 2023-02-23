@@ -1,7 +1,11 @@
 <template>
   <section>
     <div class="container">
-      <v-btn @click="() => {this.$router.push('/')}" id="navbar">
+      <v-btn @click="() => {
+          releaseMemory()
+          this.stop();
+          this.$router.push('/')
+      }" id="navbar">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
             <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
@@ -116,6 +120,11 @@ export default {
     return {store};
   },
   methods: {
+    releaseMemory() {
+      location.reload()
+      this.viewer.dispose();
+      this.viewer = null;
+    },
     play() {
       if(this.playing) {
         this.start()
@@ -208,7 +217,12 @@ export default {
       let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
       let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
-      window.onmousemove = () => {viewer.IFC.selector.prePickIfcItem()};
+      window.onmousemove = () => {
+        if(this.viewer === null) {
+          return;
+        }
+        this.viewer.IFC.selector.prePickIfcItem()
+      };
       window.ondblclick = async () => {
         const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
         const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
@@ -475,9 +489,8 @@ export default {
   },
 
   unmounted() {
-    this.viewer.dispose();
+    this.releaseMemory()
     this.stop();
-    this.store.currentProjectName = null;
   },
 
   mounted() {
