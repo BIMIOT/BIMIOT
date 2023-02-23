@@ -45,9 +45,12 @@
 
 <script>
 
+import {projectStore} from "@/store/project";
+
 export default {
   name: "ColorPickers",
   props: {
+    sensorType:{}
   },
   watch: {
     colorToValue: {
@@ -56,6 +59,10 @@ export default {
       },
       deep:true
     }
+  },
+  setup() {
+    const store = projectStore();
+    return {store}
   },
   data() {
     return {
@@ -83,6 +90,8 @@ export default {
   },
 
   mounted() {
+    this.colorToValue = this.store.colors[this.sensorType]
+    console.log(this.colorToValue)
     this.$emit('colorToValue', this.colorToValue)
     this.$emit('colorToValue',this.colorToValue)
     console.log("colorToValue", this.colorToValue)
