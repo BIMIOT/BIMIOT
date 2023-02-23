@@ -3,7 +3,7 @@ package fr.bimiot.domain.use_cases;
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
-import fr.bimiot.domain.use_cases.providers.ProjectFileProvider;
+//import fr.bimiot.domain.use_cases.providers.ProjectFileProvider;
 import fr.bimiot.fixtures.ProjectFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CreateProjectTest {
     @InjectMocks
     CreateProject createProject;
-
-    @Mock
-    ProjectFileProvider projectFileProvider;
 
     @Mock
     ProjectDatabaseProvider projectDatabaseProvider;
