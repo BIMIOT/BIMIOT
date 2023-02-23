@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     play() {
-      if(this.playing) {
+      if(!this.playing) {
         this.start()
       } else {
         this.stop()
@@ -224,7 +224,7 @@ export default {
       scene.add(sensors);
       scene.add(walls);
 
-      this.changeColor(this.room_list, manager, this.currentSenseType)
+      await this.changeColor(this.room_list, manager, this.currentSenseType)
 
     },
     subscribe: function (greeting) {
@@ -291,7 +291,7 @@ export default {
         }
       }
     },
-    changeColor: function (room_ids, manager, sensorType) {
+    async changeColor(room_ids, manager, sensorType) {
       const room_ids_iter = Object.keys(room_ids);
 
       for (const id of room_ids_iter) {
@@ -305,29 +305,29 @@ export default {
         });
       }
     },
-    updateParent: function (type) {
+    updateParent: async function (type) {
       this.currentSenseType = type
 
       const manager = this.viewer.IFC.loader.ifcManager;
       switch (type) {
         case 'HUMIDITY':
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
+          await this.changeColor(this.room_list, manager, type);
           this.currentColorRange = this.humMeshes;
           break;
         case 'LIGHT':
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
+          await this.changeColor(this.room_list, manager, type);
           this.currentColorRange = this.lumMeshes;
           break;
         case 'CO2':
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
+          await this.changeColor(this.room_list, manager, type);
           this.currentColorRange = this.co2Meshes;
           break;
         case "TEMPERATURE":
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
+          await this.changeColor(this.room_list, manager, type);
           this.currentColorRange = this.tempMeshes;
           break;
         default:
