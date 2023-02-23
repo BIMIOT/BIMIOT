@@ -6,7 +6,7 @@
             <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
             <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
           </div>
-      </v-btn>
+     </v-btn>
       <input hidden type="file" id="file-input"/>
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <div style="position: absolute; bottom: 0; left: 0;">
@@ -638,14 +638,13 @@ export default {
 
 #colorPickers {
   position: absolute !important;
-  left: 70%;
 }
 
 #navbar {
   top: 0;
   border-radius: 0 0 25px 0;
   background-color: #888888;
-  elevation: 3;
+  elevation: 3deg;
   position: absolute;
   height: 5em;
   width: 12em;

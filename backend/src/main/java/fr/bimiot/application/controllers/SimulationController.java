@@ -1,6 +1,7 @@
 package fr.bimiot.application.controllers;
 
-import fr.bimiot.domain.use_cases.GetFile;
+import fr.bimiot.application.exception.type.BaseException;
+import fr.bimiot.domain.use_cases.LoadIfcFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,19 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bimiot/simulation")
 public class SimulationController {
-    private final GetFile getFile;
+    private final LoadIfcFile loadIfcFile;
 
     @Autowired
-    public SimulationController(GetFile getFile) {
-        this.getFile = getFile;
+    public SimulationController(LoadIfcFile loadIfcFile) {
+        this.loadIfcFile = loadIfcFile;
     }
 
     @GetMapping("/files/{projectName}")
-    public ResponseEntity<byte[]> loadFile(@PathVariable("projectName") String projectName) {
-        byte[] filecontent = getFile.execute(projectName);
+    public ResponseEntity<byte[]> loadFile(@PathVariable("projectName") String projectName) throws BaseException {
+        byte[] fileContent = loadIfcFile.execute(projectName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentLength(filecontent.length);
-        return new ResponseEntity<>(filecontent, headers, HttpStatus.OK);
+        headers.setContentLength(fileContent.length);
+        return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
     }
 }
