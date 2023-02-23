@@ -1,6 +1,6 @@
 package fr.bimiot.application.controllers;
 
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.LoadIfcFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bimiot/simulation")
 public class SimulationController {
-    private final ProjectDatabaseProvider projectDatabaseProvider;
+    private final LoadIfcFile loadIfcFile;
 
     @Autowired
-    public SimulationController( ProjectDatabaseProvider projectDatabaseProvider) {
-        this.projectDatabaseProvider = projectDatabaseProvider;
+    public SimulationController(LoadIfcFile loadIfcFile) {
+        this.loadIfcFile = loadIfcFile;
     }
 
     @GetMapping("/files/{projectName}")
     public ResponseEntity<byte[]> loadFile(@PathVariable("projectName") String projectName) {
-        byte[] fileContent = projectDatabaseProvider.loadFile(projectName);
+        byte[] fileContent = loadIfcFile.execute(projectName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentLength(fileContent.length);
