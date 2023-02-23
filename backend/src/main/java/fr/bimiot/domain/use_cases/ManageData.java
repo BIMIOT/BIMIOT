@@ -27,7 +27,7 @@ public class ManageData {
                     ifcID = sensor.getSensorIFCid();
                     found = true;
                 }
-                if (SensorType.valueOf(data.getType()).equals(sensor.getType())) {
+                if (SensorType.valueOf(data.getType()).equals(sensor.getType()) && sensor.getValue() != null) {
                     nb++;
                     sum += Float.parseFloat(sensor.getValue());
                 }
