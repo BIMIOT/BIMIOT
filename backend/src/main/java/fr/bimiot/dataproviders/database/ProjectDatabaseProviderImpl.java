@@ -57,7 +57,7 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
     }
 
     @Override
-    public byte[] loadFile(String projectName) {
+    public byte[] loadIFCFile(String projectName) {
         return  projectJpaRepository.findProjectJpaByName(projectName).getIfc().getData();
     }
 

@@ -19,5 +19,5 @@ public interface ProjectDatabaseProvider {
 
     List<String> getAllProjects();
 
-    byte[] loadFile(String projectName);
+    byte[] loadIFCFile(String projectName);
 }
