@@ -105,8 +105,7 @@ export default {
         opacity: 0.3,
         color: 0x00FFFF,
         depthTest: false,
-      }),
-      currentColorRange: []
+      })
     }
   },
   setup() {
@@ -166,8 +165,6 @@ export default {
       }
 
       const manager = this.viewer.IFC.loader.ifcManager;
-      await this.getSensors(structure, manager, this.model.modelID);
-      this.sendMapping();
 
       /**
        * HERE IS THE code YOU WANT IT START FROM HERE
@@ -223,9 +220,11 @@ export default {
       scene.add(floors);
       scene.add(sensors);
       scene.add(walls);
+      scene.add(sp);
 
-      await this.changeColor(this.room_list, manager, this.currentSenseType)
-
+      await this.changeColor(this.room_list, manager, this.currentSenseType);
+      await this.getSensors(structure, manager, this.model.modelID);
+      this.sendMapping();
     },
     subscribe: function (greeting) {
 
@@ -313,39 +312,22 @@ export default {
         case 'HUMIDITY':
           this.removeAll(this.room_list, manager)
           await this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.humMeshes;
           break;
         case 'LIGHT':
           this.removeAll(this.room_list, manager)
           await this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.lumMeshes;
           break;
         case 'CO2':
           this.removeAll(this.room_list, manager)
           await this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.co2Meshes;
           break;
         case "TEMPERATURE":
           this.removeAll(this.room_list, manager)
           await this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.tempMeshes;
           break;
         default:
           console.log("Unknown type!");
       }
-    },
-    newSubsetOfType: async function (viewer, category) {
-      const manager = viewer.IFC.loader.ifcManager;
-      const ids = await manager.getAllItemsOfType(0, category, false);
-
-      return manager.createSubset({
-        modelID: 0,
-        scene: this.viewer.context.getScene(),
-        ids: [722],
-        applyBVH: true,
-        removePrevious: true,
-        customID: category.toString(),
-      });
     },
     showStructure: async function (viewer, modelID) {
       const manager = viewer.IFC.loader.ifcManager;
@@ -458,20 +440,6 @@ export default {
 
     client.activate();
     this.client = client;
-
-    const changeColor = (relIDs, roomId, sensorId, material, previousMaterial, groupId) => {
-      const manager = this.viewer.IFC.loader.ifcManager;
-      manager.removeSubset(this.model.modelID, previousMaterial, groupId);
-
-      manager.createSubset({
-        modelID: this.model.modelID,
-        ids: [roomId],
-        material: material,
-        scene: this.viewer.context.getScene(),
-        removePrevious: false,
-        customID: groupId
-      });
-    }
   },
 
   unmounted() {
