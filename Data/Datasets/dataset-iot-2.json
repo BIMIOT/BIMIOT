@@ -1,294 +1,288 @@
 
   {
-    "id": "LightSensor1",
+    "id": "SensorLum",
     "type": "LIGHT",
     "value": 400,
     "timestamp": 1677162146
   }
   {
-    "id": "CO2Sensor1",
+    "id": "SensorCarb",
     "type": "CO2",
     "value": 1000,
     "timestamp": 1677162146
   }
   {
-    "id": "CO2Sensor2",
+    "id": "SensorCarb1",
     "type": "CO2",
     "value": 1000,
     "timestamp": 1677162146
   }
   {
-    "id": "TempSensor1",
+    "id": "SensorTem1",
     "type": "TEMPERATURE",
     "value": 19,
     "timestamp": 1677162147
   }
   {
-    "id": "LightSensor2",
+    "id": "SensorLum2",
     "type": "LIGHT",
     "value": 380,
     "timestamp": 1677162148
   }
   {
-    "id": "TempSensor3",
+    "id": "SensorTem7",
     "type": "TEMPERATURE",
     "value": -18,
     "timestamp": 1677162149
   }
   {
-    "id": "HumSensor6",
+    "id": "sensorHum3",
     "type": "HUMIDITY",
     "value": 5,
     "timestamp": 1677162150
   }
   {
-    "id": "TempSensor2",
+    "id": "SensorTem4",
     "type": "TEMPERATURE",
     "value": 18,
     "timestamp": 1677162151
   }
   {
-    "id": "TempSensor1",
+    "id": "SensorTem1",
     "type": "TEMPERATURE",
     "value": 21,
     "timestamp": 1677162152
   }
   {
-    "id": "LightSensor4",
+    "id": "SensorLum1",
     "type": "LIGHT",
     "value": 0,
     "timestamp": 1677162153
   }
   {
-    "id": "CO2Sensor3",
+    "id": "SensorCarb2",
     "type": "CO2",
     "value": 1200,
     "timestamp": 1677162154
   }
   {
-    "id": "TempSensor4",
+    "id": "SensorTem2",
     "type": "TEMPERATURE",
     "value": 18,
     "timestamp": 1677162161
   }
   {
-    "id": "TempSensor2",
+    "id": "SensorTem4",
     "type": "TEMPERATURE",
     "value": 20,
     "timestamp": 1677162162
   }
   {
-    "id": "LightSensor3",
+    "id": "SensorLum8",
     "type": "LIGHT",
     "value": 0,
     "timestamp": 1677162162
   }
   {
-    "id": "HumSensor1",
+    "id": "sensorHum",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162162
   }
   {
-    "id": "TempSensor1",
+    "id": "SensorTem1",
     "type": "TEMPERATURE",
     "value": 19,
     "timestamp": 1677162163
   }
   {
-    "id": "TempSensor2",
+    "id": "SensorTem4",
     "type": "TEMPERATURE",
     "value": 18,
     "timestamp": 1677162164
   }
   {
-    "id": "CO2Sensor4",
+    "id": "SensorCarb10",
     "type": "CO2",
     "value": 1500,
     "timestamp": 1677162165
   }
   {
-    "id": "LightSensor8",
-    "type": "LIGHT",
+    "id": "sensorHum17",
+    "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162165
   }
   {
-    "id": "TempSensor1",
+    "id": "SensorTem1",
     "type": "TEMPERATURE",
     "value": 25,
     "timestamp": 1677162166
   }
   {
-    "id": "HumSensor8",
+    "id": "sensorHum10",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162167
   }
   {
-    "id": "TempSensor5",
+    "id": "SensorTem3",
     "type": "TEMPERATURE",
     "value": 18,
     "timestamp": 1677162168
   }
   {
-    "id": "LightSensor7",
-    "type": "LIGHT",
-    "value": 100,
+    "id": "sensorHum18",
+    "type": "HUMIDITY",
+    "value": 5,
     "timestamp": 1677162169
   }
   {
-    "id": "TempSensor2",
+    "id": "SensorTem4",
     "type": "TEMPERATURE",
     "value": 18,
     "timestamp": 1677162170
   }
   {
-    "id": "TempSensor3",
+    "id": "SensorTem7",
     "type": "TEMPERATURE",
     "value": -20,
     "timestamp": 1677162171
   }
   {
-    "id": "TempSensor1",
+    "id": "SensorTem1",
     "type": "TEMPERATURE",
     "value": 60,
     "timestamp": 1677162172
   }
   {
-    "id": "LightSensor4",
+    "id": "SensorLum1",
     "type": "LIGHT",
     "value": 100,
     "timestamp": 1677162173
   }
   {
-    "id": "HumSensor3",
+    "id": "sensorHum12",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162174
   }
   {
-    "id": "TempSensor2",
+    "id": "SensorTem4",
     "type": "TEMPERATURE",
     "value": 35,
     "timestamp": 1677162175
   }
   {
-    "id": "LightSensor6",
+    "id": "SensorLum4",
     "type": "LIGHT",
     "value": 100,
     "timestamp": 1677162176
   }
   {
-    "id": "TempSensor6",
-    "type": "TEMPERATURE",
-    "value": 18,
-    "timestamp": 1677162177
-  }
-  {
-    "id": "CO2Sensor5",
+    "id": "SensorCarb4",
     "type": "CO2",
     "value": 1200,
     "timestamp": 1677162178
   }
   {
-    "id": "CO2Sensor6",
+    "id": "SensorCarb6",
     "type": "CO2",
     "value": 1000,
     "timestamp": 1677162179
   }
   {
-    "id": "HumSensor2",
+    "id": "sensorHum2",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162180
   }
   {
-    "id": "LightSensor9",
-    "type": "LIGHT",
+    "id": "sensorHum16",
+    "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162181
   }
   {
-    "id": "TempSensor1",
+    "id": "SensorTem1",
     "type": "TEMPERATURE",
     "value": 200,
     "timestamp": 1677162188
   }
   {
-    "id": "TempSensor2",
+    "id": "SensorTem4",
     "type": "TEMPERATURE",
     "value": 100,
     "timestamp": 1677162189
   }
   {
-    "id": "TempSensor3",
+    "id": "SensorTem7",
     "type": "TEMPERATURE",
     "value": -19,
     "timestamp": 1677162190
   }
   {
-    "id": "CO2Sensor7",
+    "id": "SensorCarb3",
     "type": "CO2",
     "value": 1000,
     "timestamp": 1677162191
   }
   {
-    "id": "LightSensor2",
+    "id": "SensorLum2",
     "type": "LIGHT",
     "value": 5,
     "timestamp": 1677162192
   }
   {
-    "id": "HumSensor7",
+    "id": "sensorHum4",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162193
   }
   {
-    "id": "CO2Sensor1",
+    "id": "SensorCarb",
     "type": "CO2",
     "value": 5500,
     "timestamp": 1677162198
   }
   {
-    "id": "LightSensor1",
+    "id": "SensorLum",
     "type": "LIGHT",
     "value": 10,
     "timestamp": 1677162199
   }
   {
-    "id": "CO2Sensor2",
+    "id": "SensorCarb1",
     "type": "CO2",
-    "value": 4000,
+    "value": 1000,
     "timestamp": 1677162200
   }
   {
-    "id": "HumSensor4",
+    "id": "sensorHum14",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162201
   }
   {
-    "id": "LightSensor5",
+    "id": "SensorLum3",
     "type": "LIGHT",
     "value": 100,
     "timestamp": 1677162202
   }
   {
-    "id": "HumSensor5",
+    "id": "sensorHum15",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162203
   }
   {
-    "id": "HumSensor9",
+    "id": "sensorHum11",
     "type": "HUMIDITY",
     "value": 0,
     "timestamp": 1677162204
   }
   {
-    "id": "LightSensor4",
+    "id": "SensorLum1",
     "type": "LIGHT",
     "value": 0,
     "timestamp": 1677162205
