@@ -18,7 +18,7 @@ export default {
 </script>
 <style>
 .Two2d3D{
-  bottom: 80px;
+  bottom: 90px;
   left: 35px;
   color: blue;
 }

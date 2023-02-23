@@ -1,22 +1,19 @@
 <template>
   <section>
     <div class="container">
-
-      <v-app>
-        <v-app-bar color="grey" :elevation="2">
+      <v-btn @click="() => {this.$router.push('/')}" id="navbar">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <bim-iot-logo class="mx-3"></bim-iot-logo>
-            <span style="color: #0A0046; font-size: 150%">BimIot</span>
+            <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
+            <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
           </div>
-        </v-app-bar>
-
-      </v-app>
-
-      <input type="file" id="file-input"/>
-      <v-btn id="play" v-on:click="start()">Play</v-btn>
-      <v-btn id="stop" v-on:click="stop()">Stop</v-btn>
+     </v-btn>
+      <input hidden type="file" id="file-input"/>
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <div style="position: absolute; bottom: 0; left: 0;">
+        <v-btn id="controlBtn" icon @click="play">
+          <v-icon v-if="!playing">mdi-play</v-icon>
+          <v-icon v-if="playing">mdi-stop</v-icon>
+        </v-btn>
         <SensorsList :room_list="room_list"/>
         <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
       </div>
@@ -77,6 +74,7 @@ export default {
       entityData: '',
       client: undefined,
       viewer: undefined,
+      playing: false,
       model: undefined,
       currentSenseType: "TEMPERATURE",
       structure: undefined,
@@ -118,6 +116,14 @@ export default {
     return {store};
   },
   methods: {
+    play() {
+      if(this.playing) {
+        this.start()
+      } else {
+        this.stop()
+      }
+      this.playing = !this.playing;
+    },
     async changeTo2d() {
       if(this.model == null) {
         return;
@@ -608,6 +614,8 @@ export default {
   height: 100% !important;
 }
 
+
+
 #file-input {
   position: relative;
   /*left: 10%;*/
@@ -638,11 +646,38 @@ export default {
 
 #colorPickers {
   position: absolute !important;
-  left: 70%;
+}
+
+#navbar {
+  top: 0;
+  border-radius: 0 0 25px 0;
+  background-color: #888888;
+  elevation: 3deg;
+  position: absolute;
+  height: 5em;
+  width: 12em;
+}
+
+#projectName{
+ position: absolute;
+ right: 10px;
+
+}
+
+#logo {
+  position: absolute;
+  left:0;
 }
 
 .v-application__wrap {
   min-height: auto;
+}
+
+#controlBtn{
+  bottom: 160px;
+  left: 35px;
+  color: white;
+  background-color: #0A0046;
 }
 
 .container {
