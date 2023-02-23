@@ -1,34 +1,44 @@
 <template>
-  <div>
+  <div class="color-block-container" >
     <div class="color-block" v-for="(color,index) in colorToValue"
          :key="index"
          :style="{ background: color.colorCode }"
          @click="openColorPicker(index)">
 
     </div>
-    <v-app v-if="selectedColorIndex !== null" id="colorPicker">
-      <v-tabs v-model="selectedTab">
+    <v-app class="color-picker-container" :style="{
+        position: 'absolute',
+        transform: 'translateX(-45px)'
+
+      }" v-if="selectedColorIndex !== null" id="colorPicker">
+      <v-tabs v-model="selectedTab" >
         <v-tab>Color Picker</v-tab>
         <v-tab>Interval List</v-tab>
       </v-tabs>
-      <v-tab-item v-if="selectedTab === 0">
-        <v-color-picker v-model="colorToValue[selectedColorIndex].colorCode" mode="hexa" @input="closeColorPicker"></v-color-picker>
-      </v-tab-item>
-      <v-tab-item v-if="selectedTab === 1">
-        <div>
-          <p>Modify the interval</p>
 
+      <v-tab-item class="tab-item" v-if="selectedTab === 0">
+        <v-color-picker v-model="colorToValue[selectedColorIndex].colorCode" mode="hexa"
+                        @input="closeColorPicker"></v-color-picker>
+
+      </v-tab-item>
+
+      <v-tab-item  v-if="selectedTab === 1">
+        <div class="value-inputs">
+          <p>Modify the interval</p>
           <v-text-field
               v-for="(value,index) in colorToValue.slice(0,3)"
               :key="index"
               v-model="value.threshold"
               :placeholder="value.threshold"
               type="number"
-              :rules= "[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
+              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
               validate-on="input"
           />
         </div>
       </v-tab-item>
+      <v-btn color="primary" v-on:click="save()">Save</v-btn>
+      <v-btn v-on:click="cancel()">Cancel</v-btn>
+
     </v-app>
   </div>
 </template>
@@ -38,12 +48,11 @@
 export default {
   name: "ColorPickers",
   props: {
-    datas: []
   },
   watch: {
     colorToValue: {
       handler:function (newValue){
-        this.$emit('colorToValue',newValue)
+        this.$emit('colorToValue', newValue)
       },
       deep:true
     }
@@ -52,32 +61,31 @@ export default {
     return {
       selectedColorIndex: null,
       selectedTab: 0,
-      colorToValue:[
+      colorToValue: [
         {
-          colorCode:'#ff0000',
+          colorCode: '#ff0000',
           threshold: 3
         },
         {
-          colorCode:'#00ff00',
+          colorCode: '#00ff00',
           threshold: 10
         },
         {
-          colorCode:'#0000ff',
+          colorCode: '#0000ff',
           threshold: 20
         },
         {
-          colorCode:'#ffff00',
+          colorCode: '#ffff00',
           threshold: Infinity
         }
       ]
     }
   },
-  mounted() {
 
-    this.$emit('colors',this.colors);
-    this.$emit('values',this.values);
+  mounted() {
+    this.$emit('colorToValue', this.colorToValue)
     this.$emit('colorToValue',this.colorToValue)
-    console.log("hello")
+    console.log("colorToValue", this.colorToValue)
     console.log("colorToValue",this.colorToValue)
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
@@ -85,6 +93,13 @@ export default {
     document.removeEventListener('click', this.closeColorPickerOnClickOutside)
   },
   methods: {
+    save() {
+      this.$emit('save', "save")
+    },
+    cancel() {
+      this.selectedColorIndex = null;
+    }
+    ,
     openColorPicker(id) {
       this.selectedColorIndex = id
     },
@@ -96,18 +111,40 @@ export default {
         this.selectedColorIndex = null
       }
     },
-    updateInterval(index,value) {
-      console.log("!!!!values are: ",value)
-    }
   }
 }
 </script>
 
 <style>
+
+.color-block-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-picker-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  align-items: center;
+}
+
 .color-block {
   width: 50px;
-  height: 24px;
-  display: inline-block;
+  height: 18px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+
+.tab-item {
+  margin-bottom: 18px;
+}
+
+.value-inputs {
+  padding: 8px;
 }
 </style>
