@@ -80,8 +80,6 @@ export default {
         return '#0A0046'; // default color for unselected button
       }
     }
-
-
   }
 }
 </script>
