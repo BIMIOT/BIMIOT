@@ -8,7 +8,7 @@
           :value="'TEMPERATURE'" :class="{ 'active': selected === 'TEMPERATURE' }"
           :color="pickColor('TEMPERATURE')"
       >
-        <v-icon color="white">
+        <v-icon :color="selected === 'TEMPERATURE'? '#0A0046' : '#ffffff'">
           mdi-home-thermometer
         </v-icon>
       </v-btn>
@@ -23,7 +23,7 @@
           :color="pickColor('HUMIDITY')"
       >
         <v-icon
-            color="white">
+            :color="selected === 'HUMIDITY'? '#0A0046' : '#ffffff'">
           mdi-water-percent
         </v-icon>
       </v-btn>
@@ -36,7 +36,7 @@
           :value="'CO2'" :class="{ 'active': selected === 'CO2' }"
           :color="pickColor('CO2')"
       >
-        <v-icon color="white">
+        <v-icon :color="selected === 'CO2'? '#0A0046' : '#ffffff'">
           mdi-molecule-co2
         </v-icon>
       </v-btn>
@@ -49,7 +49,7 @@
           :value="'LIGHT'" :class="{ 'active': selected === 'LIGHT' }"
           :color="pickColor('LIGHT')"
       >
-        <v-icon color="white">
+        <v-icon :color="selected === 'LIGHT'? '#0A0046' : '#ffffff'">
           mdi-home-lightbulb
         </v-icon>
       </v-btn>
@@ -63,6 +63,7 @@
 export default {
   data() {
     return {
+      iconColor: "white",
       selected: "TEMPERATURE",
     }
   },
@@ -75,7 +76,7 @@ export default {
     },
     pickColor: function(value) {
       if (this.selected === value) {
-        return '#a3a3a2'; // red color for selected button
+        return '#d1FFFF'; // red color for selected button
       } else {
         return '#0A0046'; // default color for unselected button
       }
