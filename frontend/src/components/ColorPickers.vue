@@ -97,8 +97,6 @@ export default {
     });
 
     this.$emit('colorToValue', this.colorToValue)
-    this.$emit('colorToValue',this.colorToValue)
-    console.log("colorToValue", this.colorToValue)
     console.log("colorToValue",this.colorToValue)
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
