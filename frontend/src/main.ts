@@ -20,3 +20,6 @@ loadFonts()
 createApp(App).use(pinia)
   .use(vuetify).use(router).component("font-awesome-icon", FontAwesomeIcon).component("bim-iot-logo",BimIotLogo)
   .mount('#app')
+
+
+
