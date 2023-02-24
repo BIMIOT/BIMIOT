@@ -1,10 +1,10 @@
 package fr.bimiot.dataproviders.database;
 
 import fr.bimiot.dataproviders.exception.DataBaseException;
-import fr.bimiot.domain.entities.Project;
-import fr.bimiot.domain.entities.SensorColor;
-import fr.bimiot.domain.entities.SensorType;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.core.entities.Project;
+import fr.bimiot.core.entities.SensorColor;
+import fr.bimiot.core.entities.SensorType;
+import fr.bimiot.core.use_cases.providers.ProjectDatabaseProvider;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.stereotype.Component;

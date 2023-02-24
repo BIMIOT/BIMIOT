@@ -1,6 +1,6 @@
 package fr.bimiot.dataproviders.exception;
 
-import fr.bimiot.application.exception.type.BaseException;
+import fr.bimiot.entrypoints.exception.type.BaseException;
 
 public class DataBaseException extends BaseException {
 

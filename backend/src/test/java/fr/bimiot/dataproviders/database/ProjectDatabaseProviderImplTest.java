@@ -1,7 +1,7 @@
 package fr.bimiot.dataproviders.database;
 
 import fr.bimiot.dataproviders.exception.DataBaseException;
-import fr.bimiot.domain.entities.Project;
+import fr.bimiot.core.entities.Project;
 import fr.bimiot.fixtures.ProjectJpaFixture;
 import fr.bimiot.fixtures.SensorColorMapFixture;
 import org.bson.BsonBinarySubType;

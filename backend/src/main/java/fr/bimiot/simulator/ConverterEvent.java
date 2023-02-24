@@ -1,6 +1,6 @@
 package fr.bimiot.simulator;
 
-import fr.bimiot.domain.entities.WebSocketData;
+import fr.bimiot.core.entities.WebSocketData;
 import org.springframework.context.ApplicationEvent;
 
 public class ConverterEvent extends ApplicationEvent {

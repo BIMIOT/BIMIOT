@@ -2,7 +2,7 @@ package fr.bimiot.fixtures;
 
 import fr.bimiot.dataproviders.database.SensorColorJpa;
 import fr.bimiot.dataproviders.database.SensorTypeJpa;
-import fr.bimiot.domain.entities.SensorType;
+import fr.bimiot.core.entities.SensorType;
 
 import java.util.*;
 

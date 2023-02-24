@@ -1,6 +1,6 @@
 package fr.bimiot.fixtures;
 
-import fr.bimiot.domain.entities.Project;
+import fr.bimiot.core.entities.Project;
 import org.springframework.mock.web.MockMultipartFile;
 
 public class ProjectFixture {

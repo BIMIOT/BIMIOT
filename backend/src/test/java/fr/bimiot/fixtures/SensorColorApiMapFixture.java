@@ -1,7 +1,7 @@
 package fr.bimiot.fixtures;
 
-import fr.bimiot.application.SensorTypeApi;
-import fr.bimiot.application.dtos.SensorColorApi;
+import fr.bimiot.entrypoints.dtos.SensorColorApi;
+import fr.bimiot.entrypoints.dtos.SensorTypeApi;
 
 import java.util.*;
 

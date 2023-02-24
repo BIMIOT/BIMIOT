@@ -1,7 +1,7 @@
 package fr.bimiot.fixtures;
 
-import fr.bimiot.domain.entities.SensorColor;
-import fr.bimiot.domain.entities.SensorType;
+import fr.bimiot.core.entities.SensorColor;
+import fr.bimiot.core.entities.SensorType;
 
 import java.util.*;
 
