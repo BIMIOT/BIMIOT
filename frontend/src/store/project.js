@@ -35,6 +35,9 @@ export const projectStore = defineStore('project', {
             }]
         }
     }),
+    getters: {
+        getColors: (state) => state.colors
+    },
     actions: {
         async updateProjectColors(colors) {
             let config = {
@@ -52,9 +55,8 @@ export const projectStore = defineStore('project', {
                     'Content-Type': 'application/json'
                 }
             }
-            const response = await axios.get(`/api/bimiot/projects/colors/${this.currentProjectName}`, config);
-            this.colors = response.data;
-            console.log(this.colors);
+            this.colors  = await axios.get(`/api/bimiot/projects/colors/${this.currentProjectName}`, config);
+            return this.colors;
         }
     }
 })

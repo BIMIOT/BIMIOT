@@ -90,8 +90,12 @@ export default {
   },
 
   mounted() {
-    this.colorToValue = this.store.colors[this.sensorType]
-    console.log(this.colorToValue)
+    this.store.fetchSensorColors().then(() => {
+      const v = this.store.getColors.data
+      this.colorToValue =  v[this.sensorType];
+      console.log(v, "heeeeeeee")
+    });
+
     this.$emit('colorToValue', this.colorToValue)
     this.$emit('colorToValue',this.colorToValue)
     console.log("colorToValue", this.colorToValue)
