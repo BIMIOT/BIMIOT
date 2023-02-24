@@ -2,7 +2,7 @@
   <div   :style="{ left: colorPickerPos.x + 'px', top: colorPickerPos.y + 'px' }" @mousedown="handleMouseDown" >
     <div class="sensor-item" v-show="this.selectedType === 'TEMPERATURE'" >
       <div class="sensor-icon">
-        <v-icon color="#0A0046" size="28">mdi-home-thermometer</v-icon>
+        <v-icon color="#0A0046" size="28">mdi-thermometer</v-icon>
       </div>
       <color-pickers sensor-type="TEMPERATURE" v-on:save="saveData" class="color-pickers" v-on:colorToValue="updateTempColorToValue" v-on:click="this.showModal=true"/>
     </div>
@@ -14,7 +14,7 @@
     </div>
     <div class="sensor-item" v-show="this.selectedType === 'LIGHT'">
       <div class="sensor-icon">
-        <v-icon color="#0A0046" size="28">mdi-home-lightbulb</v-icon>
+        <v-icon color="#0A0046" size="28">mdi-lightbulb-on</v-icon>
       </div>
       <color-pickers  sensor-type="LIGHT" v-on:save="saveData"  v-on:colorToValue="updateLumColorToValue" v-on:click="this.showModal=true"/>
     </div>
