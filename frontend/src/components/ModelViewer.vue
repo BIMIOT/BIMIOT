@@ -4,7 +4,7 @@
       <v-btn @click="() => {
           releaseMemory()
           this.stop();
-          this.$router.push('/')
+          this.$router.back()
       }" id="navbar">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
