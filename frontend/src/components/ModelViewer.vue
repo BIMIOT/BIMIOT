@@ -109,8 +109,7 @@ export default {
         opacity: 0.3,
         color: 0x00FFFF,
         depthTest: false,
-      }),
-      currentColorRange: []
+      })
     }
   },
   setup() {
@@ -126,7 +125,7 @@ export default {
       this.viewer = null;
     },
     play() {
-      if(this.playing) {
+      if(!this.playing) {
         this.start()
       } else {
         this.stop()
@@ -175,8 +174,6 @@ export default {
       }
 
       const manager = this.viewer.IFC.loader.ifcManager;
-      await this.getSensors(structure, manager, this.model.modelID);
-      this.sendMapping();
 
       /**
        * HERE IS THE code YOU WANT IT START FROM HERE
@@ -237,9 +234,11 @@ export default {
       scene.add(floors);
       scene.add(sensors);
       scene.add(walls);
+      scene.add(sp);
 
-      this.changeColor(this.room_list, manager, this.currentSenseType)
-
+      await this.changeColor(this.room_list, manager, this.currentSenseType);
+      await this.getSensors(structure, manager, this.model.modelID);
+      this.sendMapping();
     },
     subscribe: function (greeting) {
 
@@ -305,7 +304,7 @@ export default {
         }
       }
     },
-    changeColor: function (room_ids, manager, sensorType) {
+    async changeColor(room_ids, manager, sensorType) {
       const room_ids_iter = Object.keys(room_ids);
 
       for (const id of room_ids_iter) {
@@ -319,47 +318,30 @@ export default {
         });
       }
     },
-    updateParent: function (type) {
+    updateParent: async function (type) {
       this.currentSenseType = type
 
       const manager = this.viewer.IFC.loader.ifcManager;
       switch (type) {
         case 'HUMIDITY':
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.humMeshes;
+          await this.changeColor(this.room_list, manager, type);
           break;
         case 'LIGHT':
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.lumMeshes;
+          await this.changeColor(this.room_list, manager, type);
           break;
         case 'CO2':
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.co2Meshes;
+          await this.changeColor(this.room_list, manager, type);
           break;
         case "TEMPERATURE":
           this.removeAll(this.room_list, manager)
-          this.changeColor(this.room_list, manager, type);
-          this.currentColorRange = this.tempMeshes;
+          await this.changeColor(this.room_list, manager, type);
           break;
         default:
           console.log("Unknown type!");
       }
-    },
-    newSubsetOfType: async function (viewer, category) {
-      const manager = viewer.IFC.loader.ifcManager;
-      const ids = await manager.getAllItemsOfType(0, category, false);
-
-      return manager.createSubset({
-        modelID: 0,
-        scene: this.viewer.context.getScene(),
-        ids: [722],
-        applyBVH: true,
-        removePrevious: true,
-        customID: category.toString(),
-      });
     },
     showStructure: async function (viewer, modelID) {
       const manager = viewer.IFC.loader.ifcManager;
@@ -472,20 +454,6 @@ export default {
 
     client.activate();
     this.client = client;
-
-    const changeColor = (relIDs, roomId, sensorId, material, previousMaterial, groupId) => {
-      const manager = this.viewer.IFC.loader.ifcManager;
-      manager.removeSubset(this.model.modelID, previousMaterial, groupId);
-
-      manager.createSubset({
-        modelID: this.model.modelID,
-        ids: [roomId],
-        material: material,
-        scene: this.viewer.context.getScene(),
-        removePrevious: false,
-        customID: groupId
-      });
-    }
   },
 
   unmounted() {

@@ -9,7 +9,7 @@
           :color="pickColor('TEMPERATURE')"
       >
         <v-icon :color="selected === 'TEMPERATURE'? '#0A0046' : '#ffffff'">
-          mdi-home-thermometer
+          mdi-thermometer
         </v-icon>
       </v-btn>
   </div>
@@ -50,7 +50,7 @@
           :color="pickColor('LIGHT')"
       >
         <v-icon :color="selected === 'LIGHT'? '#0A0046' : '#ffffff'">
-          mdi-home-lightbulb
+          mdi-lightbulb-on
         </v-icon>
       </v-btn>
     </div>
