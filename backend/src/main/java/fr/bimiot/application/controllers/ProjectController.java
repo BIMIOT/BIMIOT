@@ -5,8 +5,9 @@ import fr.bimiot.application.dtos.SensorColorApi;
 import fr.bimiot.application.dtos.SensorColorApiMap;
 import fr.bimiot.application.dtos.SensorTypeApi;
 import fr.bimiot.dataproviders.exception.DataBaseException;
-import fr.bimiot.domain.entities.*;
-import fr.bimiot.domain.exception.DomainException;
+import fr.bimiot.domain.entities.Project;
+import fr.bimiot.domain.entities.SensorColor;
+import fr.bimiot.domain.entities.SensorType;
 import fr.bimiot.domain.use_cases.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,21 +28,40 @@ public class ProjectController {
     private final ManageData manageData;
     private final UpdateSensorsColors updateSensorsColors;
     private final GetSensorColorMap getSensorColorMap;
+    private final GetAllProjects getAllProjects;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap, GetAllProjects getAllProjects) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
         this.manageSimulation = manageSimulation;
         this.manageData = manageData;
         this.updateSensorsColors = updateSensorsColors;
         this.getSensorColorMap = getSensorColorMap;
+        this.getAllProjects = getAllProjects;
     }
 
+    /**
+     * Create new project in database and create new simulation in simulator with dataset file
+     * @param projectName of new project
+     * @param ifc data structure file
+     * @param dataset json dataset file
+     * @return project created
+     * @throws IOException throw if there is problem with getting content bytes of file(s)
+     */
     @PostMapping
-    public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
+    public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws IOException {
         manageSimulation.executeCreate(projectName, dataset);
         var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
         return ResponseEntity.ok(toProjectApi(projectResponse));
+    }
+
+    /**
+     * Get all project names
+     * @return list of existed project names
+     */
+    @GetMapping
+    public ResponseEntity<List<String>> getAllProjects() {
+        return ResponseEntity.status(HttpStatus.OK).body(getAllProjects.execute());
     }
 
     private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) {
@@ -54,13 +74,24 @@ public class ProjectController {
         return projectApi;
     }
 
+    /**
+     * Delete project in database and in simulator
+     * @param projectName of corresponding project
+     */
     @DeleteMapping("/{projectName}")
-    public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
+    public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) {
         manageSimulation.executeDelete(projectName);
         deleteProject.execute(projectName);
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
 
+    /**
+     * Update the colors of the sensors of a project
+     * @param projectName of the project
+     * @param sensorColorApiMap of the project contains all type of sensor and for each its colors with threshold
+     * @return the corresponding project with new sensors colors
+     * @throws DataBaseException throw this exception if project doesn't exist
+     */
     @PutMapping("/colors/{projectName}")
     public ResponseEntity<ProjectApi> updateProjectColors(@PathVariable("projectName") String projectName, @RequestBody SensorColorApiMap sensorColorApiMap) throws DataBaseException {
         var project = updateSensorsColors.execute(projectName, toSensorColorMap(sensorColorApiMap));
@@ -68,6 +99,11 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(project));
     }
 
+    /**
+     * Get sensors colors of a project
+     * @param projectName of corresponding project
+     * @return map of all color types with colors and threshold for each type
+     */
     @GetMapping("/colors/{projectName}")
     public ResponseEntity<Map<SensorTypeApi, List<SensorColorApi>>> getSensorColorMap(@PathVariable("projectName") String projectName) {
         var map = getSensorColorMap.execute(projectName);

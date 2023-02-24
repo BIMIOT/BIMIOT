@@ -1,7 +1,6 @@
 package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.Project;
-import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,13 @@ public class CreateProject {
         this.projectDatabaseProvider = projectDatabaseProvider;
     }
 
-    public String execute(Project project) throws DomainException, IOException {
+    /**
+     * Create project in database
+     * @param project has to create
+     * @return project's id
+     * @throws IOException throw if there is problem with getting bytes content file(s)
+     */
+    public String execute(Project project) throws IOException {
         return projectDatabaseProvider.create(project);
     }
 

@@ -12,6 +12,10 @@ public class GetAllProjects {
         this.projectDatabaseProvider = projectDatabaseProvider;
     }
 
+    /**
+     * Get all project's name
+     * @return list of all project's names
+     */
     public List<String> execute() {
         return projectDatabaseProvider.getAllProjects();
     }

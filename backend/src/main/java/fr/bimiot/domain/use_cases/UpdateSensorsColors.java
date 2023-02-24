@@ -18,6 +18,13 @@ public class UpdateSensorsColors {
         this.projectDatabaseProvider = projectDatabaseProvider;
     }
 
+    /**
+     * Update sensors colors of project name
+     * @param projectName of project
+     * @param sensorTypeListMap updated sensors colors
+     * @return project with updated sensors colors
+     * @throws DataBaseException throw this exception if project doesn't exist
+     */
     public Project execute(String projectName, Map<SensorType, List<SensorColor>> sensorTypeListMap) throws DataBaseException {
         return projectDatabaseProvider.updateSensorsColorsByProjectName(projectName, sensorTypeListMap);
     }

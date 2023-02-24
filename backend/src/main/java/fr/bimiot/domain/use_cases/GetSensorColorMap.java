@@ -17,6 +17,11 @@ public class GetSensorColorMap {
         this.projectDatabaseProvider = projectDatabaseProvider;
     }
 
+    /**
+     * Get sensors with colors for each sensor and threshold for each color
+     * @param projectName of corresponding project
+     * @return all type of sensor with colors and threshold for each
+     */
     public Map<SensorType, List<SensorColor>> execute(String projectName) {
         return projectDatabaseProvider.findSensorColorMapByProjectName(projectName);
     }

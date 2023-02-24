@@ -27,7 +27,7 @@ class UpdateSensorsColorsTest {
     void execute_shouldReturnSameProjectWithColorsSensors() throws DataBaseException {
         //  Given
         Project project = ProjectFixture.aProjectWithoutSensorsAndWithoutId();
-        BDDMockito.doReturn(ProjectFixture.aProjectWithOnlyTemperatureSensor())
+        BDDMockito.doReturn(ProjectFixture.aCompleteProject())
                 .when(projectDatabaseProvider)
                 .updateSensorsColorsByProjectName(project.getName(), SensorColorMapFixture.sensorTypeListMapDomain());
         //  When

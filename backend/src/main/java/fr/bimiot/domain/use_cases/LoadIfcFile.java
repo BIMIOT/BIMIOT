@@ -1,6 +1,5 @@
 package fr.bimiot.domain.use_cases;
 
-import fr.bimiot.application.exception.type.BaseException;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,14 @@ public class LoadIfcFile {
         this.projectDatabaseProvider = projectDatabaseProvider;
     }
 
-    public byte[] execute(String projectName) throws BaseException {
+    /**
+     * Load ifc file of project with name projectName
+     * @param projectName of corresponding project
+     * @return bytes array content of ifc project file
+     * @throws DomainException throw this exception if projectName is invalid
+     */
+    //  TODO : move invalid project name check to ProjectController with spring boot validator
+    public byte[] execute(String projectName) throws DomainException {
         if (isInvalidProjectName(projectName)) {
             throw new DomainException("Invalid project name !");
         }
