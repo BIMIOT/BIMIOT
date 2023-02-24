@@ -5,7 +5,7 @@ export default {
     //ModelViewer
   },
   created() {
-    document.title = 'Vue IFC.js Example'
+    document.title = 'BimIot'
   }
 }
 </script>

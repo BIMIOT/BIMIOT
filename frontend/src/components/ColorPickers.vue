@@ -1,98 +1,161 @@
 <template>
-  <div>
-    <div class="color-block" v-for="color in colors" :key="color.id" :style="{ background: color.value }" @click="openColorPicker(color.id)"></div>
-    <v-app v-if="selectedColorId !== null" id="colorPicker">
-      <v-tabs v-model="selectedTab">
+  <div class="color-block-container" >
+    <div class="color-block" v-for="(color,index) in colorToValue"
+         :key="index"
+         :style="{ background: color.colorCode }"
+         @click="openColorPicker(index)">
+
+    </div>
+    <v-app class="color-picker-container" :style="{
+        position: 'absolute',
+        transform: 'translateX(-45px)'
+
+      }" v-if="selectedColorIndex !== null" id="colorPicker">
+      <v-tabs v-model="selectedTab" >
         <v-tab>Color Picker</v-tab>
-        <v-tab>Int List</v-tab>
+        <v-tab>Interval List</v-tab>
       </v-tabs>
-      <v-tab-item v-if="selectedTab === 0">
-        <v-color-picker v-model="colors[selectedColorId].value" mode="hexa" @input="closeColorPicker"></v-color-picker>
+
+      <v-tab-item class="tab-item" v-if="selectedTab === 0">
+        <v-color-picker v-model="colorToValue[selectedColorIndex].colorCode" mode="hexa"
+                        @input="closeColorPicker"></v-color-picker>
+
       </v-tab-item>
-      <v-tab-item v-if="selectedTab === 1">
-        <div>
-          <p>Int List</p>
-          <ul>
-            <li v-for="int in values" :key="int">{{ int }}</li>
-          </ul>
-          <div>
-            <v-text-field v-model="newInt" placeholder="Add a new int"></v-text-field>
-            <v-btn @click="addInt(selectedColorId)">Add</v-btn>
-          </div>
+
+      <v-tab-item  v-if="selectedTab === 1">
+        <div class="value-inputs">
+          <p>Modify the interval</p>
+          <v-text-field
+              v-for="(value,index) in colorToValue.slice(0,3)"
+              :key="index"
+              v-model="value.threshold"
+              :placeholder="value.threshold"
+              type="number"
+              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
+              validate-on="input"
+          />
         </div>
       </v-tab-item>
+      <v-btn color="primary" v-on:click="save()">Save</v-btn>
+      <v-btn v-on:click="cancel()">Cancel</v-btn>
+
     </v-app>
   </div>
 </template>
 
 <script>
+
+import {projectStore} from "@/store/project";
+
 export default {
   name: "ColorPickers",
   props: {
-    datas: []
+    sensorType:{}
   },
   watch: {
-    colors: {
-      handler: function(newValue) {
-        this.$emit('colors',newValue);
+    colorToValue: {
+      handler:function (newValue){
+        this.$emit('colorToValue', newValue)
       },
-      deep: true
-    },
-    values: {
-      handler: function(newValue) {
-        this.$emit('values',newValue);
-      },
-      deep: true
+      deep:true
     }
+  },
+  setup() {
+    const store = projectStore();
+    return {store}
   },
   data() {
     return {
-      colors: [
-        { id: 0, value: '#ff0000' },
-        { id: 1, value: '#00ff00' },
-        { id: 2, value: '#0000ff' },
-        { id: 3, value: '#ffff00' }
-      ],
-      values: [3,10,20],
-      selectedColorId: null,
+      selectedColorIndex: null,
       selectedTab: 0,
-      newInt: ''
+      colorToValue: [
+        {
+          colorCode: '#ff0000',
+          threshold: 3
+        },
+        {
+          colorCode: '#00ff00',
+          threshold: 10
+        },
+        {
+          colorCode: '#0000ff',
+          threshold: 20
+        },
+        {
+          colorCode: '#ffff00',
+          threshold: Infinity
+        }
+      ]
     }
   },
+
   mounted() {
-    this.$emit('colors',this.colors);
-    this.$emit('values',this.values);
-    console.log("hello")
+    this.store.fetchSensorColors().then(() => {
+      const v = this.store.getColors.data
+      this.colorToValue =  v[this.sensorType];
+      console.log(v, "heeeeeeee")
+    });
+
+    this.$emit('colorToValue', this.colorToValue)
+    console.log("colorToValue",this.colorToValue)
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
   beforeUnmount() {
     document.removeEventListener('click', this.closeColorPickerOnClickOutside)
   },
   methods: {
+    save() {
+      this.$emit('save', "save")
+    },
+    cancel() {
+      this.selectedColorIndex = null;
+    }
+    ,
     openColorPicker(id) {
-      this.selectedColorId = id
+      this.selectedColorIndex = id
     },
     closeColorPicker() {
-      this.selectedColorId = null
+      this.selectedColorIndex = null
     },
     closeColorPickerOnClickOutside(event) {
-      if (!this.$el.contains(event.target) && this.selectedColorId !== null) {
-        this.selectedColorId = null
+      if (!this.$el.contains(event.target) && this.selectedColorIndex !== null) {
+        this.selectedColorIndex = null
       }
     },
-    addInt(id) {
-      this.values.push(Number(this.newInt))
-      this.newInt = ''
-    }
   }
 }
 </script>
 
 <style>
+
+.color-block-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-picker-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  align-items: center;
+}
+
 .color-block {
   width: 50px;
-  height: 50px;
-  display: inline-block;
+  height: 18px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+
+.tab-item {
+  margin-bottom: 18px;
+}
+
+.value-inputs {
+  padding: 8px;
 }
 </style>

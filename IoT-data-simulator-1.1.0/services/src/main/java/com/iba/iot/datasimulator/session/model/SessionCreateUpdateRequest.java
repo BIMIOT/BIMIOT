@@ -48,4 +48,8 @@ public class SessionCreateUpdateRequest {
 
     @NotEmpty
     private String targetSystemId;
+
+    public void setIsReplayLooped(boolean isReplayLooped) {
+        this.isReplayLooped = isReplayLooped;
+    }
 }
