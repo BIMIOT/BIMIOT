@@ -6,10 +6,10 @@ import fr.bimiot.entrypoints.dtos.SensorTypeApi;
 import java.util.*;
 
 public class SensorColorApiMapFixture {
-    public static Map<String, List<SensorColorApi>> sensorTypeListMapEntrypoint() {
-        var map = new HashMap<String, List<SensorColorApi>>();
+    public static Map<SensorTypeApi, List<SensorColorApi>> sensorTypeListMapEntrypoint() {
+        var map = new HashMap<SensorTypeApi, List<SensorColorApi>>();
         Arrays.stream(SensorTypeApi.values())
-                .forEach(sensorTypeApi -> map.put(sensorTypeApi.name(), aCompletePaletteSensorColorApi()));
+                .forEach(sensorTypeApi -> map.put(sensorTypeApi, aCompletePaletteSensorColorApi()));
         return map;
     }
 
