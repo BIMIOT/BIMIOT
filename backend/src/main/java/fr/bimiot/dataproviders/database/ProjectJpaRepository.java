@@ -5,8 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectJpaRepository extends MongoRepository<ProjectJpa, String>{
-    //@Query("{'name': ?0 }")
-    void deleteByName(String projectName);
-    ProjectJpa findByName(String name);
 
 }

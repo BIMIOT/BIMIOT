@@ -8,7 +8,6 @@ import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -26,45 +25,35 @@ public class ProjectDatabaseProvider implements ProjectProvider {
     }
 
     @Override
-    public Project save(Project project) throws IOException {
-        //  TODO
-        return null;
+    public Project save(Project project) {
+        return toProject(projectJpaRepository.save(toProjectJpa(project)));
     }
 
     @Override
     public void deleteById(String id) {
-        //  TODO
+        projectJpaRepository.deleteById(id);
     }
 
     @Override
     public Optional<Project> findById(String id) {
-        return Optional.empty();
+        return projectJpaRepository.findById(id)
+                .map(this::toProject);
     }
 
     @Override
     public List<Project> findAll() {
-        return null;
-    }
-
-    private List<SensorColorJpa> toSensorColorJpaList(List<SensorColor> sensorColors) {
-        return sensorColors.stream()
-                .map(sensorColor -> new SensorColorJpa(
-                        sensorColor.colorCode(),
-                        sensorColor.threshold()
-                )).toList();
+        return projectJpaRepository.findAll().stream()
+                .map(this::toProject)
+                .toList();
     }
 
     private Project toProject(ProjectJpa projectJpa) {
         var project = new Project();
         project.setId(projectJpa.getId());
         project.setName(projectJpa.getName());
+        project.setIfc(projectJpa.getIfc().getData());
         project.setSensorColors(toSensorColorMap(projectJpa.getSensorColorJpaMap()));
         return project;
-    }
-
-    private Map<SensorTypeJpa, List<SensorColorJpa>> toSensorColorJpaMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
-        return sensorTypeListMap.entrySet().stream()
-                .collect(Collectors.toMap(entry -> SensorTypeJpa.valueOf(entry.getKey().name()), entry -> toSensorColorJpaList(entry.getValue())));
     }
 
     private Map<SensorType, List<SensorColor>> toSensorColorMap(Map<SensorTypeJpa, List<SensorColorJpa>> sensorColorJpaMap) {
@@ -79,7 +68,7 @@ public class ProjectDatabaseProvider implements ProjectProvider {
                         sensorColorJpa.getThreshold())).toList();
     }
 
-    private ProjectJpa toProjectJpa(Project project) throws IOException {
+    private ProjectJpa toProjectJpa(Project project) {
         ProjectJpa projectJpa = new ProjectJpa();
         projectJpa.setIfc(toBinary(project.getIfc()));
         projectJpa.setName(project.getName());
@@ -132,7 +121,7 @@ public class ProjectDatabaseProvider implements ProjectProvider {
         );
     }
 
-    private Binary toBinary(byte[] file) throws IOException {
+    private Binary toBinary(byte[] file) {
         return new Binary(BsonBinarySubType.BINARY, file);
     }
 }
