@@ -1,7 +1,7 @@
 package fr.bimiot.core.use_cases;
 
-import fr.bimiot.core.exception.DomainException;
-import fr.bimiot.core.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.core.use_cases.providers.ProjectProvider;
+import fr.bimiot.fixtures.ProjectFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,15 +16,15 @@ class DeleteProjectTest {
     @InjectMocks
     DeleteProject deleteProject;
     @Mock
-    ProjectDatabaseProvider projectDatabaseProvider;
-    private final static String PROJECT_NAME = "deleteTest";
+    ProjectProvider projectProvider;
 
     @Test
-    void deleteProject_byGivenProjectName() throws DomainException {
-        //When
-        deleteProject.execute(PROJECT_NAME);
-        //Then
-        verify(projectDatabaseProvider, times(1)).delete(PROJECT_NAME);
+    void execute_shouldCallDeleteByIdOfProvider() {
+        //  Given
+        var id = ProjectFixture.aCompleteProject().getId();
+        //  When
+        deleteProject.execute(id);
+        //  Then
+        verify(projectProvider, times(1)).deleteById(id);
     }
-
 }

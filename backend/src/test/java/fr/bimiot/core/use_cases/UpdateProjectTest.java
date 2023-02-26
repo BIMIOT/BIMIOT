@@ -12,24 +12,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateProjectTest {
+class UpdateProjectTest {
+
     @InjectMocks
-    CreateProject createProject;
+    UpdateProject updateProject;
     @Mock
     ProjectProvider projectProvider;
+
     @Test
-    void execute_shouldReturnCreatedProjectFromProvider() throws IOException {
+    void execute_shouldReturnUpdatedProjectFromProvider() throws IOException {
         //  Given
-        var project = ProjectFixture.aCompleteProject();
-        BDDMockito.doReturn(project).when(projectProvider).save(ProjectFixture.aProjectWithoutSensorsAndWithoutId());
+        var updatedProject = ProjectFixture.aCompleteProject();
+        BDDMockito.doReturn(updatedProject).when(projectProvider).save(updatedProject);
         //  When
-        var result = createProject.execute(ProjectFixture.aProjectWithoutSensorsAndWithoutId());
+        var result = updateProject.execute(updatedProject);
         //  Then
-        assertThat(result).isEqualTo(project);
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getSensorColors()).isNotNull();
+        assertThat(result).isEqualTo(updatedProject);
     }
 }

@@ -1,64 +1,49 @@
 package fr.bimiot.dataproviders.database;
 
-import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.core.entities.Project;
 import fr.bimiot.core.entities.SensorColor;
 import fr.bimiot.core.entities.SensorType;
-import fr.bimiot.core.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.core.use_cases.providers.ProjectProvider;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
+public class ProjectDatabaseProvider implements ProjectProvider {
 
     private final ProjectJpaRepository projectJpaRepository;
 
 
-    public ProjectDatabaseProviderImpl(ProjectJpaRepository projectJpaRepository) {
+    public ProjectDatabaseProvider(ProjectJpaRepository projectJpaRepository) {
         this.projectJpaRepository = projectJpaRepository;
     }
 
     @Override
-    public String create(Project project) throws IOException {
-        return projectJpaRepository.insert(toProjectJpa(project)).getId();
+    public Project save(Project project) throws IOException {
+        //  TODO
+        return null;
     }
 
     @Override
-    public void delete(String projectName) {
-        projectJpaRepository.deleteByName(projectName);
+    public void deleteById(String id) {
+        //  TODO
     }
 
     @Override
-    public Project updateSensorsColorsByProjectName(String projectName, Map<SensorType, List<SensorColor>> sensorTypeListMap) throws DataBaseException {
-        var projectExisted = projectJpaRepository.findProjectJpaByName(projectName);
-        if (projectExisted == null) {
-            throw new DataBaseException("Project doesn't exist", "404");
-        }
-        projectExisted.setSensorColorJpaMap(toSensorColorJpaMap(sensorTypeListMap));
-        return toProject(projectJpaRepository.save(projectExisted));
+    public Optional<Project> findById(String id) {
+        return Optional.empty();
     }
 
     @Override
-    public Map<SensorType, List<SensorColor>> findSensorColorMapByProjectName(String projectName) {
-        return toSensorColorMap(projectJpaRepository.findProjectJpaByName(projectName).getSensorColorJpaMap());
-    }
-
-    @Override
-    public List<String> getAllProjects() {
-        return projectJpaRepository.findAll().stream().map(ProjectJpa::getName).toList();
-    }
-
-    @Override
-    public byte[] loadIFCFile(String projectName) {
-        return  projectJpaRepository.findProjectJpaByName(projectName).getIfc().getData();
+    public List<Project> findAll() {
+        return null;
     }
 
     private List<SensorColorJpa> toSensorColorJpaList(List<SensorColor> sensorColors) {
@@ -97,7 +82,6 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
     private ProjectJpa toProjectJpa(Project project) throws IOException {
         ProjectJpa projectJpa = new ProjectJpa();
         projectJpa.setIfc(toBinary(project.getIfc()));
-        projectJpa.setDataset(toBinary(project.getDataset()));
         projectJpa.setName(project.getName());
         projectJpa.setSensorColorJpaMap(getDefaultSensorsColors());
         return projectJpa;
@@ -148,7 +132,7 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         );
     }
 
-    private Binary toBinary(MultipartFile file) throws IOException {
-        return new Binary(BsonBinarySubType.BINARY, file.getBytes());
+    private Binary toBinary(byte[] file) throws IOException {
+        return new Binary(BsonBinarySubType.BINARY, file);
     }
 }

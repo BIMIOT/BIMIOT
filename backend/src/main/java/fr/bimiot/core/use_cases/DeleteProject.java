@@ -1,25 +1,22 @@
 package fr.bimiot.core.use_cases;
 
-import fr.bimiot.core.use_cases.providers.ProjectDatabaseProvider;
-import fr.bimiot.dataproviders.database.ProjectDatabaseProviderImpl;
+import fr.bimiot.core.use_cases.providers.ProjectProvider;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DeleteProject {
 
-    private final ProjectDatabaseProviderImpl projectDatabaseProviderImpl;
-    private final ProjectDatabaseProvider projectDatabaseProvider;
+    private final ProjectProvider projectProvider;
 
-    public DeleteProject(ProjectDatabaseProviderImpl projectDatabaseProviderImpl, ProjectDatabaseProvider projectDatabaseProvider) {
-        this.projectDatabaseProviderImpl = projectDatabaseProviderImpl;
-        this.projectDatabaseProvider = projectDatabaseProvider;
+    public DeleteProject(ProjectProvider projectProvider) {
+        this.projectProvider = projectProvider;
     }
 
     /**
      * Delete project in database
-     * @param projectName name of project
+     * @param id of project
      */
-    public void execute(String projectName) {
-        projectDatabaseProvider.delete(projectName);
+    public void execute(String id) {
+        projectProvider.deleteById(id);
     }
 }

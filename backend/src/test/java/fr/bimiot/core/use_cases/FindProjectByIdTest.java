@@ -1,5 +1,6 @@
 package fr.bimiot.core.use_cases;
 
+import fr.bimiot.core.exception.DomainException;
 import fr.bimiot.core.use_cases.providers.ProjectProvider;
 import fr.bimiot.fixtures.ProjectFixture;
 import org.junit.jupiter.api.Test;
@@ -9,27 +10,35 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateProjectTest {
+class FindProjectByIdTest {
+
     @InjectMocks
-    CreateProject createProject;
+    FindProjectById findProjectById;
     @Mock
     ProjectProvider projectProvider;
+
     @Test
-    void execute_shouldReturnCreatedProjectFromProvider() throws IOException {
+    void execute_shouldReturnProjectWithFromProvider() throws DomainException {
         //  Given
         var project = ProjectFixture.aCompleteProject();
-        BDDMockito.doReturn(project).when(projectProvider).save(ProjectFixture.aProjectWithoutSensorsAndWithoutId());
+        BDDMockito.doReturn(Optional.of(project)).when(projectProvider).findById(project.getId());
         //  When
-        var result = createProject.execute(ProjectFixture.aProjectWithoutSensorsAndWithoutId());
+        var result = findProjectById.execute(project.getId());
         //  Then
         assertThat(result).isEqualTo(project);
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getSensorColors()).isNotNull();
+    }
+
+    @Test
+    void execute_shoudThrowDomainException() {
+        //  Given
+        BDDMockito.doReturn(Optional.empty()).when(projectProvider).findById(ProjectFixture.aCompleteProject().getId());
+        //  When / Then
+        assertThrows(DomainException.class, () -> findProjectById.execute(ProjectFixture.aCompleteProject().getId()));
     }
 }

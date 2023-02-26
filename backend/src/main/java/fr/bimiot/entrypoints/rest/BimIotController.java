@@ -1,4 +1,4 @@
-package fr.bimiot.entrypoints.controllers;
+package fr.bimiot.entrypoints.rest;
 
 import fr.bimiot.core.entities.Data;
 import fr.bimiot.core.entities.Room;

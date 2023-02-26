@@ -1,14 +1,13 @@
 package fr.bimiot.fixtures;
 
 import fr.bimiot.core.entities.Project;
-import org.springframework.mock.web.MockMultipartFile;
 
 public class ProjectFixture {
     public static Project aProjectWithoutSensorsAndWithoutId(){
         var project = new Project();
         project.setName("Project X");
-        project.setIfc(new MockMultipartFile("file.ifc", "Hello world".getBytes()));
-        project.setDataset(new MockMultipartFile("file.json", "Hello world".getBytes()));
+        project.setIfc("file.ifc".getBytes());
+        project.setDataset("dataset.json".getBytes());
         return project;
     }
 

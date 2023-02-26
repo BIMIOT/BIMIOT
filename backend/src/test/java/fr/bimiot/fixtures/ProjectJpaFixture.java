@@ -21,7 +21,6 @@ public class ProjectJpaFixture {
 
     public static ProjectJpa aCompleteProjectJpa() {
         ProjectJpa projectJpa = aProjectJpaWithoutSensors();
-        projectJpa.setId("ProjectID");
         projectJpa.setSensorColorJpaMap(SensorColorJpaMapFixture.sensorTypeListMapDataProviders());
         return projectJpa;
     }
