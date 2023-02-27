@@ -53,16 +53,12 @@ import {
 } from 'web-ifc';
 import SensorsList from './SensorsList.vue'
 
-
-
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickerSensor from "@/components/ColorPickerSensor";
 
 import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
-
-
 
 export default {
   name: 'ModelViewer',
@@ -89,9 +85,10 @@ export default {
       room_list: {},
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.5,
         color: 0xffffff,
-        depthTest: false,
+        depthTest: true,
+        side: THREE.DoubleSide
       }),
       preSelectMat: new MeshLambertMaterial({
         transparent: true,
@@ -104,12 +101,7 @@ export default {
         opacity: 1,
         color: 0xfcba03,
       }),
-      preSelectMatBlue: new MeshLambertMaterial({
-        transparent: true,
-        opacity: 0.3,
-        color: 0x00FFFF,
-        depthTest: false,
-      })
+      floorMesh: new MeshLambertMaterial({})
     }
   },
   setup() {
@@ -138,12 +130,14 @@ export default {
       }
       const controls = this.viewer.context.ifcCamera.cameraControls;
       if(this.currentPlan === "3D") {
+        this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
         await this.viewer.context.ifcCamera.toggleProjection();
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
       } else {
+        this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
         await controls.setPosition(0, 1, 0, false)
@@ -183,31 +177,29 @@ export default {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSLAB, false),
         removePrevious: true,
-        customID: "stuff"
-      }
+        material: this.floorMesh,
+        customID: "floor"
+      };
       const sensor = {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
         material: this.sensorColor,
         removePrevious: true,
         customID: "stuff2"
-      }
-
+      };
       const wall = {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCWALLSTANDARDCASE, false),
         removePrevious: true,
         customID: "stuff3"
-      }
-
-
+      };
       const spaces = {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSPACE, false),
         removePrevious: true,
         material: this.invisibleMat,
         customID: "stuff4"
-      }
+      };
 
       let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
       let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
@@ -256,9 +248,10 @@ export default {
 
       let mesh = new MeshLambertMaterial({
         transparent: true,
-        opacity: 0.3,
+        opacity: 0.5,
         color: new THREE.Color(response["color"]).getHex(),
-        depthTest: false,
+        depthTest: true,
+        side: THREE.DoubleSide
       });
 
       const manager = this.viewer.IFC.loader.ifcManager;
@@ -280,17 +273,6 @@ export default {
           customID: response["roomIfcID"] + response["sensorType"] + ""
         });
       }
-    },
-    convertHexToInt: function (colors) {
-      return colors.map(color => {
-        let color2 = new THREE.Color(color.value);
-        return new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: color2.getHex(),
-          depthTest: false,
-        });
-      });
     },
     removeAll: function (room_ids, manager) {
       const room_ids_iter = Object.keys(room_ids);
@@ -476,112 +458,6 @@ export default {
     });
 
     this.loadFile(viewer);
-
-    const input = document.getElementById("file-input");
-
-    input.addEventListener("change",
-
-        async (changed) => {
-          const file = changed.target.files[0];
-          const ifcURL = URL.createObjectURL(file);
-          const model = await viewer.IFC.loadIfcUrl(ifcURL);
-          this.model = model;
-
-
-
-
-
-
-        /*
-          this.model.material.forEach(mat => mat.side = 2);
-
-
-          await this.viewer.plans.computeAllPlanViews(model.modelID);
-
-          const edgesName = 'exampleEdges';
-
-
-          this.viewer.edges.toggle(edgesName, true);
-
-
-          let planNames = [];
-          const currentPlans = this.viewer.plans.planLists[0];
-
-          planNames = Object.keys(currentPlans);
-
-
-          await this.viewer.plans.goTo(this.model.modelID, planNames[0], false);
-
-         // await viewer.shadowDropper.renderShadow(model.modelID);
-        */
-
-          model.removeFromParent();
-
-
-          const structure = await this.showStructure(viewer, model.modelID);
-          this.structure = structure;
-
-
-
-          const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
-          for (let type in types) {
-            this.sensor_types[types[type].Name.value] = types[type].PredefinedType.value;
-          }
-
-          const manager = this.viewer.IFC.loader.ifcManager;
-          await this.getSensors(structure, manager, model.modelID);
-          this.sendMapping();
-
-          /**
-           * HERE IS THE code YOU WANT IT START FROM HERE
-           * */
-
-          const floor = {
-            modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSLAB, false),
-            removePrevious: true,
-            customID: "stuff"
-          }
-
-          const sensor = {
-            modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
-            material: this.sensorColor,
-            removePrevious: true,
-            customID: "stuff2"
-          }
-
-          const wall = {
-            modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCWALLSTANDARDCASE, false),
-            removePrevious: true,
-            customID: "stuff3"
-          }
-
-          const spaces = {
-            modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false),
-            removePrevious: true,
-            material: this.invisibleMat,
-            customID: "stuff4"
-          }
-
-          let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
-          let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
-          let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
-          let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
-
-
-          const scene = this.viewer.context.getScene();
-          scene.add(floors);
-          scene.add(sensors);
-          scene.add(walls);
-          scene.add(sp);
-
-        },
-
-        false
-    );
   },
 }
 </script>
