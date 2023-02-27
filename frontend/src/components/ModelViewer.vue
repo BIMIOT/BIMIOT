@@ -60,6 +60,8 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 
+import { NavCube } from "./NavCube/NavCube";
+
 export default {
   name: 'ModelViewer',
   props: ['token', 'projectId', 'discipline'],
@@ -206,6 +208,7 @@ export default {
       let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
       let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
+      /*
       window.onmousemove = () => {
         if(this.viewer === null) {
           return;
@@ -221,6 +224,7 @@ export default {
           viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
       }
+       */
 
       const scene = this.viewer.context.getScene();
       scene.add(floors);
@@ -462,6 +466,21 @@ export default {
     });
 
     this.loadFile(viewer);
+
+    viewer.container = container;
+    const navCube = new NavCube(viewer);
+    navCube.onPick(this.model);
+    window.ondblclick = () => viewer.IFC.selector.pickIfcItem(true);
+    window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
+    viewer.clipper.active = true;
+
+    window.onkeydown = (event) => {
+      if (event.code === "KeyP") {
+        viewer.clipper.createPlane();
+      } else if (event.code === "KeyO") {
+        viewer.clipper.deletePlane();
+      }
+    };
   },
 }
 </script>
