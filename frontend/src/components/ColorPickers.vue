@@ -93,7 +93,6 @@ export default {
     this.store.fetchSensorColors().then(() => {
       const v = this.store.getColors.data
       this.colorToValue = v[this.sensorType];
-      console.log(v, "heeeeeeee")
     });
 
     this.$emit('colorToValue', this.colorToValue)
