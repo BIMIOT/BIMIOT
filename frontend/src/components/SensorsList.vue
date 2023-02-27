@@ -45,7 +45,7 @@
                     Type : {{ type2 }}
                     <ul v-for="sensor in room_list[roomId][type2]" :key="sensor.id">
                       <li v-if="sensor.IFCid">
-                        Capteur : {{ sensor.IFCid }} / {{ sensor.DataId }}, valeur : {{ sensor.value === undefined ? "Aucune" : sensor.value }}
+                        Capteur : {{ sensor.IFCid }} / {{ sensor.DataId }}, valeur : {{ sensor.value !== undefined ? sensor.value : "Aucune" }}
                       </li>
                     </ul>
                   </li>

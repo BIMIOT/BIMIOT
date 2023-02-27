@@ -75,6 +75,8 @@ export default {
   },
   data() {
     return {
+      propertyPositionX: 0,
+      propertyPositionY: 0,
       entityData: '',
       client: undefined,
       viewer: undefined,
@@ -213,6 +215,7 @@ export default {
       let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
       let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
       let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+      const infoElement = document.getElementById("properties-text")
 
       window.onmousemove = () => {
         if(this.viewer === null) {
@@ -220,11 +223,19 @@ export default {
         }
         this.viewer.IFC.selector.prePickIfcItem()
       };
-      window.ondblclick = async () => {
+      window.ondblclick = async (e) => {
         const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
         const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+          const px = e.x
+          const py = e.y;
+          console.log("propertyPositionX is : ",px)
+          console.log("propertyPositionY is : ",py)
+
+          infoElement.style.left = px.toString();
+          infoElement.style.top = py.toString();
           this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
+          console.log("entity data is :", this.entityData);
         } else {
           viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
@@ -243,6 +254,8 @@ export default {
     subscribe: function (greeting) {
 
       const response = greeting;
+      console.log("subscribe response :", response);
+
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
       }
@@ -253,6 +266,8 @@ export default {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
         }
       }
+      console.log("Room List is :",this.room_list)
+      console.log("Updated room is :",this.room_list[response["roomIfcID"]][response["sensorType"]])
 
       let mesh = new MeshLambertMaterial({
         transparent: true,
@@ -438,7 +453,6 @@ export default {
       // This is needed because this will be executed after a (re)connect
       client.subscribe('/data/sensors', (greeting) => {
         const response = JSON.parse(greeting.body);
-
         this.subscribe(response);
 
       });
@@ -617,13 +631,13 @@ export default {
   margin: 0.5em 0.5em 0.5em;
 }
 
-#properties-text {
-  display:flex;
-  position: absolute;
-  align-items: center;
-  left: 0;
-  bottom: 0;
-}
+/*#properties-text {*/
+/*  display:flex;*/
+/*  position: absolute;*/
+/*  align-items: center;*/
+/*  left: ${this.propertyPositionX};*/
+/*  top: this.propertyPositionY;*/
+/*}*/
 
 #colorPickers {
   position: absolute !important;
