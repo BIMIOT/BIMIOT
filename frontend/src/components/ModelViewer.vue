@@ -109,7 +109,8 @@ export default {
         opacity: 0.3,
         color: 0x00FFFF,
         depthTest: false,
-      })
+      }),
+      isFinishedSimulation: true
     }
   },
   setup() {
@@ -243,10 +244,18 @@ export default {
     subscribe: function (greeting) {
 
       const response = greeting;
+      if(response["sensorType"] === "END"){
+        alert("Simulation terminate");
+        this.play();
+      }
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
       }
-
+      console.log(response["sensorType"]);
+      if(response["sensorType"] === "END"){
+        alert("Simulation terminate");
+        this.play();
+      }
       // Update last recorded value for this sensor
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {

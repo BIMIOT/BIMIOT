@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,6 +35,6 @@ class GetSensorColorMapTest {
         var result = getSensorColorMap.execute(projectName);
         //  Then
         assertNotNull(result);
-        assertTrue(result.keySet().containsAll(Arrays.stream(SensorType.values()).collect(Collectors.toSet())));
+        assertTrue(result.keySet().containsAll(Arrays.stream(SensorType.values()).filter(type -> !SensorType.END.equals(type)).toList()));
     }
 }
