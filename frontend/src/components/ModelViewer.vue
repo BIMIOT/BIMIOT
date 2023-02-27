@@ -241,9 +241,26 @@ export default {
         }
       }
     },
+    createAllSubsets: function (room_ids, manager) {
+      const room_ids_iter = Object.keys(room_ids);
+      for (const id of room_ids_iter) {
+        manager.createSubset({
+          modelID: this.model.modelID,
+          ids: [parseInt(id, 10)],
+          material: new MeshLambertMaterial({
+            transparent: true,
+            opacity: 0.3,
+             color: 0xffffff,
+            depthTest: false,
+          }),
+          scene: this.viewer.context.getScene(),
+          removePrevious: false,
+          customID: id
+        });
+      }
+    },
     changeColor: function (room_ids, manager, sensorType) {
       const room_ids_iter = Object.keys(room_ids);
-
       for (const id of room_ids_iter) {
         manager.createSubset({
           modelID: this.model.modelID,
@@ -505,7 +522,7 @@ export default {
           var floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
           var sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
           var walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
-          var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+          //var sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
 
           const scene = this.viewer.context.getScene();
@@ -513,6 +530,7 @@ export default {
           scene.add(sensors);
           scene.add(walls);
 
+          this.createAllSubsets(this.room_list,manager)
 
         },
 
