@@ -208,7 +208,6 @@ export default {
       let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
       let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
-      /*
       window.onmousemove = () => {
         if(this.viewer === null) {
           return;
@@ -224,7 +223,6 @@ export default {
           viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
       }
-       */
 
       const scene = this.viewer.context.getScene();
       scene.add(floors);
@@ -470,8 +468,8 @@ export default {
     viewer.container = container;
     const navCube = new NavCube(viewer);
     navCube.onPick(this.model);
-    window.ondblclick = () => viewer.IFC.selector.pickIfcItem(true);
-    window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
+    /*window.ondblclick = () => viewer.IFC.selector.pickIfcItem(true);
+    window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();*/
     viewer.clipper.active = true;
 
     window.onkeydown = (event) => {
