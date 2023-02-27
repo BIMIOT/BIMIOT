@@ -235,6 +235,10 @@ export default {
     subscribe: function (greeting) {
 
       const response = greeting;
+      if(response["sensorType"] === "END"){
+        alert("Simulation terminate");
+        this.play();
+      }
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
       }
