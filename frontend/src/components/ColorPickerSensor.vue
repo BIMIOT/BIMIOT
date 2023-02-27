@@ -1,37 +1,30 @@
 <template>
-  <div>
-    <v-btn @click="showModal = true">Open Modal</v-btn>
-    <v-dialog v-model="showModal">
-      <v-card>
-        <v-card-title>
-          <span>Select Colors for Sensors</span>
-        </v-card-title>
-        <v-card-text>
-          <div class="sensor-container">
-            <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'thermometer-half']"  class="my-3"/>
-              <color-pickers v-on:colors="updateTemp" v-on:values="updateTempValues"/>
-            </div>
-            <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'tint']" class="my-3" />
-              <color-pickers v-on:colors="updateHum" v-on:values="updateHumValues" v-model="humidityColors"  />
-            </div>
-            <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'lightbulb']" class="my-3"/>
-              <color-pickers v-on:colors="updateLight" v-on:values="updateLightValues" v-model="luminosityColors" />
-            </div>
-            <div class="sensor-item">
-              <font-awesome-icon :icon="['fas', 'leaf']" class="my-3" />
-              <color-pickers  v-on:colors="updateCo2" v-on:values="updateCo2Values" v-model="co2Colors" />
-            </div>
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="saveData">Save</v-btn>
-          <v-btn color="secondary" @click="showModal = false">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+  <div   :style="{ left: colorPickerPos.x + 'px', top: colorPickerPos.y + 'px' }" @mousedown="handleMouseDown" >
+    <div class="sensor-item" v-show="this.selectedType === 'TEMPERATURE'" >
+      <div class="sensor-icon">
+        <v-icon color="#0A0046" size="28">mdi-thermometer</v-icon>
+      </div>
+      <color-pickers sensor-type="TEMPERATURE" v-on:save="saveData" class="color-pickers" v-on:colorToValue="updateTempColorToValue" v-on:click="this.showModal=true"/>
+    </div>
+    <div class="sensor-item" v-show="this.selectedType === 'HUMIDITY'">
+      <div class="sensor-icon">
+        <v-icon color="#0A0046" size="28">mdi-water-percent</v-icon>
+      </div>
+      <color-pickers  sensor-type="HUMIDITY" v-on:save="saveData"  class="color-pickers" v-on:colorToValue="updateHumColorToValue" v-on:click="this.showModal=true"/>
+    </div>
+    <div class="sensor-item" v-show="this.selectedType === 'LIGHT'">
+      <div class="sensor-icon">
+        <v-icon color="#0A0046" size="28">mdi-lightbulb-on</v-icon>
+      </div>
+      <color-pickers  sensor-type="LIGHT" v-on:save="saveData"  v-on:colorToValue="updateLumColorToValue" v-on:click="this.showModal=true"/>
+    </div>
+    <div class="sensor-item" v-show="this.selectedType === 'CO2'">
+      <div class="sensor-icon">
+        <v-icon color="#0A0046" size="28">mdi-molecule-co2</v-icon>
+      </div>
+      <color-pickers sensor-type="CO2" v-on:save="saveData"  v-on:colorToValue="updateCo2ColorToValue" v-on:click="this.showModal=true"/>
+    </div>
+
   </div>
 </template>
 
@@ -39,8 +32,12 @@
 
 import ColorPickers from "@/components/ColorPickers";
 import axios from 'axios';
+import {sensorsStore} from "@/store/sensors";
+import {projectStore} from "@/store/project";
+
 
 export default {
+  props: ['selectedType'],
   name: "ColorPickerSensor",
   components: {
     ColorPickers
@@ -48,96 +45,131 @@ export default {
   data() {
     return {
       showModal: false,
-      temperatureColors: [],
-      humidityColors: [],
-      luminosityColors: [],
-      co2Colors: [],
-      temperatureValues: [],
-      humidityValues: [],
-      luminosityValues: [],
-      co2Values: []
+      colorPickerPos: { x: window.innerWidth.valueOf()/2, y: window.innerHeight.valueOf()/7 },
+      isDragging: false,
+      lastMousePos: { x: 0, y: 0 },
+      temperatureColorToValue: [],
+      humidityColorToValue: [],
+      luminosityColorToValue: [],
+      co2ColorToValue: [],
     }
   },
+  setup() {
+    const store = projectStore();
+    store.fetchSensorColors();
+    return {store};
+  },
+
   methods: {
-    updateTemp(colors) {
-      this.temperatureColors = colors;
+    handleMouseDown(event) {
+      // Save the initial mouse position and set the isDragging flag
+      this.lastMousePos = { x: event.clientX, y: event.clientY };
+      this.isDragging = true;
+
+      // Add event listeners for mousemove and mouseup events
+      document.addEventListener('mousemove', this.handleMouseMove);
+      document.addEventListener('mouseup', this.handleMouseUp);
     },
-    updateHum(colors) {
-      this.humidityColors = colors;
+    handleMouseMove(event) {
+      if (!this.isDragging) return;
+
+      // Calculate the difference between the current and last mouse positions
+      const dx = event.clientX - this.lastMousePos.x;
+      const dy = event.clientY - this.lastMousePos.y;
+
+      // Update the colorPickerPos based on the difference
+      this.colorPickerPos = {
+        x: this.colorPickerPos.x + dx,
+        y: this.colorPickerPos.y + dy,
+      };
+
+      // Save the current mouse position for the next mousemove event
+      this.lastMousePos = { x: event.clientX, y: event.clientY };
     },
-    updateCo2(colors) {
-      this.co2Colors = colors;
+    handleMouseUp(event) {
+      // Unset the isDragging flag and remove the event listeners
+      this.isDragging = false;
+      document.removeEventListener('mousemove', this.handleMouseMove);
+      document.removeEventListener('mouseup', this.handleMouseUp);
     },
-    updateLight(colors) {
-      this.luminosityColors = colors;
+    updateTempColorToValue(colorToValue) {
+      this.isDragging = false;
+      this.temperatureColorToValue = colorToValue;
     },
-    updateTempValues(values) {
-      this.temperatureValues= values;
+    updateHumColorToValue(colorToValue) {
+      this.isDragging = false;
+      this.humidityColorToValue = colorToValue;
     },
-    updateHumValues(values) {
-      this.humidityValues = values;
+    updateCo2ColorToValue(colorToValue) {
+      this.isDragging = false;
+      this.luminosityColorToValue = colorToValue;
     },
-    updateCo2Values(values) {
-      this.co2Values = values;
+    updateLumColorToValue(colorToValue) {
+      this.isDragging = false;
+      this.co2ColorToValue = colorToValue;
     },
-    updateLightValues(values) {
-      this.luminosityValues = values;
+    updateColorToValue(colorToValue){
+      this.temperatureColorToValue = colorToValue;
+      this.humidityColorToValue = colorToValue;
+      this.luminosityColorToValue = colorToValue;
+      this.co2ColorToValue = colorToValue;
     },
+
     saveData() {
-      console.log("colors: ", this.temperatureColors);
-      let config = {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      }
+      let sensorsColors = {"sensorColorApis": {}};
+      sensorsColors["sensorColorApis"]["TEMPERATURE"] = this.temperatureColorToValue;
+      sensorsColors["sensorColorApis"]["LIGHT"] = this.luminosityColorToValue;
+      sensorsColors["sensorColorApis"]["HUMIDITY"] = this.humidityColorToValue;
+      sensorsColors["sensorColorApis"]["CO2"] = this.co2ColorToValue;
 
-      let typesColors = {"typesColor":{}};
-      typesColors["typesColor"]["TEMPERATURE"] = {"colors":[],"values":this.temperatureValues};
-      for (let i in this.temperatureColors) {
-        typesColors["typesColor"]["TEMPERATURE"]["colors"].push(this.temperatureColors[i].value);
-      }
-      typesColors["typesColor"]["HUMIDITY"] = {"colors":[],"values":this.humidityValues};
-      for (let i in this.humidityColors) {
-        typesColors["typesColor"]["HUMIDITY"]["colors"].push(this.humidityColors[i].value);
-      }
-      typesColors["typesColor"]["LIGHT"] = {"colors":[],"values":this.luminosityValues};
-      for (let i in this.luminosityColors) {
-        typesColors["typesColor"]["LIGHT"]["colors"].push(this.luminosityColors[i].value);
-      }
-      typesColors["typesColor"]["CO2"] = {"colors":[],"values":this.co2Values};
-      for (let i in this.co2Colors) {
-        typesColors["typesColor"]["CO2"]["colors"].push(this.co2Colors[i].value);
-      }
-
-      console.log(JSON.stringify(typesColors));
-      axios.post("/api/bimiot/colors", JSON.stringify(typesColors), config)
-          .then((data) => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-
-      this.showModal = false
+      this.store.updateProjectColors(sensorsColors);
     }
   }
 }
 </script>
 
 <style>
-.sensor-container {
-  display: flex;
-  justify-content: space-between;
-}
 
-.sensor-item {
+
+
+/*
+.color-pickers {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-}
+  justify-content: center;
+}*/
+
 
 .sensor-item i {
   font-size: 36px;
   margin-bottom: 12px;
 }
+
+.sensor-item {
+
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+/*
+
+.sensor-icon {
+  display: flex;
+  justify-content: center;
+}
+*/
+
+
+
+.save-buttons {
+  display: flex;
+  position: relative;
+  width: 150%;
+  z-index: 5;
+}
+
+
 </style>

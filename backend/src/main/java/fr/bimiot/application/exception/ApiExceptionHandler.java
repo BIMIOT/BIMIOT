@@ -17,7 +17,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {BaseException.class})
     public ResponseEntity<Object> handleException(BaseException baseException) {
         return switch (baseException.getClass().getSimpleName()) {
-            case "DomainException", "IOException" -> handleRecoverableException(baseException);
+            case "DomainException", "DatabaseException" -> handleRecoverableException(baseException);
             default -> handleGenericException(baseException);
         };
     }

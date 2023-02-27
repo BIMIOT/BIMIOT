@@ -1,6 +1,9 @@
 package fr.bimiot.dataproviders.database;
 
+import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.Project;
+import fr.bimiot.fixtures.ProjectJpaFixture;
+import fr.bimiot.fixtures.SensorColorMapFixture;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.junit.jupiter.api.Test;
@@ -15,8 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,8 +76,40 @@ class ProjectDatabaseProviderImplTest {
         var result = projectJpaRepository.deleteByName("project1");
 
         //Then
-        assertNotNull(result);
-        assertEquals(1,result);
+        assertEquals(1, result);
+    }
+
+    @Test
+    void updateSensorsColors_shouldUpdateByUsingJpaRepository() throws DataBaseException {
+        //  Given
+        ArgumentCaptor<String> projectNameCaptor = ArgumentCaptor.forClass(String.class);
+
+        ProjectJpa findByNameOutput = ProjectJpaFixture.aProjectJpaWithoutSensors();
+        ProjectJpa saveOutput = ProjectJpaFixture.aCompleteProjectJpa();
+
+        BDDMockito.doReturn(findByNameOutput).when(projectJpaRepository).findProjectJpaByName("Project X");
+        BDDMockito.doReturn(saveOutput).when(projectJpaRepository).save(ProjectJpaFixture.aCompleteProjectJpa());
+
+        //  When
+        Project result = projectDatabaseProvider.updateSensorsColorsByProjectName("Project X", SensorColorMapFixture.sensorTypeListMapDomain());
+
+        //  Then
+        verify(projectJpaRepository).findProjectJpaByName(projectNameCaptor.capture());
+        assertEquals("Project X", projectNameCaptor.getValue());
+        assertEquals("ProjectID", result.getId());
+        assertNotNull(result.getSensorColors());
+    }
+
+    @Test
+    void updateSensorsColorsNoExistedProject_shouldThrowDomainException() {
+        //  Given
+        String projectName = "Project XX";
+        BDDMockito.doReturn(null).when(projectJpaRepository).findProjectJpaByName(projectName);
+        //  When
+        Exception exception = assertThrows(DataBaseException.class, () -> projectDatabaseProvider.updateSensorsColorsByProjectName(projectName, SensorColorMapFixture.sensorTypeListMapDomain()));
+        //  Then
+        assertNotNull(exception);
+        assertEquals("Project doesn't exist", exception.getMessage());
     }
 
     private Binary toBinary(MultipartFile file) throws IOException {
