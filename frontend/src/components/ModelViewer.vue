@@ -11,7 +11,7 @@
             <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
           </div>
      </v-btn>
-      <input hidden type="file" id="file-input"/>
+      <input type="file" id="file-input"/>
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <div style="position: absolute; bottom: 0; left: 0;">
         <v-btn id="controlBtn" icon @click="play">
@@ -23,8 +23,8 @@
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
-
-    <div id="properties-text">
+<!--    v-bind:style=" {left: this.propertyPositionX + 'px' , top: this.propertyPositionY + 'px' }"-->
+    <div id="properties-text" v-bind:style=" {left: this.propertyPositionX + 'px' , top: this.propertyPositionY + 'px' }">
       <p>
         ID:
         {{ entityData }}
@@ -53,8 +53,6 @@ import {
 } from 'web-ifc';
 import SensorsList from './SensorsList.vue'
 
-
-
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickerSensor from "@/components/ColorPickerSensor";
 
@@ -62,7 +60,7 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 
-
+import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 export default {
   name: 'ModelViewer',
@@ -75,8 +73,9 @@ export default {
   },
   data() {
     return {
-      propertyPositionX: 0,
-      propertyPositionY: 0,
+      receivingDataset:{},
+      propertyPositionX: 10,
+      propertyPositionY: 120,
       entityData: '',
       client: undefined,
       viewer: undefined,
@@ -164,6 +163,7 @@ export default {
       });
       const ifcURL = URL.createObjectURL(response.data);
       this.model = await this.viewer.IFC.loadIfcUrl(ifcURL);
+      console.log("this is the model:",this.model)
 
       this.model.removeFromParent();
 
@@ -215,7 +215,6 @@ export default {
       let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
       let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
       let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
-      const infoElement = document.getElementById("properties-text")
 
       window.onmousemove = () => {
         if(this.viewer === null) {
@@ -227,14 +226,10 @@ export default {
         const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
         const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
-          const px = e.x
-          const py = e.y;
-          console.log("propertyPositionX is : ",px)
-          console.log("propertyPositionY is : ",py)
-
-          infoElement.style.left = px.toString();
-          infoElement.style.top = py.toString();
-          this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
+          this.propertyPositionX = e.clientX
+          this.propertyPositionY = e.clientY;
+          //this.entityData = this.room_list[modelID]
+          this.entityData = (type === "IFCSPACE" ? "Pièce" + this.room_list[id] : "Capteur" + this.receivingDataset);
           console.log("entity data is :", this.entityData);
         } else {
           viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
@@ -259,7 +254,7 @@ export default {
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
       }
-
+      this.receivingDataset = this.room_list[response["roomIfcID"]][response["sensorType"]]
       // Update last recorded value for this sensor
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
@@ -454,7 +449,6 @@ export default {
       client.subscribe('/data/sensors', (greeting) => {
         const response = JSON.parse(greeting.body);
         this.subscribe(response);
-
       });
 
     };
@@ -531,6 +525,9 @@ export default {
 
           model.removeFromParent();
 
+          console.log("load url this is the model:",model)
+
+
 
           const structure = await this.showStructure(viewer, model.modelID);
           this.structure = structure;
@@ -550,11 +547,33 @@ export default {
            * HERE IS THE code YOU WANT IT START FROM HERE
            * */
 
+          const floorDiv = document.createElement( 'div' );
+          floorDiv.className = 'label';
+          floorDiv.textContent = 'Floor';
+          floorDiv.style.marginTop = '-1em'
+          const floorLabel = new CSS2DObject(floorDiv);
+
+          floorLabel.position.set(0,1,0)
+          console.log("floor label 3D object", floorLabel)
+
+          //viewer.context.scene.add(floorLabel);
+
+
+          // const labelRenderer = new CSS2DRenderer();
+          // labelRenderer.setSize( window.innerWidth, window.innerHeight );
+          // labelRenderer.domElement.style.position = 'absolute';
+          // labelRenderer.domElement.style.top = '0px';
+          // document.body.appendChild( labelRenderer.domElement );
+          //
+          // console.log("floor label render", labelRenderer)
+
+
           const floor = {
             modelID: model.modelID,
             ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSLAB, false),
             removePrevious: true,
-            customID: "stuff"
+            customID: "stuff",
+            //material: labelRenderer,
           }
 
           const sensor = {
@@ -585,12 +604,20 @@ export default {
           let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
           let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
+          console.log("floor ids are:",floor.ids)
+          for (let i = 0; i < floor.ids.length ; i++) {
+            const prop = viewer.IFC.loader.ifcManager.getPropertySets(floor.modelID,floor.ids[i],false)
+            console.log("floor prop is: ",prop)
+          }
+
+
 
           const scene = this.viewer.context.getScene();
           scene.add(floors);
           scene.add(sensors);
           scene.add(walls);
           scene.add(sp);
+          scene.add(floorLabel);
 
         },
 
@@ -631,13 +658,15 @@ export default {
   margin: 0.5em 0.5em 0.5em;
 }
 
-/*#properties-text {*/
-/*  display:flex;*/
-/*  position: absolute;*/
-/*  align-items: center;*/
-/*  left: ${this.propertyPositionX};*/
-/*  top: this.propertyPositionY;*/
-/*}*/
+#properties-text {
+  display:flex;
+  position: absolute;
+  align-items: center;
+  /*left: v-bind(propertyPositionX)px;*/
+  /*top: v-bind(propertyPositionY)px;*/
+  /*left: 601px;*/
+  /*top: 330px;*/
+}
 
 #colorPickers {
   position: absolute !important;

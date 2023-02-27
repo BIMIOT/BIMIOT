@@ -22,17 +22,18 @@
     "core-js": "^3.8.3",
     "cpy": "^9.0.1",
     "cpy-cli": "^4.2.0",
+    "openbim-components": "^0.0.39",
     "pinia": "^2.0.30",
     "roboto-fontface": "*",
     "sockjs-client": "^1.6.1",
+    "three": "^0.135.0",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.1.6",
     "vue3-colorpicker": "^2.1.2",
     "vuetify": "^3.0.0-beta.0",
     "web-ifc-viewer": "1.0.213",
-    "webfontloader": "^1.0.0",
-    "openbim-components": "^0.0.39"
+    "webfontloader": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
