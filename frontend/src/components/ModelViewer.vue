@@ -291,6 +291,21 @@ export default {
 
       return [centerX, centerY, centerZ];
     },
+    creatLabel(labelDivId,position, initContent, className){
+      const labelDiv = document.createElement( 'div' );
+      labelDiv.id = labelDivId;
+      labelDiv.className = className;
+      labelDiv.textContent = initContent;
+      labelDiv.style.marginTop = '-1em'
+
+      const label = new CSS2DObject(labelDiv);
+      label.position.set(position[0], position[1], position[2])
+      label.layers.set(0)
+      return label
+    },
+    modifyTextContentLabel(label,newContent){
+      label.element.textContent = newContent;
+    },
     subscribe: function (greeting) {
 
       const response = greeting;
@@ -537,45 +552,10 @@ export default {
           const ifcURL = URL.createObjectURL(file);
           const model = await viewer.IFC.loadIfcUrl(ifcURL);
           this.model = model;
-
-
-
-
-
-
-        /*
-          this.model.material.forEach(mat => mat.side = 2);
-
-
-          await this.viewer.plans.computeAllPlanViews(model.modelID);
-
-          const edgesName = 'exampleEdges';
-
-
-          this.viewer.edges.toggle(edgesName, true);
-
-
-          let planNames = [];
-          const currentPlans = this.viewer.plans.planLists[0];
-
-          planNames = Object.keys(currentPlans);
-
-
-          await this.viewer.plans.goTo(this.model.modelID, planNames[0], false);
-
-         // await viewer.shadowDropper.renderShadow(model.modelID);
-        */
-
           model.removeFromParent();
-
-          console.log("load url this is the model:",model)
-
-
 
           const structure = await this.showStructure(viewer, model.modelID);
           this.structure = structure;
-
-
 
           const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
           for (let type in types) {
@@ -591,15 +571,15 @@ export default {
            * */
 
           //viewer.context.scene.add(floorLabel);
-
-          const labelRenderer = new CSS2DRenderer();
-          //labelRenderer.setSize( window.innerWidth, window.innerHeight );
-          labelRenderer.domElement.style.position = 'absolute';
-          labelRenderer.domElement.style.top = '0px';
-          document.body.appendChild( labelRenderer.domElement );
-
-          console.log("Here")
-          console.log("floor label render: ", labelRenderer)
+          //
+          // const labelRenderer = new CSS2DRenderer();
+          // //labelRenderer.setSize( window.innerWidth, window.innerHeight );
+          // labelRenderer.domElement.style.position = 'absolute';
+          // labelRenderer.domElement.style.top = '0px';
+          // document.body.appendChild( labelRenderer.domElement );
+          //
+          // console.log("Here")
+          // console.log("floor label render: ", labelRenderer)
 
 
           const floor = {
@@ -647,7 +627,7 @@ export default {
 
           sensors.geometry.computeBoundingSphere();
 
-          const center = this.calculateCenter(sensors)
+          const center = this.calculateCenter(sp)
 
           //console.log(center, "centerrrr")
 
@@ -672,20 +652,22 @@ export default {
           //############ Sensor Label
 
           //const sensorPosition = sensors.geometry.attributes.position
-          const sensorDiv = document.createElement( 'div' );
-          sensorDiv.id = '1';
-          sensorDiv.className = 'label';
-          sensorDiv.textContent = 'Sensor';
-          sensorDiv.style.marginTop = '-1em'
+          // const sensorDiv = document.createElement( 'div' );
+          // sensorDiv.id = '1';
+          // sensorDiv.className = 'label';
+          // sensorDiv.textContent = 'Sensor';
+          // sensorDiv.style.marginTop = '-1em'
+          //
+          // const sensorLabel = new CSS2DObject(sensorDiv);
+          //
+          // sensorLabel.position.set(center[0], center[1], center[2])
+          // sensorLabel.layers.set(0)
+          // sensors.add(sensorLabel)
+          // console.log("sensor label 3D object", sensorLabel)
 
-          const sensorLabel = new CSS2DObject(sensorDiv);
-
-          sensorLabel.position.set(center[0], center[1], center[2])
-          sensorLabel.layers.set(0)
-          sensors.add(sensorLabel)
-          console.log("sensor label 3D object", sensorLabel)
-
-
+          const label = this.creatLabel("label1",center,"space","label")
+          sp.add(label)
+          this.modifyTextContentLabel(label,"new space")
 
           const scene = this.viewer.context.getScene();
           scene.add(floors);
