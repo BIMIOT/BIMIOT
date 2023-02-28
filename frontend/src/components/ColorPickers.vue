@@ -1,5 +1,5 @@
 <template>
-  <div class="color-block-container" >
+  <div class="color-block-container">
     <div class="color-block" v-for="(color,index) in colorToValue"
          :key="index"
          :style="{ background: color.colorCode }"
@@ -11,7 +11,7 @@
         transform: 'translateX(-45px)'
 
       }" v-if="selectedColorIndex !== null" id="colorPicker">
-      <v-tabs v-model="selectedTab" >
+      <v-tabs v-model="selectedTab">
         <v-tab>Color Picker</v-tab>
         <v-tab>Interval List</v-tab>
       </v-tabs>
@@ -22,7 +22,7 @@
 
       </v-tab-item>
 
-      <v-tab-item  v-if="selectedTab === 1">
+      <v-tab-item v-if="selectedTab === 1">
         <div class="value-inputs">
           <p>Modify the interval</p>
           <v-text-field
@@ -50,14 +50,14 @@ import {projectStore} from "@/store/project";
 export default {
   name: "ColorPickers",
   props: {
-    sensorType:{}
+    sensorType: {}
   },
   watch: {
     colorToValue: {
-      handler:function (newValue){
+      handler: function (newValue) {
         this.$emit('colorToValue', newValue)
       },
-      deep:true
+      deep: true
     }
   },
   setup() {
@@ -92,12 +92,11 @@ export default {
   mounted() {
     this.store.fetchSensorColors().then(() => {
       const v = this.store.getColors.data
-      this.colorToValue =  v[this.sensorType];
-      console.log(v, "heeeeeeee")
+      this.colorToValue = v[this.sensorType];
     });
 
     this.$emit('colorToValue', this.colorToValue)
-    console.log("colorToValue",this.colorToValue)
+    console.log("colorToValue", this.colorToValue)
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
   beforeUnmount() {
@@ -105,12 +104,12 @@ export default {
   },
   methods: {
     save() {
-      this.$emit('save', "save")
+      this.$emit('save', "save");
+      this.closeColorPicker();
     },
     cancel() {
-      this.selectedColorIndex = null;
-    }
-    ,
+      this.closeColorPicker();
+    },
     openColorPicker(id) {
       this.selectedColorIndex = id
     },

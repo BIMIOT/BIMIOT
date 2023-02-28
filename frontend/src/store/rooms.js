@@ -11,6 +11,9 @@ export const roomsStateStore = defineStore('rooms', () => {
 
     function storeNewRoomColorByType(roomId, sensorType, value) {
         let combinedKey = `${roomId},${sensorType}`;
+
         state.value[combinedKey] = value;
     }
+
+    return { storeNewRoomColorByType,getLastRoomColorByType }
 })
