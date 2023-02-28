@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row align="center">
       <v-col cols="12" class="text-center">
-        <HomePageTitle/>
+        <h1 style="font-family: Arial sans-serif; font-size: 30px;">BIMIOT</h1>
       </v-col>
       <v-col cols="12" class="text-center">
         <v-btn
@@ -10,6 +10,7 @@
             dark
             prepend-icon="mdi-plus"
             color="#023D57"
+            class="text-white"
             @click="toCreateProjectPage">
           Ajouter un projet
         </v-btn>
@@ -59,8 +60,3 @@ export default {
   mounted() {
     this.getAllProjects()
   }
-}
-</script>
-
-<style>
-</style>
