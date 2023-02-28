@@ -60,7 +60,11 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 
+
 import { CSS2DRenderer,CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+
+import { NavCube } from "./NavCube/NavCube";
+
 
 export default {
   name: 'ModelViewer',
@@ -90,9 +94,10 @@ export default {
       room_list: {},
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.5,
         color: 0xffffff,
-        depthTest: false,
+        depthTest: true,
+        side: THREE.DoubleSide
       }),
       preSelectMat: new MeshLambertMaterial({
         transparent: true,
@@ -105,12 +110,8 @@ export default {
         opacity: 1,
         color: 0xfcba03,
       }),
-      preSelectMatBlue: new MeshLambertMaterial({
-        transparent: true,
-        opacity: 0.3,
-        color: 0x00FFFF,
-        depthTest: false,
-      })
+      floorMesh: new MeshLambertMaterial({}),
+      navCube: undefined
     }
   },
   setup() {
@@ -139,15 +140,19 @@ export default {
       }
       const controls = this.viewer.context.ifcCamera.cameraControls;
       if(this.currentPlan === "3D") {
+        this.navCube.changeActivation(); // False
+        this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
         await this.viewer.context.ifcCamera.toggleProjection();
-        await controls.setPosition(0, 1, 0, false);
+        await controls.setPosition(0, 50, 0, false);
         this.currentPlan = "2D"
       } else {
+        this.navCube.changeActivation(); // True
+        this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
-        await controls.setPosition(0, 1, 0, false)
+        await controls.setPosition(0, 50, 0, false)
         await this.viewer.context.ifcCamera.toggleProjection()
         this.currentPlan = "3D"
       }
@@ -185,31 +190,29 @@ export default {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSLAB, false),
         removePrevious: true,
-        customID: "stuff"
-      }
+        material: this.floorMesh,
+        customID: "floor"
+      };
       const sensor = {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
         material: this.sensorColor,
         removePrevious: true,
         customID: "stuff2"
-      }
-
+      };
       const wall = {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCWALLSTANDARDCASE, false),
         removePrevious: true,
         customID: "stuff3"
-      }
-
-
+      };
       const spaces = {
         modelID: this.model.modelID,
         ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSPACE, false),
         removePrevious: true,
         material: this.invisibleMat,
         customID: "stuff4"
-      }
+      };
 
       let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
       let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
@@ -246,10 +249,59 @@ export default {
       await this.getSensors(structure, manager, this.model.modelID);
       this.sendMapping();
     },
+    calculateCenter(mesh){
+      const coordinates = [];
+      const alreadySaved = new Set();
+      const position = mesh.geometry.attributes.position;
+      for(let index of mesh.geometry.index.array) {
+        if(!alreadySaved.has(index)){
+          coordinates.push(position.getX(index));
+          coordinates.push(position.getY(index));
+          coordinates.push(position.getZ(index));
+          alreadySaved.add(index);
+        }
+      }
+      const vertices = Float32Array.from(coordinates);
+
+      const verticex = [];
+      for (let i = 0; i < vertices.length; i += 3) {
+        const vertex = [vertices[i], vertices[i + 1], vertices[i + 2]];
+        verticex.push(vertex);
+      }
+
+      let minX = Number.POSITIVE_INFINITY;
+      let minY = Number.POSITIVE_INFINITY;
+      let minZ = Number.POSITIVE_INFINITY;
+      let maxX = Number.NEGATIVE_INFINITY;
+      let maxY = Number.NEGATIVE_INFINITY;
+      let maxZ = Number.NEGATIVE_INFINITY;
+
+      for (const vertex of verticex) {
+        minX = Math.min(minX, vertex[0]);
+        minY = Math.min(minY, vertex[1]);
+        minZ = Math.min(minZ, vertex[2]);
+        maxX = Math.max(maxX, vertex[0]);
+        maxY = Math.max(maxY, vertex[1]);
+        maxZ = Math.max(maxZ, vertex[2]);
+      }
+
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+      const centerZ = (minZ + maxZ) / 2;
+
+      return [centerX, centerY, centerZ];
+    },
     subscribe: function (greeting) {
 
       const response = greeting;
+
       console.log("subscribe response :", response);
+
+
+      if(response["sensorType"] === "END"){
+        alert("Simulation terminate");
+        this.play();
+      }
 
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list || response["color"] === undefined)) {
         return;
@@ -266,9 +318,10 @@ export default {
 
       let mesh = new MeshLambertMaterial({
         transparent: true,
-        opacity: 0.3,
+        opacity: 0.5,
         color: new THREE.Color(response["color"]).getHex(),
-        depthTest: false,
+        depthTest: true,
+        side: THREE.DoubleSide
       });
 
       const manager = this.viewer.IFC.loader.ifcManager;
@@ -290,17 +343,6 @@ export default {
           customID: response["roomIfcID"] + response["sensorType"] + ""
         });
       }
-    },
-    convertHexToInt: function (colors) {
-      return colors.map(color => {
-        let color2 = new THREE.Color(color.value);
-        return new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: color2.getHex(),
-          depthTest: false,
-        });
-      });
     },
     removeAll: function (room_ids, manager) {
       const room_ids_iter = Object.keys(room_ids);
@@ -485,6 +527,7 @@ export default {
 
     this.loadFile(viewer);
 
+
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -547,9 +590,6 @@ export default {
            * HERE IS THE code YOU WANT IT START FROM HERE
            * */
 
-
-
-
           //viewer.context.scene.add(floorLabel);
 
           const labelRenderer = new CSS2DRenderer();
@@ -563,19 +603,22 @@ export default {
 
 
           const floor = {
-            modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSLAB, false),
+            modelID: this.model.modelID,
+            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSLAB, false),
             removePrevious: true,
-            customID: "stuff",
-            //material: labelRenderer,
-          }
+            material: this.floorMesh,
+            customID: "floor"
+          };
 
+          let sensorList = await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false);
+          const oneSensor = sensorList[1];
           const sensor = {
             modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
+            ids: [oneSensor],
             material: this.sensorColor,
             removePrevious: true,
-            customID: "stuff2"
+            customID: "sensor",
+            applyBVH : true
           }
 
           const wall = {
@@ -584,8 +627,8 @@ export default {
             removePrevious: true,
             customID: "stuff3"
           }
-          let spaceList2 =  await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false)
-          const oneSpace = spaceList2[0]
+          let spaceList =  await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false)
+          const oneSpace = spaceList[0]
           const spaces = {
             modelID: model.modelID,
             ids:[oneSpace],
@@ -600,53 +643,16 @@ export default {
           let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
           let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
           sp.geometry.computeBoundingSphere();
+          //const sensorBox = new THREE.Box3().setFromObject(myMesh)
 
-          const coordinates = [];
-          const alreadySaved = new Set();
-          const position = sp.geometry.attributes.position;
-          for(let index of sp.geometry.index.array) {
-            if(!alreadySaved.has(index)){
-              coordinates.push(position.getX(index));
-              coordinates.push(position.getY(index));
-              coordinates.push(position.getZ(index));
-              alreadySaved.add(index);
-            }
-          }
+          sensors.geometry.computeBoundingSphere();
 
-          const vertices = Float32Array.from(coordinates);
+          const center = this.calculateCenter(sensors)
 
-          const verticex = [];
-          for (let i = 0; i < vertices.length; i += 3) {
-            const vertex = [vertices[i], vertices[i + 1], vertices[i + 2]];
-            verticex.push(vertex);
-          }
-
-          let minX = Number.POSITIVE_INFINITY;
-          let minY = Number.POSITIVE_INFINITY;
-          let minZ = Number.POSITIVE_INFINITY;
-          let maxX = Number.NEGATIVE_INFINITY;
-          let maxY = Number.NEGATIVE_INFINITY;
-          let maxZ = Number.NEGATIVE_INFINITY;
-
-          for (const vertex of verticex) {
-            minX = Math.min(minX, vertex[0]);
-            minY = Math.min(minY, vertex[1]);
-            minZ = Math.min(minZ, vertex[2]);
-            maxX = Math.max(maxX, vertex[0]);
-            maxY = Math.max(maxY, vertex[1]);
-            maxZ = Math.max(maxZ, vertex[2]);
-          }
-
-          const centerX = (minX + maxX) / 2;
-          const centerY = (minY + maxY) / 2;
-          const centerZ = (minZ + maxZ) / 2;
-
-          const center = [centerX, centerY, centerZ];
-
-          console.log(center, "centerrrr")
+          //console.log(center, "centerrrr")
 
 
-          console.log('coordinate',vertices)
+          //console.log('coordinate',vertices)
 
 
 //############################### space Label
@@ -660,12 +666,24 @@ export default {
           console.log(sp.geometry.boundingBox, "hellooo");
           spLabel.position.set(center[0], center[1],center[2])
           spLabel.layers.set(0)
-          sp.add(spLabel)
+          //sp.add(spLabel)
           console.log("space label 3D object", spLabel)
 
-          //############Spaces Labels
-          const spaceList = viewer.IFC.loader.ifcManager.getSubset(sp.modelID,this.invisibleMat,"stuff4");
-          console.log("spaceList mat",spaceList)
+          //############ Sensor Label
+
+          //const sensorPosition = sensors.geometry.attributes.position
+          const sensorDiv = document.createElement( 'div' );
+          sensorDiv.id = '1';
+          sensorDiv.className = 'label';
+          sensorDiv.textContent = 'Sensor';
+          sensorDiv.style.marginTop = '-1em'
+
+          const sensorLabel = new CSS2DObject(sensorDiv);
+
+          sensorLabel.position.set(center[0], center[1], center[2])
+          sensorLabel.layers.set(0)
+          sensors.add(sensorLabel)
+          console.log("sensor label 3D object", sensorLabel)
 
 
 
@@ -678,6 +696,11 @@ export default {
 
         false
     );
+    viewer.container = container;
+    const navCube = new NavCube(viewer);
+    navCube.onPick(this.model);
+    this.navCube = navCube;
+
   },
 }
 </script>

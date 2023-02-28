@@ -16,6 +16,9 @@ public class ManageData {
     private Map<SensorType, List<SensorColor>> sensorTypeListMap;
 
     public WebSocketData execute(Data data) {
+        if(SensorType.END.name().equals(data.getType())){
+            return new WebSocketData("0", data.getValue(), "0", data.getType(), "0");
+        }
         var found = false;
         String ifcID = null;
         String dataID = null;
