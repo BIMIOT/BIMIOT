@@ -18,16 +18,6 @@
       </v-col>
     </v-row>
   </v-container>
-  <div class="text-center">
-    <v-snackbar
-        location="top"
-        v-model="snackbar"
-        :timeout="timeout"
-        color="success"
-    >
-      Nouveau projet : {{ newProject }}
-    </v-snackbar>
-  </div>
 </template>
 
 <script>
@@ -36,7 +26,7 @@ export default {
   components: {HomeProjectCard},
   data() {
     return {
-      names: [],
+      names: ['Project1','Project1','Project1','Project1','Project1','Project1','Project1','Project1'],
     };
   },
   methods: {
