@@ -71,6 +71,8 @@ import {projectStore} from "@/store/project";
 import {roomsStateStore} from "@/store/rooms";
 import {storeToRefs} from "pinia";
 
+import { NavCube } from "./NavCube/NavCube";
+
 export default {
   name: 'ModelViewer',
   props: ['token', 'projectId', 'discipline'],
@@ -115,7 +117,8 @@ export default {
         opacity: 1,
         color: 0xfcba03,
       }),
-      floorMesh: new MeshLambertMaterial({})
+      floorMesh: new MeshLambertMaterial({}),
+      navCube: undefined
     }
   },
   setup() {
@@ -160,6 +163,7 @@ export default {
       }
       const controls = this.viewer.context.ifcCamera.cameraControls;
       if(this.currentPlan === "3D") {
+        this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
@@ -167,7 +171,7 @@ export default {
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
       } else {
-
+        this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
@@ -322,7 +326,8 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          depthTest: false,
+          side: THREE.DoubleSide,
+          depthTest: true,
         })
 
         this.roomIdToMesh[parseInt(id, 10)] = mesh;
@@ -331,6 +336,7 @@ export default {
           modelID: this.model.modelID,
           ids: [parseInt(id, 10)],
           material: mesh,
+
           removePrevious: false,
           customID: id
         });
@@ -518,6 +524,7 @@ export default {
 
     this.loadFile(viewer);
 
+
     const input = document.getElementById("file-input");
     const manager = this.viewer.IFC.loader.ifcManager;
 
@@ -629,6 +636,11 @@ export default {
 
         false
     );
+    viewer.container = container;
+    const navCube = new NavCube(viewer);
+    navCube.onPick(this.model);
+    this.navCube = navCube;
+
   },
 }
 </script>
