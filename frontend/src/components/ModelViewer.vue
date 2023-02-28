@@ -547,25 +547,19 @@ export default {
            * HERE IS THE code YOU WANT IT START FROM HERE
            * */
 
-          const floorDiv = document.createElement( 'div' );
-          floorDiv.className = 'label';
-          floorDiv.textContent = 'Floor';
-          floorDiv.style.marginTop = '-1em'
-          const floorLabel = new CSS2DObject(floorDiv);
 
-          floorLabel.position.set(0,1,0)
-          console.log("floor label 3D object", floorLabel)
+
 
           //viewer.context.scene.add(floorLabel);
 
+          const labelRenderer = new CSS2DRenderer();
+          //labelRenderer.setSize( window.innerWidth, window.innerHeight );
+          labelRenderer.domElement.style.position = 'absolute';
+          labelRenderer.domElement.style.top = '0px';
+          document.body.appendChild( labelRenderer.domElement );
 
-          // const labelRenderer = new CSS2DRenderer();
-          // labelRenderer.setSize( window.innerWidth, window.innerHeight );
-          // labelRenderer.domElement.style.position = 'absolute';
-          // labelRenderer.domElement.style.top = '0px';
-          // document.body.appendChild( labelRenderer.domElement );
-          //
-          // console.log("floor label render", labelRenderer)
+          console.log("Here")
+          console.log("floor label render: ", labelRenderer)
 
 
           const floor = {
@@ -590,25 +584,88 @@ export default {
             removePrevious: true,
             customID: "stuff3"
           }
-
+          let spaceList2 =  await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false)
+          const oneSpace = spaceList2[0]
           const spaces = {
             modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCSPACE, false),
+            ids:[oneSpace],
             removePrevious: true,
             material: this.invisibleMat,
-            customID: "stuff4"
+            customID: "stuff4",
+            applyBVH : true
           }
 
           let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
           let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
           let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
           let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+          sp.geometry.computeBoundingSphere();
 
-          console.log("floor ids are:",floor.ids)
-          for (let i = 0; i < floor.ids.length ; i++) {
-            const prop = viewer.IFC.loader.ifcManager.getPropertySets(floor.modelID,floor.ids[i],false)
-            console.log("floor prop is: ",prop)
+          const coordinates = [];
+          const alreadySaved = new Set();
+          const position = sp.geometry.attributes.position;
+          for(let index of sp.geometry.index.array) {
+            if(!alreadySaved.has(index)){
+              coordinates.push(position.getX(index));
+              coordinates.push(position.getY(index));
+              coordinates.push(position.getZ(index));
+              alreadySaved.add(index);
+            }
           }
+
+          const vertices = Float32Array.from(coordinates);
+
+          const verticex = [];
+          for (let i = 0; i < vertices.length; i += 3) {
+            const vertex = [vertices[i], vertices[i + 1], vertices[i + 2]];
+            verticex.push(vertex);
+          }
+
+          let minX = Number.POSITIVE_INFINITY;
+          let minY = Number.POSITIVE_INFINITY;
+          let minZ = Number.POSITIVE_INFINITY;
+          let maxX = Number.NEGATIVE_INFINITY;
+          let maxY = Number.NEGATIVE_INFINITY;
+          let maxZ = Number.NEGATIVE_INFINITY;
+
+          for (const vertex of verticex) {
+            minX = Math.min(minX, vertex[0]);
+            minY = Math.min(minY, vertex[1]);
+            minZ = Math.min(minZ, vertex[2]);
+            maxX = Math.max(maxX, vertex[0]);
+            maxY = Math.max(maxY, vertex[1]);
+            maxZ = Math.max(maxZ, vertex[2]);
+          }
+
+          const centerX = (minX + maxX) / 2;
+          const centerY = (minY + maxY) / 2;
+          const centerZ = (minZ + maxZ) / 2;
+
+          const center = [centerX, centerY, centerZ];
+
+          console.log(center, "centerrrr")
+
+
+          console.log('coordinate',vertices)
+
+
+//############################### space Label
+
+          const spaceDiv = document.createElement( 'div' );
+          spaceDiv.className = 'label';
+          spaceDiv.textContent = 'Space';
+          spaceDiv.style.marginTop = '-1em'
+
+          const spLabel = new CSS2DObject(spaceDiv);
+          console.log(sp.geometry.boundingBox, "hellooo");
+          spLabel.position.set(center[0], center[1],center[2])
+          spLabel.layers.set(0)
+          sp.add(spLabel)
+          console.log("space label 3D object", spLabel)
+
+          //############Spaces Labels
+          const spaceList = viewer.IFC.loader.ifcManager.getSubset(sp.modelID,this.invisibleMat,"stuff4");
+          console.log("spaceList mat",spaceList)
 
 
 
@@ -617,8 +674,6 @@ export default {
           scene.add(sensors);
           scene.add(walls);
           scene.add(sp);
-          scene.add(floorLabel);
-
         },
 
         false
