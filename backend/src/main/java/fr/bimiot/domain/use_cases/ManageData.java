@@ -17,7 +17,7 @@ public class ManageData {
 
     public WebSocketData execute(Data data) {
         if(SensorType.END.name().equals(data.getType())){
-            return new WebSocketData("0", data.getValue(), "0", data.getType(), "0");
+            return new WebSocketData("0", data.getValue(), "0", data.getType(), "0", "0", "0");
         }
         var found = false;
         String ifcID = null;
@@ -39,10 +39,10 @@ public class ManageData {
             }
             if (found) {
                 return new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
-                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb),dataID);
+                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb),dataID, String.valueOf(sum / nb));
             }
         }
-        return new WebSocketData("0", "0", "0", "0", "0","0"); // TODO : Handle error when sensor not found
+        return new WebSocketData("0", "0", "0", "0", "0","0", "0"); // TODO : Handle error when sensor not found
     }
 
     private String getMatchingColor(SensorType sensorType, Float value) {

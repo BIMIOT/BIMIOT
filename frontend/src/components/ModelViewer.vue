@@ -345,6 +345,7 @@ export default {
          return;
       }
       console.log("im called")
+      console.log("average room", response["averageValue"]);
       this.roomStore.storeNewRoomColorByType(response["roomIfcID"],response["sensorType"],response["color"]);
 
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
