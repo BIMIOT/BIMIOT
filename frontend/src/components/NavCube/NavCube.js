@@ -45,6 +45,7 @@ export class NavCube {
         this.canvas.style.top = 0;
         this.canvas.style.left = 0;
         this.container.appendChild(this.canvas);
+        this.activate = true;
     }
 
     initCamera() {
@@ -181,7 +182,7 @@ export class NavCube {
                 this.rayCaster.setFromCamera(this.mouse, this.camera);
                 const intersects = this.rayCaster.intersectObjects(filterElementClick);
                 const found = intersects[0];
-                if (found) {
+                if (this.activate && found) {
                     switchPick(camera, ifcModel, found.object.name.trim());
                 }
             }
@@ -222,5 +223,9 @@ export class NavCube {
             requestAnimationFrame(animate);
         };
         animate();
+    }
+
+    changeActivation() {
+        this.activate = !this.activate;
     }
 }
