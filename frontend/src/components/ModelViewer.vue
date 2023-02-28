@@ -105,6 +105,12 @@ export default {
       room_by_color: {},
       currentPlan: "3D",
       room_list: {},
+      space_list:
+      { 207: {"TEMPERATURE" : 27, "LIGHT": 100,"HUMIDITY":40,"CO2":1100},
+        252:{"TEMPERATURE" : 27, "LIGHT": 88,"HUMIDITY":42,"CO2":1200},
+        392:{"TEMPERATURE" : 30, "LIGHT": 80,"HUMIDITY":43,"CO2":1300},
+        400:{"TEMPERATURE" : 31, "LIGHT": 90,"HUMIDITY":45,"CO2":1400}
+      },
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.5,
@@ -313,20 +319,40 @@ export default {
 
       return [centerX, centerY, centerZ];
     },
-    creatLabel(labelDivId,position, initContent, className){
+    createLabel(position, initContent, className, roomId){
       const labelDiv = document.createElement( 'div' );
-      labelDiv.id = labelDivId;
+      labelDiv.id = roomId;
       labelDiv.className = className;
       labelDiv.textContent = initContent;
       labelDiv.style.marginTop = '-1em'
 
+      console.log("label div ",labelDiv)
+
+
       const label = new CSS2DObject(labelDiv);
       label.position.set(position[0], position[1], position[2])
       label.layers.set(0)
+      //console.log("label is :",label)
       return label
     },
-    modifyTextContentLabel(label,newContent){
-      label.element.textContent = newContent;
+    modifyTextContent(roomId,newContent){
+      const labelDiv = document.getElementById(roomId)
+      console.log("new content: ",newContent)
+      console.log("label div ",labelDiv)
+      labelDiv.textContent = newContent
+    },
+    async changeLabelContent(){
+      console.log("Change label content is called")
+      for (const space in this.space_list){
+        console.log("space",space)
+        for (const type in this.space_list[space]){
+          console.log("type",type)
+          if(type === this.currentSenseType){
+            this.modifyTextContent(space,this.space_list[space][type])
+            console.log("value ",this.space_list[space][type])
+          }
+        }
+      }
     },
     subscribe: function (greeting) {
 
@@ -388,7 +414,7 @@ export default {
     },
     createAllSubsets: function (room_ids, manager) {
       const room_ids_iter = Object.keys(room_ids);
-      let subsets = []
+      let subsets = [];
 
       for (const id of room_ids_iter) {
         let mesh = new MeshLambertMaterial({
@@ -409,6 +435,10 @@ export default {
         });
        subsets.push(subset)
 
+        const center= this.calculateCenter(subset)
+        const label = this.createLabel(center,"space","spaceLabel",subset.customID);
+        subset.add(label)
+
         console.log("hello")
       }
       for (const subset of subsets) {
@@ -416,9 +446,6 @@ export default {
           this.viewer.context.getScene().add(subset);
           this.arrayOfKids = this.viewer.context.getScene().children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial")
 
-          const center= this.calculateCenter(subset)
-          const label = this.creatLabel("label1",center,"space","label")
-          subset.add(label)
 
         }, 6000)
 
@@ -440,6 +467,8 @@ export default {
       this.currentSenseType = type
 
       const manager = this.viewer.IFC.loader.ifcManager;
+
+
 
 
       switch (type) {
@@ -676,7 +705,7 @@ export default {
           //###############################  Label
 
           //this.modifyTextContentLabel(label,"new space")
-
+          await this.changeLabelContent()
 
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
