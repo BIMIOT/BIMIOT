@@ -2,18 +2,7 @@
   <v-container fluid>
     <v-row align="center">
       <v-col cols="12" class="text-center">
-        <h1 style="font-family: Arial sans-serif; font-size: 30px;">BIMIOT</h1>
-      </v-col>
-      <v-col cols="12" class="text-center">
-        <v-btn
-            fab
-            dark
-            prepend-icon="mdi-plus"
-            color="#023D57"
-            class="text-white"
-            @click="toCreateProjectPage">
-          Ajouter un projet
-        </v-btn>
+        <h1 style="font-family: Arial sans-serif; font-size: 30px; color: #0A0046">BIMIOT</h1>
       </v-col>
     </v-row>
     <v-row dense align="center">
@@ -31,6 +20,19 @@
         </v-row>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-btn
+            fab
+            dark
+            prepend-icon="mdi-plus"
+            color="#023D57"
+            class="text-white rounded-xl"
+            @click="toCreateProjectPage">
+          Ajouter un projet
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -39,7 +41,7 @@ import HomeProjectCard from "@/components/HomeProjectCard";
 import HomePageTitle from "@/components/HomePageTitle";
 
 export default {
-  components: {HomeProjectCard, HomePageTitle},
+  components: {HomeProjectCard},
   data() {
     return {
       names: ['Project1', 'Project1', 'Project1', 'Project1', 'Project1', 'Project1', 'Project1', 'Project1'],
@@ -60,3 +62,5 @@ export default {
   mounted() {
     this.getAllProjects()
   }
+}
+</script>

@@ -1,21 +1,25 @@
 <template>
-  <v-card class="text-center elevation-12 mb-5" v-if="show" :rounded="30">
-    <v-card-title>
+  <v-card
+      class="text-center elevation-12 mb-5 rounded-xl"
+      max-width="400"
+      v-if="show"
+      style="background: transparent;"
+  >
+    <v-card-title style="color: #0A0046">
       {{ title }}
     </v-card-title>
     <v-card-actions class="justify-center">
       <v-btn
           variant="elevated"
-          color="primary"
+          class="text-white rounded-xl"
+          style="background-color: #023D57;"
           @click="sendProjectName"
-      >
-        Simulation
-      </v-btn>
+          icon="mdi-location-enter"
+      />
       <v-btn
           variant="outlined"
           icon="mdi-delete"
           color="error"
-          size="x-small"
           @click="this.dialog = true"
       ></v-btn>
     </v-card-actions>
