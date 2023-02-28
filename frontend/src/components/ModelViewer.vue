@@ -103,7 +103,8 @@ export default {
         opacity: 1,
         color: 0xfcba03,
       }),
-      floorMesh: new MeshLambertMaterial({})
+      floorMesh: new MeshLambertMaterial({}),
+      navCube: undefined
     }
   },
   setup() {
@@ -132,6 +133,7 @@ export default {
       }
       const controls = this.viewer.context.ifcCamera.cameraControls;
       if(this.currentPlan === "3D") {
+        this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
@@ -139,6 +141,7 @@ export default {
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
       } else {
+        this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
@@ -468,17 +471,7 @@ export default {
     viewer.container = container;
     const navCube = new NavCube(viewer);
     navCube.onPick(this.model);
-    /*window.ondblclick = () => viewer.IFC.selector.pickIfcItem(true);
-    window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();*/
-    viewer.clipper.active = true;
-
-    window.onkeydown = (event) => {
-      if (event.code === "KeyP") {
-        viewer.clipper.createPlane();
-      } else if (event.code === "KeyO") {
-        viewer.clipper.deletePlane();
-      }
-    };
+    this.navCube = navCube;
   },
 }
 </script>
