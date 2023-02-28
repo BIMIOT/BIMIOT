@@ -69,6 +69,7 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 import {roomsStateStore} from "@/store/rooms";
+import {storeToRefs} from "pinia";
 
 export default {
   name: 'ModelViewer',
@@ -119,10 +120,9 @@ export default {
   },
   setup() {
     const store = projectStore();
-    const roomStore = roomsStateStore();
-
+    const roomStore = roomsStateStore()
     store.fetchSensorColors();
-    return {store, roomStore};
+    return {store,roomStore};
   },
   watch: {
     arrayOfKids: {
@@ -274,6 +274,7 @@ export default {
          return;
       }
       console.log("im called")
+
       this.roomStore.storeNewRoomColorByType(response["roomIfcID"],response["sensorType"],response["color"]);
 
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
@@ -350,11 +351,13 @@ export default {
       const room_ids_iter = Object.keys(room_ids);
       for (const id of room_ids_iter) {
         const color = this.roomStore.getLastRoomColorByType(id,sensorType);
-        console.log(id);
         const roomMesh = this.roomIdToMesh[id];
         let subset = manager.getSubset(this.model.modelID,roomMesh,id);
-        console.log(subset,color , " im here");
-        subset.material.color.set(color);
+        if(!color) {
+          subset.material.color.set(0xffffff);
+        } else {
+          subset.material.color.set(color);
+        }
       }
     },
     updateParent: async function (type) {
@@ -365,20 +368,17 @@ export default {
 
       switch (type) {
         case 'HUMIDITY':
-          // this.removeAll(this.room_list, manager)
           await this.changeColor(this.room_list, manager, type);
           break;
         case 'LIGHT':
-          //this.removeAll(this.room_list, manager)
-          //await this.changeColor(this.room_list, manager, type);
+          await this.changeColor(this.room_list, manager, type);
           break;
         case 'CO2':
-         // this.removeAll(this.room_list, manager)
-         // await this.changeColor(this.room_list, manager, type);
+          await this.changeColor(this.room_list, manager, type);
           break;
         case "TEMPERATURE":
-         // this.removeAll(this.room_list, manager)
-        //  await this.changeColor(this.room_list, manager, type);
+          await this.changeColor(this.room_list, manager, type);
+
           break;
         default:
           console.log("Unknown type!");
