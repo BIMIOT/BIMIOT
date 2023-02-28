@@ -1,5 +1,5 @@
 <template>
-  <v-card class="text-center mx-auto" v-if="show">
+  <v-card class="text-center elevation-12 mb-5" v-if="show" :rounded="30">
     <v-card-title>
       {{ title }}
     </v-card-title>

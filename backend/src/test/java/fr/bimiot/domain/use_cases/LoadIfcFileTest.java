@@ -29,7 +29,7 @@ class LoadIfcFileTest {
     @Test
     void execute_shouldReturnCorrectBytesArray() throws IOException, BaseException {
         //  Given
-        Project project = ProjectFixture.aProjectWithOnlyTemperatureSensor();
+        Project project = ProjectFixture.aCompleteProject();
         BDDMockito.doReturn(project.getIfc().getBytes()).when(projectDatabaseProvider).loadIFCFile(project.getName());
         //  When
         var result = loadIfcFile.execute(project.getName());
