@@ -13,13 +13,6 @@
       </v-btn>
       <v-btn
           variant="outlined"
-          icon="mdi-pencil"
-          color="secondary"
-          size="x-small"
-          @click="this.dialog = true"
-      ></v-btn>
-      <v-btn
-          variant="outlined"
           icon="mdi-delete"
           color="error"
           size="x-small"
