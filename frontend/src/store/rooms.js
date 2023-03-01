@@ -13,6 +13,9 @@ export const roomsStateStore = defineStore('rooms', {
             storeNewRoomColorByType(roomId, sensorType, value) {
                 let combinedKey = `${roomId},${sensorType}`;
                 this.hashmap[combinedKey] = value;
+            },
+            resetColors() {
+                this.hashmap = {};
             }
         }
 
