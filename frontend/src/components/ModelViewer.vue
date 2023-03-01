@@ -440,7 +440,23 @@ export default {
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
     },
+    resetColorsAndValues: function() {
+      this.roomStore.resetColors();
+      const manager = this.viewer.IFC.loader.ifcManager;
+      this.changeColor(this.room_list, manager, this.currentSenseType);
+      for (let i in this.room_list) {
+        for (let j in this.room_list[i]) {
+          for (let k in this.room_list[i][j]) {
+            this.room_list[i][j][k].value = undefined;
+          }
+        }
+      }
+      // TODO : reset average values of rooms in the model
+    },
     start: function () {
+      if (this.inSimulation === false) {
+        this.resetColorsAndValues();
+      }
       this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
       axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
