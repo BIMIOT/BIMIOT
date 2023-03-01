@@ -113,7 +113,7 @@ export default {
         opacity: 0.5,
         color: 0xffffff,
         depthTest: true,
-        side: THREE.DoubleSide
+        side: THREE.SimpleSide
       }),
       preSelectMat: new MeshLambertMaterial({
         transparent: true,
@@ -172,7 +172,9 @@ export default {
         return;
       }
       const controls = this.viewer.context.ifcCamera.cameraControls;
+      const manager = this.viewer.IFC.loader.ifcManager;
       if(this.currentPlan === "3D") {
+        await this.changeSideProperty(this.room_list, manager, THREE.DoubleSide);
         this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
@@ -181,6 +183,7 @@ export default {
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
       } else {
+        await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
         this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
@@ -340,7 +343,7 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          side: THREE.DoubleSide,
+          side: THREE.SimpleSide,
           depthTest: true,
         })
 
@@ -370,6 +373,14 @@ export default {
         i++;
       }
       console.log("i finished")
+    },
+    async changeSideProperty(room_ids, manager, side) {
+      const room_ids_iter = Object.keys(room_ids);
+      for (const id of room_ids_iter) {
+        const roomMesh = this.roomIdToMesh[id];
+        let subset = manager.getSubset(this.model.modelID,roomMesh,id);
+        subset.material.side = side;
+      }
     },
     async changeColor(room_ids, manager, sensorType) {
       const room_ids_iter = Object.keys(room_ids);
