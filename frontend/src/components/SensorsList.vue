@@ -1,5 +1,11 @@
 <script>
+
+import TreeViewSensors from "@/components/TreeViewSensors";
+
   export default {
+    components: {
+      TreeViewSensors
+    },
     props: {
         room_list: {
             type: Object,
@@ -19,59 +25,44 @@
       <v-btn icon id="showSensors"
         color='#0A0046'
         dark
-        @click.stop="dialog = true"
+        @click.stop=" dialog = true"
       >
         <v-icon color="white">
           mdi-access-point
         </v-icon>
       </v-btn>
 
-  
-      <v-dialog
-        v-model="dialog"
-        max-width="750"
-      >
-        <v-card>
-          <v-card-title class="text-h5">
-            Liste des capteurs
-          </v-card-title>
+      <v-card>
 
-          <v-card-text>
-            <ul  v-for="(type,roomId) in room_list " :key="type.id">
-              <li v-if='roomId!=="roomId"'>
-                Pièce : {{ roomId }}
-                <ul v-for="(sensor,type2) in room_list[roomId]" :key="sensor.id">
-                  <li v-if='type2!=="type"'>
-                    Type : {{ type2 }}
-                    <ul v-for="sensor in room_list[roomId][type2]" :key="sensor.id">
-                      <li v-if="sensor.IFCid">
-                        Capteur : {{ sensor.IFCid }} / {{ sensor.DataId }}, valeur : {{ sensor.value === undefined ? "Aucune" : sensor.value }}
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <br>
-            </ul>
-          </v-card-text>
-  
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="green darken-1"
-              text
-              @click="dialog = false"
+        <v-layout>
+          <v-navigation-drawer
+              v-model="dialog"
+              temporary
+          >
+            <v-list-item
+                title="Liste des capteurs"
+                nav
             >
-              Fermer
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+              <template v-slot:append>
+                <v-btn
+                    variant="text"
+                    icon="mdi-chevron-left"
+                    @click.stop="dialog = !dialog"
+                ></v-btn>
+              </template>
+            </v-list-item>
+            <v-divider></v-divider>
+            <div v-if="dialog">
+              <TreeViewSensors :room_list="this.room_list"/>
+            </div>
+          </v-navigation-drawer>
+        </v-layout>
+      </v-card>
     </v-row>
   </template>
 
 <style>
-#showSensors{
+#showSensors {
   bottom: 125px;
   left: 35px;
   color: blue;

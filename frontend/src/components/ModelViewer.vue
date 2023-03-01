@@ -51,6 +51,7 @@ import axios from 'axios';
 import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
 
+
 import {
   IFCDISTRIBUTIONCONTROLELEMENT,
   IFCOPENINGELEMENT,
@@ -72,6 +73,7 @@ import {roomsStateStore} from "@/store/rooms";
 import {storeToRefs} from "pinia";
 
 import { NavCube } from "./NavCube/NavCube";
+
 
 export default {
   name: 'ModelViewer',
@@ -516,8 +518,8 @@ export default {
   },
 
   async mounted() {
-    document.getElementById("model").style.filter = "blur(2px)";
-    document.getElementById("progress-bar").style.visibility = "visible";
+   // document.getElementById("model").style.filter = "blur(2px)";
+    //document.getElementById("progress-bar").style.visibility = "visible";
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
@@ -531,13 +533,10 @@ export default {
       [IFCOPENINGELEMENT]: false
     });
 
-    await this.loadFile();
-    console.log("finished load file");
-    await new Promise((resolve, reject) => {
-      this.createAllSubsets(this.room_list);
-      resolve();
-    });
 
+    console.log("finished load file");
+
+   // await this.loadFile();
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -549,10 +548,11 @@ export default {
           this.model = model;
 
 
+
           model.removeFromParent();
 
-          document.getElementById("model").style.filter = "blur(2px)";
-          document.getElementById("progress-bar").style.visibility = "visible";
+         // document.getElementById("model").style.filter = "blur(2px)";
+         // document.getElementById("progress-bar").style.visibility = "visible";
 
 
           const structure = await this.showStructure(viewer, model.modelID);
@@ -624,22 +624,10 @@ export default {
 
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
-          const response = {sensorType: "HUMIDITY", roomIfcID: "207", color: "#0A0046", sensorIfcID: "sensor1"};
-          this.subscribe(response);
-          await new Promise(r => this.createAllSubsets(this.room_list, manager));
+
+         await new Promise(r => this.createAllSubsets(this.room_list, manager));
 
 
-          // console.log(this.viewer.context.getScene().children, "kids")
-          //console.log(this.roomIdToMesh["207"])
-
-          // let room = manager.getSubset(model.modelID,this.roomIdToMesh["207"],"207");
-          //console.log("im messh",room)
-          /* let meshCount = (scene.children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial").length)-1
-           console.log(meshCount, "im count")
-           const room_ids_iter = Object.keys(this.room_list);
-           this.knowledge = (meshCount*100)/room_ids_iter.length;
-           console.log( this.knowledge,"hello ")*/
-          //room.material.color.set(0x00ff00);
         },
 
         false
@@ -739,6 +727,10 @@ export default {
   left: 35px;
   color: white;
   background-color: #0A0046;
+}
+
+#treeView {
+  position: absolute;
 }
 
 .container {
