@@ -311,7 +311,7 @@ export default {
       }
 
       const centerX = (minX + maxX) / 2;
-      const centerY = (minY + maxY) / 2;
+      const centerY = minY;
       const centerZ = (minZ + maxZ) / 2;
 
       return [centerX, centerY, centerZ];
