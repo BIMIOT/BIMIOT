@@ -97,7 +97,7 @@ public class ProjectController {
 
     private Map<SensorType, List<SensorColor>> toSensorColorMap(SensorColorApiMap sensorColorApiMap) {
         return sensorColorApiMap.getSensorColorApis().entrySet().stream()
-                .collect(Collectors.toMap(entry -> SensorType.valueOf(entry.getKey()), entry -> toSensorColorList(entry.getValue())));
+                .collect(Collectors.toMap(entry -> SensorType.valueOf(entry.getKey().name()), entry -> toSensorColorList(entry.getValue())));
     }
 
     private List<SensorColor> toSensorColorList(List<SensorColorApi> sensorColorApis) {
