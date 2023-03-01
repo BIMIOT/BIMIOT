@@ -72,7 +72,7 @@
 
 <style>
 #showSensors{
-  bottom: 125px;
+  bottom: 120px;
   left: 35px;
   color: blue;
 }
