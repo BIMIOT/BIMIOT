@@ -97,7 +97,8 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
     private ProjectJpa toProjectJpa(Project project) throws IOException {
         ProjectJpa projectJpa = new ProjectJpa();
         projectJpa.setIfc(toBinary(project.getIfc()));
-        projectJpa.setDataset(toBinary(project.getDataset()));
+        projectJpa.setDatasetFilename(project.getDataset().getOriginalFilename());
+        projectJpa.setIfcFilename(project.getIfc().getOriginalFilename());
         projectJpa.setName(project.getName());
         projectJpa.setSensorColorJpaMap(getDefaultSensorsColors());
         return projectJpa;
