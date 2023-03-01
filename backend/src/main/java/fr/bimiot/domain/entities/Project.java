@@ -1,27 +1,19 @@
 package fr.bimiot.domain.entities;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Project{
     private String id;
     private String name;
-    private MultipartFile ifc;
-    private MultipartFile dataset;
+    private String ifcFilename;
+    private String datasetFilename;
+    private byte[] ifcFile;
+    private byte[] datasetFile;
     private Map<SensorType, List<SensorColor>> sensorColors;
-
-    public Project() {
-    }
-
-    public Project(String id, String name, MultipartFile ifc, MultipartFile dataset) {
-        this.id = id;
-        this.name = name;
-        this.ifc = ifc;
-        this.dataset = dataset;
-    }
 
     public String getId() {
         return id;

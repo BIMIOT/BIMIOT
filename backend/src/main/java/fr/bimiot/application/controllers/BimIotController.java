@@ -1,18 +1,28 @@
 package fr.bimiot.application.controllers;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.bimiot.application.dtos.ProjectApiGetAllResponse;
 import fr.bimiot.domain.entities.Data;
+import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.entities.Room;
 import fr.bimiot.domain.use_cases.GetAllProjects;
 import fr.bimiot.domain.use_cases.ManageData;
 import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.simulator.ConverterEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import fr.bimiot.utils.Builder;
 
 @RestController
 @RequestMapping("/api/bimiot")
@@ -32,8 +42,14 @@ public class BimIotController {
 
     @Deprecated
     @GetMapping("/projects")
-    public ResponseEntity<List<String>> getAllProjects() {
+    public ResponseEntity<List<ProjectApiGetAllResponse>> getAllProjects() {
         return ResponseEntity.status(HttpStatus.OK).body(getAllProjects.execute());
+    }
+
+    private ProjectApiGetAllResponse toProjectApiGetAllResponse(Project project){
+        return Builder.of(ProjectApiGetAllResponse::new)
+        .with(ProjectApiGetAllResponse::setName, project)
+        .with(ProjectApiGetAllResponse, null);
     }
 
     @PutMapping(value = "/sendData", consumes = "application/json")
