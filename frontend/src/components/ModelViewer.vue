@@ -29,7 +29,7 @@
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 <!--    v-bind:style=" {left: this.propertyPositionX + 'px' , top: this.propertyPositionY + 'px' }"-->
-    <div id="properties-text" v-bind:style=" {left: this.propertyPositionX + 'px' , top: this.propertyPositionY + 'px' }">
+    <div id="properties-text">
       <p>
         ID:
         {{ entityData }}
@@ -87,9 +87,6 @@ export default {
   },
   data() {
     return {
-      receivingDataset:{},
-      propertyPositionX: 10,
-      propertyPositionY: 120,
       entityData: '',
       knowledge: 0,
       roomIdToMesh: {},
@@ -105,12 +102,7 @@ export default {
       room_by_color: {},
       currentPlan: "3D",
       room_list: {},
-      space_list:
-      { 207: {"TEMPERATURE" : 27, "LIGHT": 100,"HUMIDITY":40,"CO2":1100},
-        252:{"TEMPERATURE" : 27, "LIGHT": 88,"HUMIDITY":42,"CO2":1200},
-        392:{"TEMPERATURE" : 30, "LIGHT": 80,"HUMIDITY":43,"CO2":1300},
-        400:{"TEMPERATURE" : 31, "LIGHT": 90,"HUMIDITY":45,"CO2":1400}
-      },
+      space_list: {},
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.5,
@@ -255,11 +247,7 @@ export default {
         const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
         const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
-          this.propertyPositionX = e.clientX
-          this.propertyPositionY = e.clientY;
-          //this.entityData = this.room_list[modelID]
-          this.entityData = (type === "IFCSPACE" ? "Pièce" + this.room_list[id] : "Capteur" + this.receivingDataset);
-          console.log("entity data is :", this.entityData);
+          this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
         } else {
           viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
@@ -325,10 +313,6 @@ export default {
       labelDiv.className = className;
       labelDiv.textContent = initContent;
       labelDiv.style.marginTop = '-1em'
-
-      console.log("label div ",labelDiv)
-
-
       const label = new CSS2DObject(labelDiv);
       label.position.set(position[0], position[1], position[2])
       label.layers.set(0)
@@ -337,29 +321,11 @@ export default {
     },
     modifyTextContent(roomId,newContent){
       const labelDiv = document.getElementById(roomId)
-      console.log("new content: ",newContent)
-      console.log("label div ",labelDiv)
       labelDiv.textContent = newContent
     },
-    async changeLabelContent(){
-      console.log("Change label content is called")
-      for (const space in this.space_list){
-        console.log("space",space)
-        for (const type in this.space_list[space]){
-          console.log("type",type)
-          if(type === this.currentSenseType){
-            this.modifyTextContent(space,this.space_list[space][type])
-            console.log("value ",this.space_list[space][type])
-          }
-        }
-      }
-    },
     subscribe: function (greeting) {
-
       const manager = this.viewer.IFC.loader.ifcManager;
-
       const response = greeting;
-
 
       if(response["sensorType"] === "END") {
         alert("Simulation terminate");
@@ -367,7 +333,6 @@ export default {
       }
 
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list)) {
-
          return;
       }
       console.log("im called")
@@ -379,14 +344,20 @@ export default {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
         }
       }
-      console.log("Room List is :",this.room_list)
-      console.log("Updated room is :",this.room_list[response["roomIfcID"]][response["sensorType"]])
+
+      if(this.space_list[response["roomIfcID"]] === undefined){
+        this.space_list[response["roomIfcID"]] = {};
+      }
+
+      this.space_list[response["roomIfcID"]][response["sensorType"]] = response["averageValue"];
 
       if (response["sensorType"] === this.currentSenseType) {
         const roomMesh =  this.roomIdToMesh[response["roomIfcID"]];
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
+        //change label content
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"])
       }
     },
     convertHexToInt: function (colors) {
@@ -426,27 +397,24 @@ export default {
 
         this.roomIdToMesh[parseInt(id, 10)] = mesh;
 
-       let subset = manager.createSubset({
+        let subset = manager.createSubset({
           modelID: this.model.modelID,
           ids: [parseInt(id, 10)],
           material: mesh,
           removePrevious: false,
           customID: id
         });
-       subsets.push(subset)
-
+        subsets.push(subset)
+        //TODO improve
         const center= this.calculateCenter(subset)
-        const label = this.createLabel(center,"space","spaceLabel",subset.customID);
+        const label = this.createLabel(center,"","spaceLabel",id);
         subset.add(label)
 
-        console.log("hello")
       }
       for (const subset of subsets) {
         setTimeout(() => {
           this.viewer.context.getScene().add(subset);
           this.arrayOfKids = this.viewer.context.getScene().children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial")
-
-
         }, 6000)
 
     }
@@ -463,6 +431,19 @@ export default {
         subset.material.color.set(color);
       }
     },
+    async changeLabelContent(room_ids,sensorType){
+      const room_ids_iter = Object.keys(room_ids);
+      let  newContent;
+      for (const id of room_ids_iter){
+        console.log("space list in changeContent",this.space_list)
+        if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
+          newContent = ""
+        }else {
+          newContent = this.space_list[id][sensorType];
+        }
+        this.modifyTextContent(id, newContent);
+      }
+    },
     updateParent: async function (type) {
       this.currentSenseType = type
 
@@ -470,23 +451,27 @@ export default {
 
 
 
-
       switch (type) {
         case 'HUMIDITY':
           // this.removeAll(this.room_list, manager)
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case 'LIGHT':
           //this.removeAll(this.room_list, manager)
           //await this.changeColor(this.room_list, manager, type);
+          //await this.changeLabelContent(this.room_list,type)
+          await this.changeLabelContent(this.room_list,type);
           break;
         case 'CO2':
          // this.removeAll(this.room_list, manager)
          // await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case "TEMPERATURE":
          // this.removeAll(this.room_list, manager)
         //  await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         default:
           console.log("Unknown type!");
@@ -705,7 +690,6 @@ export default {
           //###############################  Label
 
           //this.modifyTextContentLabel(label,"new space")
-          await this.changeLabelContent()
 
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
