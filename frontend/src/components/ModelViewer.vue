@@ -18,13 +18,22 @@
         {{knowledge}} %
       </div>
       </transition>
-      <div style="position: absolute; bottom: 0; left: 0;">
-        <v-btn id="controlBtn" icon @click="play">
-          <v-icon v-if="!playing">mdi-play</v-icon>
-          <v-icon v-if="playing">mdi-stop</v-icon>
-        </v-btn>
-        <SensorsList :room_list="room_list"/>
-        <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
+      <div style="position: absolute; bottom: 0; left: 0;" class="align-items-center">
+        <div>
+          <v-btn id="stopBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
+        </div>
+        <div>
+          <v-btn id="playBtn" icon @click="play">
+            <v-icon v-if="!playing">mdi-play</v-icon>
+            <v-icon v-if="playing">mdi-pause</v-icon>
+          </v-btn>
+        </div>
+        <div>
+          <SensorsList :room_list="room_list"/>
+        </div>
+        <div>
+          <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
+        </div>
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -118,7 +127,8 @@ export default {
         color: 0xfcba03,
       }),
       floorMesh: new MeshLambertMaterial({}),
-      navCube: undefined
+      navCube: undefined,
+      inSimulation: false
     }
   },
   setup() {
@@ -153,7 +163,7 @@ export default {
       if(!this.playing) {
         this.start()
       } else {
-        this.stop()
+        this.pause()
       }
       this.playing = !this.playing;
     },
@@ -271,6 +281,7 @@ export default {
       if(response["sensorType"] === "END") {
         alert("Simulation terminate");
         this.play();
+        this.inSimulation = false;
       }
 
 
@@ -430,10 +441,17 @@ export default {
       }
     },
     start: function () {
+      this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
       axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
     },
+    pause: function () {
+      window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
+      axios.put(`/api/bimiot/pause/${this.store.currentProjectName}`, {});
+    },
     stop: function () {
+      this.inSimulation = false;
+      this.playing = false;
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
       axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {});
     },
@@ -734,8 +752,15 @@ export default {
   font-size: 20px;
 }
 
-#controlBtn{
-  bottom: 160px;
+#playBtn{
+  bottom: 150px;
+  left: 35px;
+  color: white;
+  background-color: #0A0046;
+}
+
+#stopBtn{
+  bottom: 170px;
   left: 35px;
   color: white;
   background-color: #0A0046;

@@ -48,6 +48,12 @@ public class BimIotController {
         return 0;
     }
 
+    @PutMapping(value="/pause/{simulation_name}")
+    public int pause(@PathVariable String simulation_name) {
+        manageSimulation.executePause(simulation_name);
+        return 0;
+    }
+
     @PutMapping(value="/stop/{simulation_name}")
     public int stop(@PathVariable String simulation_name) {
         manageSimulation.executeStop(simulation_name);
