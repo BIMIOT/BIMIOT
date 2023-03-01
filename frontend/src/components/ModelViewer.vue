@@ -185,7 +185,14 @@ export default {
       const childComponent =  document.getElementById('model');
       subContainer.appendChild(childComponent);
     },
-    async loadFile(viewer) {
+    async getMappingAndLoad(structure, manager) {
+      await this.getSensors(structure, manager, this.model.modelID);
+      await new Promise((resolve, reject) => {
+        this.createAllSubsets(this.room_list);
+        resolve();
+      });
+    },
+    async loadFile() {
       const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProjectName}`, {
         responseType: 'blob',
       });
@@ -194,13 +201,10 @@ export default {
 
       this.model.removeFromParent();
 
-      document.getElementById("model").style.filter = "blur(2px)";
-      document.getElementById("progress-bar").style.visibility = "visible";
-
-      const structure = await this.showStructure(viewer, this.model.modelID);
+      const structure = await this.showStructure(this.viewer, this.model.modelID);
       this.structure = structure;
 
-      const types = await viewer.IFC.getAllItemsOfType(this.model.modelID, IFCSENSORTYPE, true);
+      const types = await this.viewer.IFC.getAllItemsOfType(this.model.modelID, IFCSENSORTYPE, true);
       for (let type in types) {
         this.sensor_types[types[type].Name.value] = types[type].PredefinedType.value;
       }
@@ -209,28 +213,28 @@ export default {
 
       const floor = {
         modelID: this.model.modelID,
-        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSLAB, false),
+        ids: await this.viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSLAB, false),
         removePrevious: true,
         material: this.floorMesh,
         customID: "floor"
       };
       const sensor = {
         modelID: this.model.modelID,
-        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
+        ids: await this.viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
         material: this.sensorColor,
         removePrevious: true,
         customID: "stuff2"
       };
       const wall = {
         modelID: this.model.modelID,
-        ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCWALLSTANDARDCASE, false),
+        ids: await this.viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCWALLSTANDARDCASE, false),
         removePrevious: true,
         customID: "stuff3"
       };
 
-      let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
-      let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
-      let walls = await viewer.IFC.loader.ifcManager.createSubset(wall)
+      let floors = await this.viewer.IFC.loader.ifcManager.createSubset(floor);
+      let sensors = await this.viewer.IFC.loader.ifcManager.createSubset(sensor);
+      let walls = await this.viewer.IFC.loader.ifcManager.createSubset(wall)
 
       window.onmousemove = () => {
         if(this.viewer === null) {
@@ -240,12 +244,12 @@ export default {
       };
 
       window.ondblclick = async () => {
-        const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
-        const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+        const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
+        const type = this.viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
         } else {
-          viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+          this.viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
         }
       }
 
@@ -254,11 +258,9 @@ export default {
       scene.add(sensors);
       scene.add(walls);
 
+      //await this.getMappingAndLoad(structure, manager);
       await this.getSensors(structure, manager, this.model.modelID);
       this.sendMapping();
-
-      await new Promise(r => this.createAllSubsets(this.room_list, manager));
-
     },
     subscribe: function (greeting) {
 
@@ -317,7 +319,8 @@ export default {
         }
       }
     },
-    createAllSubsets: function (room_ids, manager) {
+    createAllSubsets: function (room_ids) {
+      const manager = this.viewer.IFC.loader.ifcManager;
       const room_ids_iter = Object.keys(room_ids);
       let subsets = []
 
@@ -345,14 +348,18 @@ export default {
 
         console.log("hello")
       }
+      console.log("started to add subset to scene");
+      let i = 1;
       for (const subset of subsets) {
         setTimeout(() => {
+          console.log("add one : ", this.knowledge);
           this.viewer.context.getScene().add(subset);
           this.arrayOfKids = this.viewer.context.getScene().children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial")
-        }, 6000)
-    }
+        }, i*500);
+        i++;
+      }
       console.log("i finished")
-      },
+    },
     async changeColor(room_ids, manager, sensorType) {
       const room_ids_iter = Object.keys(room_ids);
       for (const id of room_ids_iter) {
@@ -508,33 +515,37 @@ export default {
     this.stop();
   },
 
-  mounted() {
+  async mounted() {
+    document.getElementById("model").style.filter = "blur(2px)";
+    document.getElementById("progress-bar").style.visibility = "visible";
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
     this.viewer = viewer;
     viewer.axes.setAxes();
     viewer.grid.setGrid();
-    viewer.IFC.setWasmPath('../../IFCjs/');
+    await viewer.IFC.setWasmPath('../../IFCjs/');
 
-    viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
+    await viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
       [IFCSPACE]: true,
       [IFCOPENINGELEMENT]: false
     });
 
-    this.loadFile(viewer);
-
+    await this.loadFile();
+    console.log("finished load file");
+    await new Promise((resolve, reject) => {
+      this.createAllSubsets(this.room_list);
+      resolve();
+    });
 
     const input = document.getElementById("file-input");
-    const manager = this.viewer.IFC.loader.ifcManager;
-
 
     input.addEventListener("change",
 
         async (changed) => {
           const file = changed.target.files[0];
           const ifcURL = URL.createObjectURL(file);
-          const model = await viewer.IFC.loadIfcUrl(ifcURL,true);
+          const model = await viewer.IFC.loadIfcUrl(ifcURL, true);
           this.model = model;
 
 
@@ -544,17 +555,16 @@ export default {
           document.getElementById("progress-bar").style.visibility = "visible";
 
 
-
-
           const structure = await this.showStructure(viewer, model.modelID);
           this.structure = structure;
-
 
 
           const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
           for (let type in types) {
             this.sensor_types[types[type].Name.value] = types[type].PredefinedType.value;
           }
+
+          const manager = this.viewer.IFC.loader.ifcManager;
 
           /**
            * HERE IS THE code YOU WANT IT START FROM HERE
@@ -585,7 +595,7 @@ export default {
 
 
           window.onmousemove = () => {
-            if(this.viewer === null) {
+            if (this.viewer === null) {
               return;
             }
             this.viewer.IFC.selector.prePickIfcItem()
@@ -603,7 +613,7 @@ export default {
           let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
           let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
           let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
-        //  let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
+          //  let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
 
 
           const scene = this.viewer.context.getScene();
@@ -619,18 +629,16 @@ export default {
           await new Promise(r => this.createAllSubsets(this.room_list, manager));
 
 
-
-
-         // console.log(this.viewer.context.getScene().children, "kids")
+          // console.log(this.viewer.context.getScene().children, "kids")
           //console.log(this.roomIdToMesh["207"])
 
-         // let room = manager.getSubset(model.modelID,this.roomIdToMesh["207"],"207");
+          // let room = manager.getSubset(model.modelID,this.roomIdToMesh["207"],"207");
           //console.log("im messh",room)
-         /* let meshCount = (scene.children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial").length)-1
-          console.log(meshCount, "im count")
-          const room_ids_iter = Object.keys(this.room_list);
-          this.knowledge = (meshCount*100)/room_ids_iter.length;
-          console.log( this.knowledge,"hello ")*/
+          /* let meshCount = (scene.children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial").length)-1
+           console.log(meshCount, "im count")
+           const room_ids_iter = Object.keys(this.room_list);
+           this.knowledge = (meshCount*100)/room_ids_iter.length;
+           console.log( this.knowledge,"hello ")*/
           //room.material.color.set(0x00ff00);
         },
 
