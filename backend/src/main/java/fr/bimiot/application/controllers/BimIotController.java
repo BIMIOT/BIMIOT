@@ -1,19 +1,5 @@
 package fr.bimiot.application.controllers;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import fr.bimiot.application.dtos.ProjectApiGetAllResponse;
 import fr.bimiot.domain.entities.Data;
 import fr.bimiot.domain.entities.Project;
@@ -23,6 +9,13 @@ import fr.bimiot.domain.use_cases.ManageData;
 import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.simulator.ConverterEvent;
 import fr.bimiot.utils.Builder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/bimiot")
@@ -43,13 +36,18 @@ public class BimIotController {
     @Deprecated
     @GetMapping("/projects")
     public ResponseEntity<List<ProjectApiGetAllResponse>> getAllProjects() {
-        return ResponseEntity.status(HttpStatus.OK).body(getAllProjects.execute());
+        var responseBody = getAllProjects.execute().stream()
+                .map(this::toProjectApiGetAllResponse)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
-    private ProjectApiGetAllResponse toProjectApiGetAllResponse(Project project){
+    private ProjectApiGetAllResponse toProjectApiGetAllResponse(Project project) {
         return Builder.of(ProjectApiGetAllResponse::new)
-        .with(ProjectApiGetAllResponse::setName, project)
-        .with(ProjectApiGetAllResponse, null);
+                .with(ProjectApiGetAllResponse::setName, project.getName())
+                .with(ProjectApiGetAllResponse::setIfcFilename, project.getIfcFilename())
+                .with(ProjectApiGetAllResponse::setDatasetFilename, project.getDatasetFilename())
+                .build();
     }
 
     @PutMapping(value = "/sendData", consumes = "application/json")
@@ -58,13 +56,13 @@ public class BimIotController {
         applicationEventPublisher.publishEvent(event);
     }
 
-    @PutMapping(value="/start/{simulation_name}")
+    @PutMapping(value = "/start/{simulation_name}")
     public int start(@PathVariable String simulation_name) {
         manageSimulation.executeStart(simulation_name);
         return 0;
     }
 
-    @PutMapping(value="/stop/{simulation_name}")
+    @PutMapping(value = "/stop/{simulation_name}")
     public int stop(@PathVariable String simulation_name) {
         manageSimulation.executeStop(simulation_name);
         return 0;

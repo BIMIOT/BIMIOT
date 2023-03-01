@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ProjectDatabaseProviderImplTest {
+class ProjectDatabaseProviderTest {
     @InjectMocks
-    ProjectDatabaseProviderImpl projectDatabaseProvider;
+    ProjectDatabaseProvider projectDatabaseProvider;
 
     @Mock
     ProjectJpaRepository projectJpaRepository;

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public interface ProjectDatabaseProvider {
+public interface ProjectProvider {
     String create(Project project) throws IOException;
 
     void delete(String projectName);
@@ -17,7 +17,7 @@ public interface ProjectDatabaseProvider {
 
     Map<SensorType, List<SensorColor>> findSensorColorMapByProjectName(String projectName);
 
-    List<String> getAllProjects();
+    List<Project> getAllProjects();
 
     byte[] loadIFCFile(String projectName);
 }
