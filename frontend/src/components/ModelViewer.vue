@@ -78,7 +78,7 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 import {roomsStateStore} from "@/store/rooms";
-import {storeToRefs} from "pinia";
+import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
 
@@ -104,6 +104,7 @@ export default {
       currentSenseType: "TEMPERATURE",
       structure: undefined,
       sensorMapping: [],
+      space_list: {},
       sensor_types: {},
       room_by_color: {},
       currentPlan: "3D",
@@ -275,6 +276,65 @@ export default {
       await this.getSensors(structure, manager, this.model.modelID);
       this.sendMapping();
     },
+    calculateCenter(subset){
+      subset.geometry.computeBoundingSphere()
+      const coordinates = [];
+      const alreadySaved = new Set();
+      const position = subset.geometry.attributes.position;
+      for(let index of subset.geometry.index.array) {
+        if(!alreadySaved.has(index)){
+          coordinates.push(position.getX(index));
+          coordinates.push(position.getY(index));
+          coordinates.push(position.getZ(index));
+          alreadySaved.add(index);
+        }
+      }
+      const vertices = Float32Array.from(coordinates);
+
+      const verticex = [];
+      for (let i = 0; i < vertices.length; i += 3) {
+        const vertex = [vertices[i], vertices[i + 1], vertices[i + 2]];
+        verticex.push(vertex);
+      }
+
+      let minX = Number.POSITIVE_INFINITY;
+      let minY = Number.POSITIVE_INFINITY;
+      let minZ = Number.POSITIVE_INFINITY;
+      let maxX = Number.NEGATIVE_INFINITY;
+      let maxY = Number.NEGATIVE_INFINITY;
+      let maxZ = Number.NEGATIVE_INFINITY;
+
+      for (const vertex of verticex) {
+        minX = Math.min(minX, vertex[0]);
+        minY = Math.min(minY, vertex[1]);
+        minZ = Math.min(minZ, vertex[2]);
+        maxX = Math.max(maxX, vertex[0]);
+        maxY = Math.max(maxY, vertex[1]);
+        maxZ = Math.max(maxZ, vertex[2]);
+      }
+
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+      const centerZ = (minZ + maxZ) / 2;
+
+      return [centerX, centerY, centerZ];
+    },
+    createLabel(position, initContent, className, roomId){
+      const labelDiv = document.createElement( 'div' );
+      labelDiv.id = roomId;
+      labelDiv.className = className;
+      labelDiv.textContent = initContent;
+      labelDiv.style.marginTop = '-1em'
+      const label = new CSS2DObject(labelDiv);
+      label.position.set(position[0], position[1], position[2])
+      label.layers.set(0)
+      //console.log("label is :",label)
+      return label
+    },
+    modifyTextContent(roomId,newContent){
+      const labelDiv = document.getElementById(roomId)
+      labelDiv.textContent = newContent
+    },
     subscribe: function (greeting) {
 
       const manager = this.viewer.IFC.loader.ifcManager;
@@ -297,6 +357,10 @@ export default {
 
       this.roomStore.storeNewRoomColorByType(response["roomIfcID"],response["sensorType"],response["color"]);
 
+      if(this.space_list[response["roomIfcID"]] === undefined){
+        this.space_list[response["roomIfcID"]] = {};
+      }
+      this.space_list[response["roomIfcID"]][response["sensorType"]] = response["averageValue"];
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
@@ -308,6 +372,7 @@ export default {
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"])
       }
     },
     convertHexToInt: function (colors) {
@@ -358,7 +423,10 @@ export default {
           customID: id
         });
 
-       subsets.push(subset)
+        const center= this.calculateCenter(subset)
+        const label = this.createLabel(center,"","spaceLabel",id);
+        subset.add(label)
+        subsets.push(subset)
 
         console.log("hello")
       }
@@ -395,6 +463,18 @@ export default {
         }
       }
     },
+    async changeLabelContent(room_ids,sensorType){
+      const room_ids_iter = Object.keys(room_ids);
+      let  newContent;
+      for (const id of room_ids_iter){
+        if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
+          newContent = ""
+        }else {
+          newContent = this.space_list[id][sensorType];
+        }
+        this.modifyTextContent(id, newContent);
+      }
+    },
     updateParent: async function (type) {
       this.currentSenseType = type
 
@@ -404,15 +484,19 @@ export default {
       switch (type) {
         case 'HUMIDITY':
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case 'LIGHT':
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case 'CO2':
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case "TEMPERATURE":
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
 
           break;
         default:

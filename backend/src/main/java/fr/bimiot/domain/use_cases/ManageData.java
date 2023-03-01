@@ -24,7 +24,7 @@ public class ManageData {
 
         // If type == END, then it's the end of the simulation
         if(SensorType.END.name().equals(data.getType())){
-            return Optional.of(new WebSocketData("0", data.getValue(), "0", data.getType(), "0"));
+            return Optional.of(new WebSocketData("0", data.getValue(), "0", data.getType(), "0","0"));
         }
 
         if (data.getValue() == null) {
@@ -56,7 +56,7 @@ public class ManageData {
             }
             if (found) {
                 return Optional.of(new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
-                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb)));
+                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb),String.valueOf(sum / nb)));
             }
         }
 
