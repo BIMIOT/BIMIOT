@@ -27,6 +27,10 @@ public class ManageData {
             return Optional.of(new WebSocketData("0", data.getValue(), "0", data.getType(), "0"));
         }
 
+        if (data.getValue() == null) {
+            return Optional.empty();
+        }
+
         var found = false;
         String ifcID = null;
         for (var room : roomListDTO) {
@@ -34,6 +38,13 @@ public class ManageData {
             var sum = 0f;
             for (var sensor : room.getSensors()) {
                 if (sensor.getSensorDataSetId().equals(data.getId()) && SensorType.valueOf(data.getType()).equals(sensor.getType())) {
+                    // Check if the value sent is correct
+                    try {
+                        Float.parseFloat(data.getValue());
+                    } catch (NumberFormatException e) {
+                        return Optional.empty();
+                    }
+
                     sensor.setValue(data.getValue());
                     ifcID = sensor.getSensorIFCid();
                     found = true;
