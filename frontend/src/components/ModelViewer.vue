@@ -516,6 +516,9 @@ export default {
   },
 
   async mounted() {
+    if(this.store.currentProjectName === null){
+      this.$router.push({name: 'home'});
+    }
     document.getElementById("model").style.filter = "blur(2px)";
     document.getElementById("progress-bar").style.visibility = "visible";
     this.moveComponentToSubDiv()
