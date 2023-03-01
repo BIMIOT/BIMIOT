@@ -18,24 +18,28 @@
         {{knowledge}} %
       </div>
       </transition>
-      <div style="position: absolute; bottom: 0; left: 0;">
-        <v-btn id="controlBtn" icon @click="play">
-          <v-icon v-if="!playing">mdi-play</v-icon>
-          <v-icon v-if="playing">mdi-stop</v-icon>
-        </v-btn>
-        <SensorsList :room_list="room_list"/>
-        <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
+      <div id="properties-text">
+        <p>
+          ID:
+          {{ entityData }}
+        </p>
+        <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
+      </div>
+      <div style="position: absolute; bottom: 30px; left: 0;">
+        <div class="block-display">
+          <v-btn id="controlBtn" icon @click="play">
+            <v-icon v-if="!playing">mdi-play</v-icon>
+            <v-icon v-if="playing">mdi-stop</v-icon>
+          </v-btn>
+          <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
+          <SensorsList :room_list="room_list"/>
+        </div>
+
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
-    <div id="properties-text">
-      <p>
-        ID:
-        {{ entityData }}
-      </p>
-      <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
-    </div>
+
     <div id="model"/>
   </section>
 </template>
@@ -655,8 +659,6 @@ export default {
 
 #file-input {
   position: relative;
-  /*left: 10%;*/
-  /*top: 10%;*/
 }
 
 
@@ -723,14 +725,13 @@ export default {
 }
 
 #controlBtn{
-  bottom: 160px;
-  left: 35px;
   color: white;
   background-color: #0A0046;
 }
+.block-display button{
+  margin:15px;
+  display:block;
 
-#treeView {
-  position: absolute;
 }
 
 .container {

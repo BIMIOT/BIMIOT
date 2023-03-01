@@ -2,9 +2,10 @@
 
 import TreeViewSensors from "@/components/TreeViewSensors";
 
+
   export default {
     components: {
-      TreeViewSensors
+      TreeViewSensors,
     },
     props: {
         room_list: {
@@ -19,7 +20,6 @@ import TreeViewSensors from "@/components/TreeViewSensors";
     },
   }
 </script>
-
 <template>
     <v-row justify="center">
       <v-btn icon id="showSensors"
@@ -36,6 +36,7 @@ import TreeViewSensors from "@/components/TreeViewSensors";
 
         <v-layout>
           <v-navigation-drawer
+              v-bind:width="425"
               v-model="dialog"
               temporary
           >
@@ -47,11 +48,13 @@ import TreeViewSensors from "@/components/TreeViewSensors";
                 <v-btn
                     variant="text"
                     icon="mdi-chevron-left"
+                    size="large"
                     @click.stop="dialog = !dialog"
                 ></v-btn>
               </template>
             </v-list-item>
-            <v-divider></v-divider>
+
+
             <div v-if="dialog">
               <TreeViewSensors :room_list="this.room_list"/>
             </div>
@@ -63,8 +66,14 @@ import TreeViewSensors from "@/components/TreeViewSensors";
 
 <style>
 #showSensors {
-  bottom: 125px;
-  left: 35px;
   color: blue;
+}
+
+.input-wrapper {
+  font-size: 16px;
+}
+
+.v-list-item--nav .v-list-item-title {
+  font-size: 1.1rem;
 }
 </style>
