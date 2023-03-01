@@ -109,6 +109,10 @@ export default {
     },
     cancel() {
       this.closeColorPicker();
+      this.store.fetchSensorColors().then(()=>{
+          const v = this.store.getColors.data;
+          this.colorToValue = v[this.sensorType];
+      });
     },
     openColorPicker(id) {
       this.selectedColorIndex = id
