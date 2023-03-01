@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ManageData {
@@ -15,17 +16,24 @@ public class ManageData {
     private List<Room> roomListDTO;
     private Map<SensorType, List<SensorColor>> sensorTypeListMap;
 
-    public WebSocketData execute(Data data) {
-        if(SensorType.END.name().equals(data.getType())){
-            return new WebSocketData("0", data.getValue(), "0", data.getType(), "0");
+    public Optional<WebSocketData> execute(Data data) {
+        // Check if type received is valid
+        if (!isTypeValid(data.getType())) {
+            return Optional.empty();
         }
+
+        // If type == END, then it's the end of the simulation
+        if(SensorType.END.name().equals(data.getType())){
+            return Optional.of(new WebSocketData("0", data.getValue(), "0", data.getType(), "0"));
+        }
+
         var found = false;
         String ifcID = null;
         for (var room : roomListDTO) {
             var nb = 0;
             var sum = 0f;
             for (var sensor : room.getSensors()) {
-                if (sensor.getSensorDataSetId().equals(data.getId())) {
+                if (sensor.getSensorDataSetId().equals(data.getId()) && SensorType.valueOf(data.getType()).equals(sensor.getType())) {
                     sensor.setValue(data.getValue());
                     ifcID = sensor.getSensorIFCid();
                     found = true;
@@ -36,11 +44,22 @@ public class ManageData {
                 }
             }
             if (found) {
-                return new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
-                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb));
+                return Optional.of(new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
+                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb)));
             }
         }
-        return new WebSocketData("0", "0", "0", "0", "0"); // TODO : Handle error when sensor not found
+
+        // Sensor ID not found
+        return Optional.empty();
+    }
+
+    private boolean isTypeValid(String type) {
+        for (SensorType t : SensorType.values()) {
+            if (t.name().equals(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getMatchingColor(SensorType sensorType, Float value) {
