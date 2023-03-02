@@ -116,6 +116,12 @@ export default {
       room_by_color: {},
       currentPlan: "3D",
       room_list: {},
+      units:{
+        "TEMPERATURE":" °C",
+        "LIGHT":" Lux",
+        "HUMIDITY":" %",
+        "CO2":" PPM",
+      },
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.5,
@@ -214,7 +220,7 @@ export default {
       });
     },
     async loadFile() {
-      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProjectName}`, {
+      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProject.name}`, {
         responseType: 'blob',
       });
       const ifcURL = URL.createObjectURL(response.data);
@@ -381,7 +387,7 @@ export default {
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
-        this.modifyTextContent(response["roomIfcID"], response["averageValue"])
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.units[response["sensorType"]])
       }
     },
     convertHexToInt: function (colors) {
@@ -417,7 +423,6 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          side: THREE.SimpleSide,
           depthTest: true,
         })
 
@@ -479,7 +484,7 @@ export default {
         if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
           newContent = ""
         }else {
-          newContent = this.space_list[id][sensorType];
+          newContent = this.space_list[id][sensorType] + this.units[sensorType];
         }
         this.modifyTextContent(id, newContent);
       }
@@ -545,20 +550,44 @@ export default {
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
     },
+    resetColorsAndValues: function() {
+      axios.put(`/api/bimiot/reset`, {})
+      this.roomStore.resetColors();
+      const manager = this.viewer.IFC.loader.ifcManager;
+      this.changeColor(this.room_list, manager, this.currentSenseType);
+      for (let i in this.room_list) {
+        for (let j in this.room_list[i]) {
+          for (let k in this.room_list[i][j]) {
+            this.room_list[i][j][k].value = undefined;
+          }
+        }
+      }
+      this.changeLabelContent(this.space_list, this.currentSenseType);
+      for (const roomId in this.space_list) {
+        this.modifyTextContent(roomId,"");
+        for (const type in this.space_list[roomId]) {
+          this.space_list[roomId][type] = undefined
+        }
+      }
+      console.log("space list after resetting",this.space_list)
+    },
     start: function () {
+      if (this.inSimulation === false) {
+        this.resetColorsAndValues();
+      }
       this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
+      axios.put(`/api/bimiot/start/${this.store.currentProject.name}`, {})
     },
     pause: function () {
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/pause/${this.store.currentProjectName}`, {});
+      axios.put(`/api/bimiot/pause/${this.store.currentProject.name}`, {});
     },
     stop: function () {
       this.inSimulation = false;
       this.playing = false;
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {});
+      axios.put(`/api/bimiot/stop/${this.store.currentProject.name}`, {});
     },
     sendMapping: function () {
       let config = {
@@ -639,8 +668,7 @@ export default {
   },
 
   async mounted() {
-
-    if(this.store.currentProjectName === null){
+    if(this.store.currentProject === null){
       this.$router.push({name: 'home'});
     }
     document.getElementById("model").style.filter = "blur(2px)";
@@ -667,6 +695,14 @@ export default {
       resolve();
     });
 
+
+    this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
+
+    viewer.container = container;
+    const navCube = new NavCube(viewer);
+    navCube.onPick(this.model);
+    this.navCube = navCube;
+    
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -764,11 +800,6 @@ export default {
 
         false
     );
-    viewer.container = container;
-    const navCube = new NavCube(viewer);
-    navCube.onPick(this.model);
-    this.navCube = navCube;
-
   },
 }
 </script>

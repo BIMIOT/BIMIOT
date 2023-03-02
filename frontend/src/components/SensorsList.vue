@@ -2,7 +2,6 @@
 
 import TreeViewSensors from "@/components/TreeViewSensors";
 
-
 export default {
   components: {
     TreeViewSensors,
