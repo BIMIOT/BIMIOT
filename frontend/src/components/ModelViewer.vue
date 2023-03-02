@@ -287,7 +287,6 @@ export default {
       scene.add(sensors);
       scene.add(walls);
 
-      //await this.getMappingAndLoad(structure, manager);
       await this.getSensors(structure, manager, this.model.modelID);
       this.sendMapping();
     },
@@ -316,7 +315,6 @@ export default {
       let minY = Number.POSITIVE_INFINITY;
       let minZ = Number.POSITIVE_INFINITY;
       let maxX = Number.NEGATIVE_INFINITY;
-      let maxY = Number.NEGATIVE_INFINITY;
       let maxZ = Number.NEGATIVE_INFINITY;
 
       for (const vertex of verticex) {
@@ -324,7 +322,6 @@ export default {
         minY = Math.min(minY, vertex[1]);
         minZ = Math.min(minZ, vertex[2]);
         maxX = Math.max(maxX, vertex[0]);
-        maxY = Math.max(maxY, vertex[1]);
         maxZ = Math.max(maxZ, vertex[2]);
       }
 
@@ -343,7 +340,6 @@ export default {
       const label = new CSS2DObject(labelDiv);
       label.position.set(position[0], position[1], position[2])
       label.layers.set(0)
-      //console.log("label is :",label)
       return label
     },
     modifyTextContent(roomId,newContent){
@@ -416,7 +412,8 @@ export default {
     createAllSubsets: function (room_ids) {
       const manager = this.viewer.IFC.loader.ifcManager;
       const room_ids_iter = Object.keys(room_ids);
-      let subsets = []
+      let subsets = [];
+      let ids = [];
 
       for (const id of room_ids_iter) {
         let mesh = new MeshLambertMaterial({
@@ -424,37 +421,31 @@ export default {
           opacity: 0.4,
           color: 0xffffff,
           depthTest: true,
-        })
+        });
 
         this.roomIdToMesh[parseInt(id, 10)] = mesh;
 
-       let subset = manager.createSubset({
-          modelID: this.model.modelID,
-          ids: [parseInt(id, 10)],
-          material: mesh,
-
-          removePrevious: false,
-          customID: id
+        let subset = manager.createSubset({
+           modelID: this.model.modelID,
+           ids: [parseInt(id, 10)],
+           material: mesh,
+           removePrevious: false,
+           customID: id
         });
-
-        const center= this.calculateCenter(subset)
-        const label = this.createLabel(center,"","spaceLabel",id);
-        subset.add(label)
-        subsets.push(subset)
-
-        console.log("hello")
+        subsets.push(subset);
+        ids.push(id);
       }
-      console.log("started to add subset to scene");
       let i = 1;
-      for (const subset of subsets) {
+      for (const index in subsets) {
         setTimeout(() => {
-          console.log("add one : ", this.knowledge);
-          this.viewer.context.getScene().add(subset);
+          const center = this.calculateCenter(subsets[index]);
+          const label = this.createLabel(center,"","spaceLabel", ids[index]);
+          subsets[index].add(label);
+          this.viewer.context.getScene().add(subsets[index]);
           this.arrayOfKids = this.viewer.context.getScene().children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial")
-        }, i*500);
+        }, i*1000);
         i++;
       }
-      console.log("i finished")
     },
     async changeSideProperty(room_ids, manager, side) {
       const room_ids_iter = Object.keys(room_ids);
@@ -693,7 +684,6 @@ export default {
       this.createAllSubsets(this.room_list);
       resolve();
     });
-
 
     this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
 
