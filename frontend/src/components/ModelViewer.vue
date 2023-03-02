@@ -441,6 +441,7 @@ export default {
       }
     },
     resetColorsAndValues: function() {
+      axios.put(`/api/bimiot/reset`, {})
       this.roomStore.resetColors();
       const manager = this.viewer.IFC.loader.ifcManager;
       this.changeColor(this.room_list, manager, this.currentSenseType);
