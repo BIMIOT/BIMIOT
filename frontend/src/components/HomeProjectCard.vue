@@ -76,7 +76,7 @@ export default {
       this.show = false;
       this.dialog = false;
       const response = await axios
-          .delete("/api/bimiot/projects/" + this.title, {})
+          .delete("/api/bimiot/projects/" + this.project.name, {})
           .catch((error) => {
             console.log("Error of deleting project: ", error);
           })

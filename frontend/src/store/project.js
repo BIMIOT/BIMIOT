@@ -45,7 +45,7 @@ export const projectStore = defineStore('project', {
                     'Content-Type': 'application/json',
                 }
             }
-            const response = await axios.put(`/api/bimiot/projects/colors/${this.currentProjectName}`, JSON.stringify(colors), config);
+            const response = await axios.put(`/api/bimiot/projects/colors/${this.currentProject.name}`, JSON.stringify(colors), config);
             this.colors = response.data.sensorsColorsApi;
             console.log(this.colors);
         },
@@ -55,7 +55,7 @@ export const projectStore = defineStore('project', {
                     'Content-Type': 'application/json'
                 }
             }
-            this.colors  = await axios.get(`/api/bimiot/projects/colors/${this.currentProjectName}`, config);
+            this.colors  = await axios.get(`/api/bimiot/projects/colors/${this.currentProject.name}`, config);
             return this.colors;
         }
     }
