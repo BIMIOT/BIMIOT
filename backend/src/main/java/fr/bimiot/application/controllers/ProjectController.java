@@ -5,7 +5,9 @@ import fr.bimiot.application.dtos.SensorColorApi;
 import fr.bimiot.application.dtos.SensorColorApiMap;
 import fr.bimiot.application.dtos.SensorTypeApi;
 import fr.bimiot.dataproviders.exception.DataBaseException;
-import fr.bimiot.domain.entities.*;
+import fr.bimiot.domain.entities.Project;
+import fr.bimiot.domain.entities.SensorColor;
+import fr.bimiot.domain.entities.SensorType;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.*;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,12 @@ public class ProjectController {
         manageSimulation.executeCreate(projectName, dataset);
         var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
         return ResponseEntity.ok(toProjectApi(projectResponse));
+    }
+
+    @PutMapping("/{projectName}")
+    public ResponseEntity<ProjectApi> update(@PathVariable String projectName, @RequestBody ProjectApi projectApi){
+        projectApi.setName(projectName);
+        return ResponseEntity.status(HttpStatus.OK).body(projectApi);
     }
 
     private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) {
