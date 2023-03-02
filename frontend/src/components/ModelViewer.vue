@@ -21,7 +21,7 @@
         </div>
       </transition>
       <div style="position: absolute; bottom:30px; left: 0; margin-left: 20px;" class="align-items-center">
-          <div class=".top">
+        <div class=".top">
             <v-btn  id="controlBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
           </div>
           <div class="spacer"></div>
@@ -36,11 +36,9 @@
           <div class="spacer"></div>
             <SensorsList class="bottom" :room_list="room_list"/>
           <div class="spacer"></div>
+          <HideValueButton class="bottom" :hide="this.hideValue" @click="hideAllValue()"/>
           </div>
-
-
         <div>
-
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -89,12 +87,14 @@ import {roomsStateStore} from "@/store/rooms";
 import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
+import HideValueButton from "@/components/HideValueButton.vue";
 
 
 export default {
   name: 'ModelViewer',
   props: ['token', 'projectId', 'discipline'],
   components: {
+    HideValueButton,
     ColorPickerSensor,
     SensorsList,
     SensorsControlButtons,
@@ -109,6 +109,7 @@ export default {
       client: undefined,
       viewer: undefined,
       playing: false,
+      hideValue:false,
       model: undefined,
       currentSenseType: "TEMPERATURE",
       structure: undefined,
@@ -349,6 +350,22 @@ export default {
     modifyTextContent(roomId,newContent){
       const labelDiv = document.getElementById(roomId)
       labelDiv.textContent = newContent
+    },
+    hideAllValue(){
+      this.hideValue = ! this.hideValue;
+      if(this.hideValue){
+        if (this.space_list !== {}){
+          for (const roomId in this.space_list) {
+            document.getElementById(roomId).style.visibility = "hidden";
+          }
+        }
+      }else{
+        if (this.space_list !== {}){
+          for (const roomId in this.space_list) {
+            document.getElementById(roomId).style.visibility = "visible";
+          }
+        }
+      }
     },
     subscribe: function (greeting) {
 
