@@ -1,18 +1,20 @@
 package fr.bimiot.domain.use_cases;
 
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.entities.Project;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component
 public class GetAllProjects {
-    private final ProjectDatabaseProvider projectDatabaseProvider;
+    private final ProjectProvider projectProvider;
 
-    public GetAllProjects(ProjectDatabaseProvider projectDatabaseProvider) {
-        this.projectDatabaseProvider = projectDatabaseProvider;
+    public GetAllProjects(ProjectProvider projectProvider) {
+        this.projectProvider = projectProvider;
     }
 
-    public List<String> execute() {
-        return projectDatabaseProvider.getAllProjects();
+    public List<Project> execute() {
+        return projectProvider.getAllProjects();
     }
 }

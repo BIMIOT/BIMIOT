@@ -1,19 +1,19 @@
 package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DeleteProject {
 
-    private final ProjectDatabaseProvider projectDatabaseProvider;
+    private final ProjectProvider projectProvider;
 
-    public DeleteProject(ProjectDatabaseProvider projectDatabaseProvider) {
-        this.projectDatabaseProvider = projectDatabaseProvider;
+    public DeleteProject(ProjectProvider projectProvider) {
+        this.projectProvider = projectProvider;
     }
 
     public void execute(String projectName) throws DomainException {
-        projectDatabaseProvider.delete(projectName);
+        projectProvider.delete(projectName);
     }
 }

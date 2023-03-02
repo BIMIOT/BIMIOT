@@ -1,3 +1,5 @@
+
+
 <template>
   <section>
     <div class="container">
@@ -6,34 +8,39 @@
           this.stop();
           this.$router.back()
       }" id="navbar">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
-            <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
-          </div>
-     </v-btn>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
+          <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
+        </div>
+      </v-btn>
       <input type="file" id="file-input"/>
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <transition name="fade" mode="out-in">
-      <div   id="progress-bar" >
-        {{knowledge}} %
-      </div>
+        <div   id="progress-bar" >
+          {{knowledge}} %
+        </div>
       </transition>
-      <div style="position: absolute; bottom: 0; left: 0;" class="align-items-center">
+      <div style="position: absolute; bottom:30px; left: 0; margin-left: 20px;" class="align-items-center">
+          <div class=".top">
+            <v-btn  id="controlBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
+          </div>
+          <div class="spacer"></div>
+           <div class="bottom">
+             <v-btn id="controlBtn" icon @click="play">
+               <v-icon v-if="!playing">mdi-play</v-icon>
+               <v-icon v-if="playing">mdi-pause</v-icon>
+             </v-btn>
+           </div>
+          <div class="spacer"></div>
+            <TwoDToThreeDButton class="top"  @click="changeTo2d()" :state="currentPlan"/>
+          <div class="spacer"></div>
+            <SensorsList class="bottom" :room_list="room_list"/>
+          <div class="spacer"></div>
+          </div>
+
+
         <div>
-          <v-btn id="stopBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
-        </div>
-        <div>
-          <v-btn id="playBtn" icon @click="play">
-            <v-icon v-if="!playing">mdi-play</v-icon>
-            <v-icon v-if="playing">mdi-pause</v-icon>
-          </v-btn>
-        </div>
-        <div>
-          <SensorsList :room_list="room_list"/>
-        </div>
-        <div>
-          <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
-        </div>
+
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -60,6 +67,7 @@ import axios from 'axios';
 import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
 
+
 import {
   IFCDISTRIBUTIONCONTROLELEMENT,
   IFCOPENINGELEMENT,
@@ -81,6 +89,7 @@ import {roomsStateStore} from "@/store/rooms";
 import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
+
 
 export default {
   name: 'ModelViewer',
@@ -109,6 +118,12 @@ export default {
       room_by_color: {},
       currentPlan: "3D",
       room_list: {},
+      units:{
+        "TEMPERATURE":" °C",
+        "LIGHT":" Lux",
+        "HUMIDITY":" %",
+        "CO2":" PPM",
+      },
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.5,
@@ -207,7 +222,7 @@ export default {
       });
     },
     async loadFile() {
-      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProjectName}`, {
+      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProject.name}`, {
         responseType: 'blob',
       });
       const ifcURL = URL.createObjectURL(response.data);
@@ -372,7 +387,7 @@ export default {
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
-        this.modifyTextContent(response["roomIfcID"], response["averageValue"])
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.units[response["sensorType"]])
       }
     },
     convertHexToInt: function (colors) {
@@ -469,7 +484,7 @@ export default {
         if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
           newContent = ""
         }else {
-          newContent = this.space_list[id][sensorType];
+          newContent = this.space_list[id][sensorType] + this.units[sensorType];
         }
         this.modifyTextContent(id, newContent);
       }
@@ -534,20 +549,37 @@ export default {
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
     },
+    resetColorsAndValues: function() {
+      axios.put(`/api/bimiot/reset`, {})
+      this.roomStore.resetColors();
+      const manager = this.viewer.IFC.loader.ifcManager;
+      this.changeColor(this.room_list, manager, this.currentSenseType);
+      for (let i in this.room_list) {
+        for (let j in this.room_list[i]) {
+          for (let k in this.room_list[i][j]) {
+            this.room_list[i][j][k].value = undefined;
+          }
+        }
+      }
+      // TODO : reset average values of rooms in the model
+    },
     start: function () {
+      if (this.inSimulation === false) {
+        this.resetColorsAndValues();
+      }
       this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
+      axios.put(`/api/bimiot/start/${this.store.currentProject.name}`, {})
     },
     pause: function () {
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/pause/${this.store.currentProjectName}`, {});
+      axios.put(`/api/bimiot/pause/${this.store.currentProject.name}`, {});
     },
     stop: function () {
       this.inSimulation = false;
       this.playing = false;
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {});
+      axios.put(`/api/bimiot/stop/${this.store.currentProject.name}`, {});
     },
     sendMapping: function () {
       let config = {
@@ -628,11 +660,12 @@ export default {
   },
 
   async mounted() {
-    if(this.store.currentProjectName === null){
+    if(this.store.currentProject === null){
       this.$router.push({name: 'home'});
     }
     document.getElementById("model").style.filter = "blur(2px)";
     document.getElementById("progress-bar").style.visibility = "visible";
+
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
@@ -646,6 +679,7 @@ export default {
       [IFCOPENINGELEMENT]: false
     });
 
+
     await this.loadFile();
     console.log("finished load file");
     await new Promise((resolve, reject) => {
@@ -653,13 +687,14 @@ export default {
       resolve();
     });
 
+
     this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
 
     viewer.container = container;
     const navCube = new NavCube(viewer);
     navCube.onPick(this.model);
     this.navCube = navCube;
-
+    
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -671,10 +706,11 @@ export default {
           this.model = model;
 
 
+
           model.removeFromParent();
 
-          document.getElementById("model").style.filter = "blur(2px)";
-          document.getElementById("progress-bar").style.visibility = "visible";
+         // document.getElementById("model").style.filter = "blur(2px)";
+         // document.getElementById("progress-bar").style.visibility = "visible";
 
 
           const structure = await this.showStructure(viewer, model.modelID);
@@ -746,22 +782,10 @@ export default {
 
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
-          const response = {sensorType: "HUMIDITY", roomIfcID: "207", color: "#0A0046", sensorIfcID: "sensor1"};
-          this.subscribe(response);
-          await new Promise(r => this.createAllSubsets(this.room_list, manager));
+
+         await new Promise(r => this.createAllSubsets(this.room_list, manager));
 
 
-          // console.log(this.viewer.context.getScene().children, "kids")
-          //console.log(this.roomIdToMesh["207"])
-
-          // let room = manager.getSubset(model.modelID,this.roomIdToMesh["207"],"207");
-          //console.log("im messh",room)
-          /* let meshCount = (scene.children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial").length)-1
-           console.log(meshCount, "im count")
-           const room_ids_iter = Object.keys(this.room_list);
-           this.knowledge = (meshCount*100)/room_ids_iter.length;
-           console.log( this.knowledge,"hello ")*/
-          //room.material.color.set(0x00ff00);
         },
 
         false
@@ -784,23 +808,8 @@ export default {
 
 #file-input {
   position: relative;
-  /*left: 10%;*/
-  /*top: 10%;*/
 }
 
-
-
-#play {
-  position: relative;
-  color: blue;
-  margin: 0.5em 0.5em 0.5em;
-}
-
-#stop {
-  position: relative;
-  color: blue;
-  margin: 0.5em 0.5em 0.5em;
-}
 
 #properties-text {
   display:flex;
@@ -851,18 +860,31 @@ export default {
   font-size: 20px;
 }
 
-#playBtn{
-  bottom: 150px;
-  left: 35px;
+.top, .bottom{
+  width:400px;
+  display:block;
+  margin:0 auto;
+}
+
+
+#controlBtn{
   color: white;
   background-color: #0A0046;
 }
 
-#stopBtn{
-  bottom: 170px;
-  left: 35px;
-  color: white;
-  background-color: #0A0046;
+.spacer{
+  display:block;
+  height:10px;
+  width:100%;
+  margin: 0 auto;
+  content:"";
+}
+
+
+
+.block-display button{
+  margin:15px;
+  display:block;
 }
 
 .container {
