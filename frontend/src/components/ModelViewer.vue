@@ -84,6 +84,7 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 import {roomsStateStore} from "@/store/rooms";
+import {unitsTypeStore} from "@/store/unitsType";
 import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
@@ -119,18 +120,11 @@ export default {
       room_by_color: {},
       currentPlan: "3D",
       room_list: {},
-      units:{
-        "TEMPERATURE":" °C",
-        "LIGHT":" Lux",
-        "HUMIDITY":" %",
-        "CO2":" PPM",
-      },
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.5,
         color: 0xffffff,
-        depthTest: true,
-        side: THREE.SimpleSide
+        depthTest: true
       }),
       preSelectMat: new MeshLambertMaterial({
         transparent: true,
@@ -151,8 +145,9 @@ export default {
   setup() {
     const store = projectStore();
     const roomStore = roomsStateStore()
+    const unitsStore = unitsTypeStore();
     store.fetchSensorColors();
-    return {store,roomStore};
+    return {store,roomStore,unitsStore};
   },
   watch: {
     arrayOfKids: {
@@ -401,7 +396,7 @@ export default {
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
-        this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.units[response["sensorType"]])
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.unitsStore.getUnitFromType(response["sensorType"]));
         if (this.hideValue) {
           document.getElementById(response["roomIfcID"]).style.visibility = "hidden";
         }
@@ -440,7 +435,7 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          depthTest: true,
+          depthTest: true
         })
 
         this.roomIdToMesh[parseInt(id, 10)] = mesh;
@@ -449,7 +444,6 @@ export default {
           modelID: this.model.modelID,
           ids: [parseInt(id, 10)],
           material: mesh,
-
           removePrevious: false,
           customID: id
         });
@@ -501,7 +495,7 @@ export default {
         if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
           newContent = ""
         }else {
-          newContent = this.space_list[id][sensorType] + this.units[sensorType];
+          newContent = this.space_list[id][sensorType] + this.unitsStore.getUnitFromType(sensorType);
         }
         this.modifyTextContent(id, newContent);
       }
@@ -578,7 +572,14 @@ export default {
           }
         }
       }
-      // TODO : reset average values of rooms in the model
+      this.changeLabelContent(this.space_list, this.currentSenseType);
+      for (const roomId in this.space_list) {
+        this.modifyTextContent(roomId,"");
+        for (const type in this.space_list[roomId]) {
+          this.space_list[roomId][type] = undefined
+        }
+      }
+      console.log("space list after resetting",this.space_list)
     },
     start: function () {
       if (this.inSimulation === false) {
@@ -696,14 +697,12 @@ export default {
       [IFCOPENINGELEMENT]: false
     });
 
-
     await this.loadFile();
     console.log("finished load file");
     await new Promise((resolve, reject) => {
       this.createAllSubsets(this.room_list);
       resolve();
     });
-
 
     this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
 
