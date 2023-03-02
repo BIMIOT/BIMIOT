@@ -27,10 +27,7 @@ export default {
   },
   methods: {
     searchFruits (e) {
-
-
       console.log(this.room_list[this.searchTerm])
-
     }
   }
 }

@@ -21,7 +21,6 @@
 <script>
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
-import SensorSearchBar from "@/components/SensorSearchBar";
 
 export default {
 
@@ -83,7 +82,7 @@ export default {
         this.config.roots = this.configOld.roots;
         return;
       }
-      if(this.nodes[this.searchTerm].parent === null) {
+      if(this.nodes[this.searchTerm] && this.nodes[this.searchTerm].parent === null) {
         this.searchRooms();
       } else {
         this.searchSensors();
@@ -99,12 +98,14 @@ export default {
               currentNode[child] =   { text: "Valeur : Aucune"};
             } else  {
                 currentNode[child] = this.nodes[child];
-              }
             }
+      }
+
       this.nodes = currentNode;
     },
     searchRooms () {
       const currentNode =  {}
+      this.config.roots = [this.searchTerm];
         currentNode[this.searchTerm] = (this.nodes[this.searchTerm])
         for (const child of this.nodes[this.searchTerm].children) {
           currentNode[child] = (this.nodes[child]);
@@ -138,7 +139,7 @@ export default {
 
                 roomNode.children.push(sensor.DataId);
                 nodes[sensor.DataId+""] = sensorNode;
-                nodes[sensor.IFCid+""] = { text: "Ifc Id : " + sensor.IFCid };
+                nodes[sensor.IFCid+""] = { text: "Ifc Id : " + sensor.IFCid};
                 nodes[sensor.DataId+"#"] = { text: "Dataset Id : " + sensor.DataId };
                 nodes[sensor.DataId+"-value"] = {text: "Valeur : "  +  (sensor.value === undefined ? "Aucune" : sensor.value)};
               }
