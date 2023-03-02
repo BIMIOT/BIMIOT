@@ -21,7 +21,7 @@
         </div>
       </transition>
       <div style="position: absolute; bottom:30px; left: 0; margin-left: 20px;" class="align-items-center">
-          <div class=".top">
+        <div class=".top">
             <v-btn  id="controlBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
           </div>
           <div class="spacer"></div>
@@ -36,11 +36,9 @@
           <div class="spacer"></div>
             <SensorsList class="bottom" :room_list="room_list"/>
           <div class="spacer"></div>
+          <HideValueButton class="bottom" :hide="this.hideValue" @click="hideAllValue()"/>
           </div>
-
-
         <div>
-
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -90,12 +88,14 @@ import {unitsTypeStore} from "@/store/unitsType";
 import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
+import HideValueButton from "@/components/HideValueButton.vue";
 
 
 export default {
   name: 'ModelViewer',
   props: ['token', 'projectId', 'discipline'],
   components: {
+    HideValueButton,
     ColorPickerSensor,
     SensorsList,
     SensorsControlButtons,
@@ -110,6 +110,7 @@ export default {
       client: undefined,
       viewer: undefined,
       playing: false,
+      hideValue:false,
       model: undefined,
       currentSenseType: "TEMPERATURE",
       structure: undefined,
@@ -266,7 +267,6 @@ export default {
         }
         this.viewer.IFC.selector.prePickIfcItem()
       };
-
       window.ondblclick = async () => {
         const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
         const type = this.viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
@@ -345,6 +345,22 @@ export default {
       const labelDiv = document.getElementById(roomId)
       labelDiv.textContent = newContent
     },
+    hideAllValue(){
+      this.hideValue = ! this.hideValue;
+      if(this.hideValue){
+        if (this.space_list !== {}){
+          for (const roomId in this.space_list) {
+            document.getElementById(roomId).style.visibility = "hidden";
+          }
+        }
+      }else{
+        if (this.space_list !== {}){
+          for (const roomId in this.space_list) {
+            document.getElementById(roomId).style.visibility = "visible";
+          }
+        }
+      }
+    },
     subscribe: function (greeting) {
 
       const manager = this.viewer.IFC.loader.ifcManager;
@@ -357,10 +373,7 @@ export default {
         this.inSimulation = false;
       }
 
-
-
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list)) {
-
          return;
       }
       console.log("im called")
@@ -371,6 +384,7 @@ export default {
         this.space_list[response["roomIfcID"]] = {};
       }
       this.space_list[response["roomIfcID"]][response["sensorType"]] = response["averageValue"];
+
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
@@ -383,6 +397,9 @@ export default {
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
         this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.unitsStore.getUnitFromType(response["sensorType"]));
+        if (this.hideValue) {
+          document.getElementById(response["roomIfcID"]).style.visibility = "hidden";
+        }
       }
     },
     convertHexToInt: function (colors) {
