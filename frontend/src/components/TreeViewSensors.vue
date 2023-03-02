@@ -83,45 +83,38 @@ export default {
         this.config.roots = this.configOld.roots;
         return;
       }
-      this.searchRooms();
-      //this.searchSensors();
+      if(this.nodes[this.searchTerm].parent === null) {
+        this.searchRooms();
+      } else {
+        this.searchSensors();
+      }
     },
     searchSensors () {
       const currentNode =  {}
       this.config.roots = [this.searchTerm];
-      console.log(this.config.roots);
-      console.log(this.nodes, "hello")
       currentNode[this.searchTerm] = this.nodes[this.searchTerm];
       for (const child of this.nodes[this.searchTerm].children) {
-        currentNode[child] = (this.nodes[parseInt(child,10)])
+        currentNode[child] = (this.nodes[child])
             if(child === undefined) {
               currentNode[child] =   { text: "Valeur : Aucune"};
             } else  {
                 currentNode[child] = this.nodes[child];
               }
             }
-
       this.nodes = currentNode;
-      console.log(this.nodes, "im here bro")
     },
     searchRooms () {
       const currentNode =  {}
-      currentNode[parseInt(this.searchTerm,10)] = (this.nodes[parseInt(this.searchTerm,10)])
-      for (const child of this.nodes[parseInt(this.searchTerm,10)].children) {
-        currentNode[child] = (this.nodes[parseInt(child,10)])
-        if(this.nodes[parseInt(child,10)] !== undefined) {
-          for (const childElement of this.nodes[parseInt(child,10)].children) {
-            if(childElement === undefined) {
-              currentNode[childElement] =   { text: "Valeur : Aucune"};
-            } else  {
-                currentNode[childElement] = this.nodes[childElement];
-
+        currentNode[this.searchTerm] = (this.nodes[this.searchTerm])
+        for (const child of this.nodes[this.searchTerm].children) {
+          currentNode[child] = (this.nodes[child]);
+          if (this.nodes[child] !== undefined) {
+            for (const childElement of this.nodes[child].children) {
+              currentNode[childElement] = this.nodes[childElement];
             }
           }
-        }
-      }
-
-      this.nodes = currentNode;
+        this.nodes = currentNode;
+     }
     },
     generateNodes(roomList) {
       const nodes = {};
@@ -136,28 +129,28 @@ export default {
               if (sensor.IFCid) {
                 const sensorNode = {
                   text: " Type " + type2 + " / " + roomId,
+                  parent: roomId+"",
                   children: []
                 };
                 sensorNode.children.push(sensor.DataId+"#");
-                sensorNode.children.push(sensor.IFCid);
-                sensorNode.children.push(sensor.value);
-
-
+                sensorNode.children.push(sensor.IFCid+"");
+                sensorNode.children.push(sensor.DataId+"-value");
 
                 roomNode.children.push(sensor.DataId);
-                nodes[sensor.DataId] = sensorNode;
-                nodes[sensor.IFCid] = { text: "Ifc Id : " + sensor.IFCid };
+                nodes[sensor.DataId+""] = sensorNode;
+                nodes[sensor.IFCid+""] = { text: "Ifc Id : " + sensor.IFCid };
                 nodes[sensor.DataId+"#"] = { text: "Dataset Id : " + sensor.DataId };
-                nodes[sensor.value] = {text: "Valeur : "  +  (sensor.value === undefined ? "Aucune" : sensor.value)};
+                nodes[sensor.DataId+"-value"] = {text: "Valeur : "  +  (sensor.value === undefined ? "Aucune" : sensor.value)};
               }
 
             }
           }
         }
-        nodes[roomId] = roomNode;
+        nodes[roomId+""] = roomNode;
       }
 
       this.oldNodes = nodes;
+
 
       return nodes;
     },
