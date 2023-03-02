@@ -423,7 +423,6 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          side: THREE.SimpleSide,
           depthTest: true,
         })
 
@@ -681,9 +680,21 @@ export default {
     });
 
 
+    await this.loadFile();
     console.log("finished load file");
+    await new Promise((resolve, reject) => {
+      this.createAllSubsets(this.room_list);
+      resolve();
+    });
 
-   // await this.loadFile();
+
+    this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
+
+    viewer.container = container;
+    const navCube = new NavCube(viewer);
+    navCube.onPick(this.model);
+    this.navCube = navCube;
+    
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -779,11 +790,6 @@ export default {
 
         false
     );
-    viewer.container = container;
-    const navCube = new NavCube(viewer);
-    navCube.onPick(this.model);
-    this.navCube = navCube;
-
   },
 }
 </script>
