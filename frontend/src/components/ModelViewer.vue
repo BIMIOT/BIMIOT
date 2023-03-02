@@ -547,7 +547,14 @@ export default {
           }
         }
       }
-      // TODO : reset average values of rooms in the model
+      this.changeLabelContent(this.space_list, this.currentSenseType);
+      for (const roomId in this.space_list) {
+        this.modifyTextContent(roomId,"");
+        for (const type in this.space_list[roomId]) {
+          this.space_list[roomId][type] = undefined
+        }
+      }
+      console.log("space list after resetting",this.space_list)
     },
     start: function () {
       if (this.inSimulation === false) {
