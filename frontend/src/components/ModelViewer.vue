@@ -128,8 +128,7 @@ export default {
         transparent: true,
         opacity: 0.5,
         color: 0xffffff,
-        depthTest: true,
-        side: THREE.SimpleSide
+        depthTest: true
       }),
       preSelectMat: new MeshLambertMaterial({
         transparent: true,
@@ -423,8 +422,7 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          side: THREE.SimpleSide,
-          depthTest: true,
+          depthTest: true
         })
 
         this.roomIdToMesh[parseInt(id, 10)] = mesh;
@@ -433,7 +431,6 @@ export default {
           modelID: this.model.modelID,
           ids: [parseInt(id, 10)],
           material: mesh,
-
           removePrevious: false,
           customID: id
         });
@@ -680,10 +677,19 @@ export default {
       [IFCOPENINGELEMENT]: false
     });
 
-
+    await this.loadFile();
     console.log("finished load file");
+    await new Promise((resolve, reject) => {
+      this.createAllSubsets(this.room_list);
+      resolve();
+    });
+    this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
+    // await this.loadFile();
+    viewer.container = container;
+    const navCube = new NavCube(viewer);
+    navCube.onPick(this.model);
+    this.navCube = navCube;
 
-   // await this.loadFile();
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -779,11 +785,6 @@ export default {
 
         false
     );
-    viewer.container = container;
-    const navCube = new NavCube(viewer);
-    navCube.onPick(this.model);
-    this.navCube = navCube;
-
   },
 }
 </script>
