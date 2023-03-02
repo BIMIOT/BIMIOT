@@ -1,13 +1,13 @@
 package fr.bimiot.application.controllers;
 
-import fr.bimiot.application.dtos.ProjectApi;
-import fr.bimiot.application.dtos.SensorColorApi;
-import fr.bimiot.application.dtos.SensorColorApiMap;
-import fr.bimiot.application.dtos.SensorTypeApi;
+import fr.bimiot.application.dtos.*;
 import fr.bimiot.dataproviders.exception.DataBaseException;
-import fr.bimiot.domain.entities.*;
+import fr.bimiot.domain.entities.Project;
+import fr.bimiot.domain.entities.SensorColor;
+import fr.bimiot.domain.entities.SensorType;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.*;
+import fr.bimiot.utils.Builder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +44,13 @@ public class ProjectController {
         return ResponseEntity.ok(toProjectApi(projectResponse));
     }
 
-    private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) {
-        return new Project(null, projectName, ifc, dataset);
+    private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) throws IOException {
+        return Builder.of(Project::new)
+                .with(Project::setName, projectName)
+                .with(Project::setIfcFile, ifc.getBytes())
+                .with(Project::setIfcFilename, ifc.getOriginalFilename())
+                .with(Project::setDatasetFilename, dataset.getOriginalFilename())
+                .build();
     }
 
     private ProjectApi toProjectApi(String projectId) {

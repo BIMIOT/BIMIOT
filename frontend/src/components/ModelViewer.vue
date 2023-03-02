@@ -222,7 +222,7 @@ export default {
       });
     },
     async loadFile() {
-      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProjectName}`, {
+      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProject.name}`, {
         responseType: 'blob',
       });
       const ifcURL = URL.createObjectURL(response.data);
@@ -570,17 +570,17 @@ export default {
       }
       this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
+      axios.put(`/api/bimiot/start/${this.store.currentProject.name}`, {})
     },
     pause: function () {
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/pause/${this.store.currentProjectName}`, {});
+      axios.put(`/api/bimiot/pause/${this.store.currentProject.name}`, {});
     },
     stop: function () {
       this.inSimulation = false;
       this.playing = false;
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {});
+      axios.put(`/api/bimiot/stop/${this.store.currentProject.name}`, {});
     },
     sendMapping: function () {
       let config = {
@@ -661,8 +661,7 @@ export default {
   },
 
   async mounted() {
-
-    if(this.store.currentProjectName === null){
+    if(this.store.currentProject === null){
       this.$router.push({name: 'home'});
     }
     document.getElementById("model").style.filter = "blur(2px)";

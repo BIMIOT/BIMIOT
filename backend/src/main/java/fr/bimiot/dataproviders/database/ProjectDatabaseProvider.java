@@ -4,11 +4,11 @@ import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.entities.SensorColor;
 import fr.bimiot.domain.entities.SensorType;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
+import fr.bimiot.utils.Builder;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -17,12 +17,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
+public class ProjectDatabaseProvider implements ProjectProvider {
 
     private final ProjectJpaRepository projectJpaRepository;
 
 
-    public ProjectDatabaseProviderImpl(ProjectJpaRepository projectJpaRepository) {
+    public ProjectDatabaseProvider(ProjectJpaRepository projectJpaRepository) {
         this.projectJpaRepository = projectJpaRepository;
     }
 
@@ -52,13 +52,26 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
     }
 
     @Override
-    public List<String> getAllProjects() {
-        return projectJpaRepository.findAll().stream().map(ProjectJpa::getName).toList();
+    public List<Project> getAllProjects() {
+        return projectJpaRepository.findAll().stream()
+                .map(this::toProject)
+                .toList();
+    }
+
+    private Project toProject(ProjectJpa projectJpa) {
+        return Builder.of(Project::new)
+                .with(Project::setId, projectJpa.getId())
+                .with(Project::setName, projectJpa.getName())
+                .with(Project::setIfcFilename, projectJpa.getIfcFilename())
+                .with(Project::setDatasetFilename, projectJpa.getDatasetFilename())
+                .with(Project::setIfcFile, projectJpa.getIfc().getData())
+                .with(Project::setSensorColors, toSensorColorMap(projectJpa.getSensorColorJpaMap()))
+                .build();
     }
 
     @Override
     public byte[] loadIFCFile(String projectName) {
-        return  projectJpaRepository.findProjectJpaByName(projectName).getIfc().getData();
+        return projectJpaRepository.findProjectJpaByName(projectName).getIfc().getData();
     }
 
     private List<SensorColorJpa> toSensorColorJpaList(List<SensorColor> sensorColors) {
@@ -67,14 +80,6 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
                         sensorColor.colorCode(),
                         sensorColor.threshold()
                 )).toList();
-    }
-
-    private Project toProject(ProjectJpa projectJpa) {
-        var project = new Project();
-        project.setId(projectJpa.getId());
-        project.setName(projectJpa.getName());
-        project.setSensorColors(toSensorColorMap(projectJpa.getSensorColorJpaMap()));
-        return project;
     }
 
     private Map<SensorTypeJpa, List<SensorColorJpa>> toSensorColorJpaMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
@@ -95,12 +100,13 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
     }
 
     private ProjectJpa toProjectJpa(Project project) throws IOException {
-        ProjectJpa projectJpa = new ProjectJpa();
-        projectJpa.setIfc(toBinary(project.getIfc()));
-        projectJpa.setDataset(toBinary(project.getDataset()));
-        projectJpa.setName(project.getName());
-        projectJpa.setSensorColorJpaMap(getDefaultSensorsColors());
-        return projectJpa;
+        return Builder.of(ProjectJpa::new)
+                .with(ProjectJpa::setIfc, toBinary(project.getIfcFile()))
+                .with(ProjectJpa::setName, project.getName())
+                .with(ProjectJpa::setIfcFilename, project.getIfcFilename())
+                .with(ProjectJpa::setDatasetFilename, project.getDatasetFilename())
+                .with(ProjectJpa::setSensorColorJpaMap, getDefaultSensorsColors())
+                .build();
     }
 
     private Map<SensorTypeJpa, List<SensorColorJpa>> getDefaultSensorsColors() {
@@ -148,7 +154,7 @@ public class ProjectDatabaseProviderImpl implements ProjectDatabaseProvider {
         );
     }
 
-    private Binary toBinary(MultipartFile file) throws IOException {
-        return new Binary(BsonBinarySubType.BINARY, file.getBytes());
+    private Binary toBinary(byte[] file) throws IOException {
+        return new Binary(BsonBinarySubType.BINARY, file);
     }
 }
