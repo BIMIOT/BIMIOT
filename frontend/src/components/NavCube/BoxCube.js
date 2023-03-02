@@ -66,7 +66,7 @@ export class BoxCube {
     }
 
     initRing() {
-        var geometry = new RingGeometry(80, 130, 30);
+        var geometry = new RingGeometry(80, 120, 30);
         geometry.rotateX(-Math.PI / 2);
         geometry.translate(0, -60, 0);
         var mesh = new Mesh(geometry, NavCubeMaterial.ring);
@@ -114,7 +114,7 @@ function initTextRing(scene, name, x1, y1, z1) {
     const font = loader.parse(fontJSON);
     const parameters = {
         font: font,
-        size: 50,
+        size: 40,
         height: 2,
     };
     var textCube = new TextGeometry(name, parameters);
