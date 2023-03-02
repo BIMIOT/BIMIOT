@@ -23,10 +23,10 @@ import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
 
 export default {
-
   name: "TreeViewSensors",
   props: {
-    room_list: {  },
+    searchFrom3dModel: {},
+    room_list: {},
   },
   components: {
     tree: treeview,
@@ -74,14 +74,33 @@ export default {
   },
   mounted() {
     this.nodes = this.generateNodes(this.room_list);
+    let rooms = document.getElementsByClassName('node-text');
+
   },
   methods: {
+    searchFrom3d(roomId) {
+      this.nodes = this.oldNodes
+      this.searchTerm = roomId+"";
+      if(!this.nodes[this.searchTerm]) {
+        this.nodes = this.oldNodes
+        this.config.roots = this.configOld.roots;
+        return;
+      }
+      if(this.nodes[this.searchTerm] && this.nodes[this.searchTerm].parent === null) {
+        this.searchRooms();
+      } else {
+        this.searchSensors();
+      }
+
+
+    },
     searchGlobal() {
       if(!this.nodes[this.searchTerm]) {
         this.nodes = this.oldNodes
         this.config.roots = this.configOld.roots;
         return;
       }
+      console.log("im here",this.searchTerm)
       if(this.nodes[this.searchTerm] && this.nodes[this.searchTerm].parent === null) {
         this.searchRooms();
       } else {
@@ -100,7 +119,6 @@ export default {
                 currentNode[child] = this.nodes[child];
             }
       }
-
       this.nodes = currentNode;
     },
     searchRooms () {
@@ -149,10 +167,7 @@ export default {
         }
         nodes[roomId+""] = roomNode;
       }
-
       this.oldNodes = nodes;
-
-
       return nodes;
     },
 

@@ -34,13 +34,10 @@
           <div class="spacer"></div>
             <TwoDToThreeDButton class="top"  @click="changeTo2d()" :state="currentPlan"/>
           <div class="spacer"></div>
-            <SensorsList class="bottom" :room_list="room_list"/>
+            <SensorsList  ref="childComponent" class="bottom" :room_list="room_list"/>
           <div class="spacer"></div>
           </div>
-
-
         <div>
-
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -103,6 +100,7 @@ export default {
   data() {
     return {
       entityData: '',
+      sensorIFcToDataSet: {},
       knowledge: 0,
       roomIdToMesh: {},
       arrayOfKids: [],
@@ -269,6 +267,7 @@ export default {
       window.ondblclick = async () => {
         const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
         const type = this.viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
         } else {
@@ -373,6 +372,7 @@ export default {
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
+          this.$refs.childComponent.room_list = this.room_list;
         }
       }
 
@@ -540,6 +540,7 @@ export default {
             "type": type_name,
             "value": undefined
           });
+          this.sensorIFcToDataSet[relIDs.children[component].expressID]=sensor.ObjectType.value.split(":")[0];
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
@@ -660,8 +661,12 @@ export default {
 
 
     console.log("finished load file");
+    await this.loadFile();
+    await new Promise((resolve, reject) => {
+      this.createAllSubsets(this.room_list);
+      resolve();
+    });
 
-   // await this.loadFile();
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -728,10 +733,12 @@ export default {
           window.ondblclick = async () => {
             const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
             const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+
             if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+              this.$refs.childComponent.search(type === "IFCSPACE" ? id : this.sensorIFcToDataSet[id]);
               this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
             } else {
-              viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+              viewer.IFC.selector.unpickIfcItems();
             }
           }
 
