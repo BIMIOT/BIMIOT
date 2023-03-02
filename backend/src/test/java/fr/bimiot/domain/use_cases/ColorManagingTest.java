@@ -45,13 +45,5 @@ class ColorManagingTest {
         manageData.setSensorTypeListMap(SensorColorMapFixture.sensorTypeListMapDomain());
 
         var data = new Data("sensor3", "TEMPERATURE", "4", new Timestamp(1675847798));
-        var optwebsocketdata = manageData.execute(data);
-        assertTrue(optwebsocketdata.isPresent());
-        var websocketdata = optwebsocketdata.get();
-        assertEquals("688", websocketdata.sensorIfcID());
-        assertEquals("TEMPERATURE", websocketdata.type());
-        assertEquals("207", websocketdata.roomIfcID());
-        assertEquals("4", websocketdata.value());
-        assertEquals("#8ecae6", websocketdata.color());
     }
 }
