@@ -97,7 +97,7 @@
                                         <include>IFCjs/</include>
                                         <include>static/</include>
                                         <include>index.html</include>
-                                        <include>favicon.ico</include>
+                                        <include>favicon.png</include>
                                     </includes>
                                 </resource>
                             </resources>
