@@ -2,7 +2,7 @@ package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
 //import fr.bimiot.domain.use_cases.providers.ProjectFileProvider;
 import fr.bimiot.fixtures.ProjectFixture;
 import org.junit.jupiter.api.Test;
@@ -23,14 +23,14 @@ class CreateProjectTest {
     CreateProject createProject;
 
     @Mock
-    ProjectDatabaseProvider projectDatabaseProvider;
+    ProjectProvider projectProvider;
 
     private static final String PROJECT_ID = "project_id";
 
     @Test
     void execute_shouldReturnProjectId() throws IOException, DomainException {
         Project project = ProjectFixture.aProjectWithoutSensorsAndWithoutId();
-        BDDMockito.doReturn(PROJECT_ID).when(projectDatabaseProvider).create(project);
+        BDDMockito.doReturn(PROJECT_ID).when(projectProvider).create(project);
         String result = createProject.execute(project);
         assertNotNull(result);
         assertEquals(PROJECT_ID, result);

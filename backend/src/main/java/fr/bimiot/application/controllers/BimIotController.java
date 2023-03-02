@@ -1,11 +1,14 @@
 package fr.bimiot.application.controllers;
 
+import fr.bimiot.application.dtos.ProjectApiGetAllResponse;
 import fr.bimiot.domain.entities.Data;
+import fr.bimiot.domain.entities.Project;
 import fr.bimiot.domain.entities.Room;
 import fr.bimiot.domain.use_cases.GetAllProjects;
 import fr.bimiot.domain.use_cases.ManageData;
 import fr.bimiot.domain.use_cases.ManageSimulation;
 import fr.bimiot.simulator.ConverterEvent;
+import fr.bimiot.utils.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -32,8 +35,19 @@ public class BimIotController {
 
     @Deprecated
     @GetMapping("/projects")
-    public ResponseEntity<List<String>> getAllProjects() {
-        return ResponseEntity.status(HttpStatus.OK).body(getAllProjects.execute());
+    public ResponseEntity<List<ProjectApiGetAllResponse>> getAllProjects() {
+        var responseBody = getAllProjects.execute().stream()
+                .map(this::toProjectApiGetAllResponse)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    private ProjectApiGetAllResponse toProjectApiGetAllResponse(Project project) {
+        return Builder.of(ProjectApiGetAllResponse::new)
+                .with(ProjectApiGetAllResponse::setName, project.getName())
+                .with(ProjectApiGetAllResponse::setIfcFilename, project.getIfcFilename())
+                .with(ProjectApiGetAllResponse::setDatasetFilename, project.getDatasetFilename())
+                .build();
     }
 
     @PutMapping(value = "/sendData", consumes = "application/json")
@@ -45,7 +59,7 @@ public class BimIotController {
         }
     }
 
-    @PutMapping(value="/start/{simulation_name}")
+    @PutMapping(value = "/start/{simulation_name}")
     public int start(@PathVariable String simulation_name) {
         manageSimulation.executeStart(simulation_name);
         return 0;

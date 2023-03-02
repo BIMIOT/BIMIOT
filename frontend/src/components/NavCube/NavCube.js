@@ -28,8 +28,8 @@ export class NavCube {
 
     initContainer() {
         console.log(this.viewer);
-        this.width = 120;
-        this.height = 120;
+        this.width = 130;
+        this.height = 130;
         this.container = document.createElement("div");
         this.container.style.position = "absolute";
         this.container.style.width = `${this.width}px`;
