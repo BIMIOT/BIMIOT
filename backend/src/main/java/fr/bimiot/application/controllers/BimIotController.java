@@ -52,11 +52,7 @@ public class BimIotController {
 
     @PutMapping(value = "/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
-        var optData = manageData.execute(data);
-        if (optData.isPresent()) {
-            var event = new ConverterEvent(this, optData.get());
-            applicationEventPublisher.publishEvent(event);
-        }
+        manageData.execute(data);
     }
 
     @PutMapping(value = "/start/{simulation_name}")
