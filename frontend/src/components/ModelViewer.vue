@@ -408,7 +408,6 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          side: THREE.SimpleSide,
           depthTest: true,
         })
 
@@ -654,6 +653,13 @@ export default {
       resolve();
     });
 
+    this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
+
+    viewer.container = container;
+    const navCube = new NavCube(viewer);
+    navCube.onPick(this.model);
+    this.navCube = navCube;
+
     const input = document.getElementById("file-input");
 
     input.addEventListener("change",
@@ -760,11 +766,6 @@ export default {
 
         false
     );
-    viewer.container = container;
-    const navCube = new NavCube(viewer);
-    navCube.onPick(this.model);
-    this.navCube = navCube;
-
   },
 }
 </script>
