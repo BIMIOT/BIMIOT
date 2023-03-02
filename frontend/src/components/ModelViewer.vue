@@ -272,7 +272,6 @@ export default {
         }
         this.viewer.IFC.selector.prePickIfcItem()
       };
-
       window.ondblclick = async () => {
         const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
         const type = this.viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
@@ -379,10 +378,7 @@ export default {
         this.inSimulation = false;
       }
 
-
-
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list)) {
-
          return;
       }
       console.log("im called")
@@ -393,6 +389,7 @@ export default {
         this.space_list[response["roomIfcID"]] = {};
       }
       this.space_list[response["roomIfcID"]][response["sensorType"]] = response["averageValue"];
+
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
@@ -405,6 +402,9 @@ export default {
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
         this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.units[response["sensorType"]])
+        if (this.hideValue) {
+          document.getElementById(response["roomIfcID"]).style.visibility = "hidden";
+        }
       }
     },
     convertHexToInt: function (colors) {
