@@ -2,6 +2,7 @@ package fr.bimiot.dataproviders.database;
 
 import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.Project;
+import fr.bimiot.fixtures.ProjectFixture;
 import fr.bimiot.fixtures.ProjectJpaFixture;
 import fr.bimiot.fixtures.SensorColorMapFixture;
 import org.bson.BsonBinarySubType;
@@ -13,7 +14,6 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,19 +29,12 @@ class ProjectDatabaseProviderTest {
     @Mock
     ProjectJpaRepository projectJpaRepository;
 
-    private static final MultipartFile IFC_FILE = new MockMultipartFile("ifc", "Hello".getBytes());
-
-    private static final MultipartFile DATASET_FILE = new MockMultipartFile("dataset", "Hello".getBytes());
-
     @Test
     void create_shouldInsertByUsingJpaRepository() throws IOException {
         //  Given
-        Project project = new Project(null, "project 1", IFC_FILE, DATASET_FILE);
+        Project project = ProjectFixture.aProjectWithoutSensorsAndWithoutId();
         ArgumentCaptor<ProjectJpa> projectJpaArgumentCaptor = ArgumentCaptor.forClass(ProjectJpa.class);
-        ProjectJpa projectJpaInput = new ProjectJpa();
-        projectJpaInput.setName(project.getName());
-        projectJpaInput.setIfc(toBinary(IFC_FILE));
-        projectJpaInput.setDataset(toBinary(DATASET_FILE));
+        ProjectJpa projectJpaInput = ProjectJpaFixture.aProjectJpaWithoutSensorsAndWithoutId();
 
         ProjectJpa projectJpaOutput = new ProjectJpa();
         projectJpaOutput.setId("projectId");
@@ -56,27 +49,6 @@ class ProjectDatabaseProviderTest {
         verify(projectJpaRepository).insert(projectJpaArgumentCaptor.capture());
         assertEquals(project.getName(), projectJpaArgumentCaptor.getValue().getName());
         assertEquals("projectId", projectId);
-    }
-
-
-    @Test
-    void find_shouldFoundByProjectName() throws IOException {
-        //Given
-        Project project = new Project(null, "project1", IFC_FILE, DATASET_FILE);
-        ProjectJpa projectJpaInput = new ProjectJpa();
-        projectJpaInput.setName(project.getName());
-        projectJpaInput.setIfc(toBinary(IFC_FILE));
-        projectJpaInput.setDataset(toBinary(DATASET_FILE));
-
-        long toReturn = 1;
-
-        BDDMockito.doReturn(toReturn).when(projectJpaRepository).deleteByName(projectJpaInput.getName());
-
-        //When
-        var result = projectJpaRepository.deleteByName("project1");
-
-        //Then
-        assertEquals(1, result);
     }
 
     @Test

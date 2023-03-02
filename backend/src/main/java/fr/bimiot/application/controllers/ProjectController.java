@@ -47,7 +47,6 @@ public class ProjectController {
     private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) throws IOException {
         return Builder.of(Project::new)
                 .with(Project::setName, projectName)
-                .with(Project::setDatasetFile, dataset.getBytes())
                 .with(Project::setIfcFile, ifc.getBytes())
                 .with(Project::setIfcFilename, ifc.getOriginalFilename())
                 .with(Project::setDatasetFilename, dataset.getOriginalFilename())

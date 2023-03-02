@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const projectStore = defineStore('project', {
     state: () => ({
-        currentProjectName: null,
+        currentProject: {},
         colors: {
             "TEMPERATURE": [{"colorCode": "#7F00FF", "threshold": -10}, {
                 "colorCode": "#00FFFF",

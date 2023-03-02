@@ -6,8 +6,14 @@
       style="background: transparent;"
   >
     <v-card-title style="color: #0A0046">
-      {{ title }}
+      {{ project.name }}
     </v-card-title>
+    <v-card-subtitle>
+      {{ project.ifcFilename }}
+    </v-card-subtitle>
+    <v-card-subtitle>
+      {{ project.datasetFilename }}
+    </v-card-subtitle>
     <v-card-actions class="justify-center">
       <v-btn
           variant="elevated"
@@ -49,7 +55,7 @@ import axios from "axios";
 import {projectStore} from "@/store/project";
 
 export default {
-  props: ["title"],
+  props: ["project"],
   data() {
     return {
       show: true,
@@ -62,7 +68,7 @@ export default {
   },
   methods: {
     sendProjectName() {
-      this.store.currentProjectName = this.title;
+      this.store.currentProject = this.project;
       this.$router.push({name: "simulation"});
     },
 

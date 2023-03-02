@@ -30,12 +30,12 @@ class LoadIfcFileTest {
     void execute_shouldReturnCorrectBytesArray() throws IOException, BaseException {
         //  Given
         Project project = ProjectFixture.aCompleteProject();
-        BDDMockito.doReturn(project.getIfc().getBytes()).when(projectProvider).loadIFCFile(project.getName());
+        BDDMockito.doReturn(project.getIfcFile()).when(projectProvider).loadIFCFile(project.getName());
         //  When
         var result = loadIfcFile.execute(project.getName());
         //  Then
         assertNotNull(result);
-        assertEquals(result, project.getIfc().getBytes());
+        assertEquals(result, project.getIfcFile());
     }
 
     @ParameterizedTest

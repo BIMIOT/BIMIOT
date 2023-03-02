@@ -9,13 +9,13 @@
       <v-col cols="12">
         <v-row>
           <v-col
-              v-for="name in names"
-              :key="name"
+              v-for="project in projects"
+              :key="project"
               cols="12"
               md="6"
               lg="3"
           >
-            <HomeProjectCard :title="name" @delete="getAllProjects"/>
+            <HomeProjectCard :project="project" @delete="getAllProjects"/>
           </v-col>
         </v-row>
       </v-col>
@@ -44,7 +44,7 @@ export default {
   components: {HomeProjectCard},
   data() {
     return {
-      names: ['Project1', 'Project1', 'Project1', 'Project1', 'Project1', 'Project1', 'Project1', 'Project1'],
+      projects: [],
     };
   },
   methods: {
@@ -55,7 +55,7 @@ export default {
       fetch("api/bimiot/projects")
           .then(response => response.json())
           .then(data => {
-            this.names = data;
+            this.projects = data;
           })
     }
   },
