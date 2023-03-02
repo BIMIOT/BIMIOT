@@ -21,6 +21,7 @@
 <script>
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
+import {unitsTypeStore} from "@/store/unitsType";
 
 export default {
 
@@ -71,6 +72,10 @@ export default {
       },
       nodes: {},
     };
+  },
+  setup() {
+    const unitsStore = unitsTypeStore();
+    return {unitsStore};
   },
   mounted() {
     this.nodes = this.generateNodes(this.room_list);
@@ -141,7 +146,7 @@ export default {
                 nodes[sensor.DataId+""] = sensorNode;
                 nodes[sensor.IFCid+""] = { text: "Ifc Id : " + sensor.IFCid};
                 nodes[sensor.DataId+"#"] = { text: "Dataset Id : " + sensor.DataId };
-                nodes[sensor.DataId+"-value"] = {text: "Valeur : "  +  (sensor.value === undefined ? "Aucune" : sensor.value)};
+                nodes[sensor.DataId+"-value"] = {text: "Valeur : "  +  (sensor.value === undefined ? "Aucune" : sensor.value + " " + this.unitsStore.getUnitFromType(type2))};
               }
 
             }
