@@ -109,6 +109,12 @@ export default {
       room_by_color: {},
       currentPlan: "3D",
       room_list: {},
+      units:{
+        "TEMPERATURE":" °C",
+        "LIGHT":" Lux",
+        "HUMIDITY":" %",
+        "CO2":" PPM",
+      },
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.5,
@@ -372,7 +378,7 @@ export default {
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
-        this.modifyTextContent(response["roomIfcID"], response["averageValue"])
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.units[response["sensorType"]])
       }
     },
     convertHexToInt: function (colors) {
@@ -470,7 +476,7 @@ export default {
         if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
           newContent = ""
         }else {
-          newContent = this.space_list[id][sensorType];
+          newContent = this.space_list[id][sensorType] + this.units[sensorType];
         }
         this.modifyTextContent(id, newContent);
       }
@@ -535,7 +541,24 @@ export default {
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
     },
+    resetColorsAndValues: function() {
+      axios.put(`/api/bimiot/reset`, {})
+      this.roomStore.resetColors();
+      const manager = this.viewer.IFC.loader.ifcManager;
+      this.changeColor(this.room_list, manager, this.currentSenseType);
+      for (let i in this.room_list) {
+        for (let j in this.room_list[i]) {
+          for (let k in this.room_list[i][j]) {
+            this.room_list[i][j][k].value = undefined;
+          }
+        }
+      }
+      // TODO : reset average values of rooms in the model
+    },
     start: function () {
+      if (this.inSimulation === false) {
+        this.resetColorsAndValues();
+      }
       this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
       axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})

@@ -90,4 +90,12 @@ public class ManageData {
     public void setSensorTypeListMap(Map<SensorType, List<SensorColor>> sensorTypeListMap) {
         this.sensorTypeListMap = sensorTypeListMap;
     }
+
+    public void resetRoomListDTO() {
+        for (var r : this.roomListDTO) {
+            for (var s : r.getSensors()) {
+                s.setValue(null);
+            }
+        }
+    }
 }
