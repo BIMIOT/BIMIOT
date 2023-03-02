@@ -160,6 +160,16 @@ public class SessionRestController {
         return message;
     }
 
+    @RequestMapping(value = "/pause/{sessionId}", method = RequestMethod.PUT)
+    public ActiveSessionManagementCommandResultMessage pause(@PathVariable("sessionId") @NotNull String sessionId) throws Exception {
+
+        ActiveSessionManagementCommand command = new ActiveSessionManagementCommand(SessionManagementCommand.PAUSE);
+        logger.debug("Performing command {} for session {}.", command.getCommand(), sessionId);
+        ActiveSessionManagementCommandResultMessage message = activeSessionManager.manage(sessionId, command);
+
+        return message;
+    }
+
     @RequestMapping(value = "/manage/{sessionId}", method = RequestMethod.PUT)
     public ActiveSessionManagementCommandResultMessage manage(@PathVariable("sessionId") @NotNull String sessionId,
                                                               @RequestBody @Valid @NotNull ActiveSessionManagementCommand command) throws Exception {

@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class ColorManagingTest {
@@ -44,7 +45,9 @@ class ColorManagingTest {
         manageData.setSensorTypeListMap(SensorColorMapFixture.sensorTypeListMapDomain());
 
         var data = new Data("sensor3", "TEMPERATURE", "4", new Timestamp(1675847798));
-        var websocketdata = manageData.execute(data);
+        var optwebsocketdata = manageData.execute(data);
+        assertTrue(optwebsocketdata.isPresent());
+        var websocketdata = optwebsocketdata.get();
         assertEquals("688", websocketdata.sensorIfcID());
         assertEquals("TEMPERATURE", websocketdata.type());
         assertEquals("207", websocketdata.roomIfcID());

@@ -25,6 +25,10 @@ public class ManageSimulation {
         stopSimulation(getSimulationId(simulation_name));
     }
 
+    public void executePause(String simulation_name) {
+        pauseSimulation(getSimulationId(simulation_name));
+    }
+
     public void executeCreate(String simulation_name, MultipartFile dataset) {
         createSimulation(simulation_name, dataset);
     }
@@ -58,6 +62,11 @@ public class ManageSimulation {
     private void startSimulation(String simulation_id) {
         restTemplate.put(URL + "/api/sessions/start/" + simulation_id, "");
         System.out.println("started simulation " + simulation_id);
+    }
+
+    private void pauseSimulation(String simulation_id) {
+        restTemplate.put(URL + "/api/sessions/pause/" + simulation_id, "");
+        System.out.println("paused simulation " + simulation_id);
     }
 
     private String getSimulationId(String simulation_name) {

@@ -52,8 +52,11 @@ public class BimIotController {
 
     @PutMapping(value = "/sendData", consumes = "application/json")
     public void sendData(@RequestBody Data data) {
-        var event = new ConverterEvent(this, manageData.execute(data));
-        applicationEventPublisher.publishEvent(event);
+        var optData = manageData.execute(data);
+        if (optData.isPresent()) {
+            var event = new ConverterEvent(this, optData.get());
+            applicationEventPublisher.publishEvent(event);
+        }
     }
 
     @PutMapping(value = "/start/{simulation_name}")
@@ -62,7 +65,13 @@ public class BimIotController {
         return 0;
     }
 
-    @PutMapping(value = "/stop/{simulation_name}")
+    @PutMapping(value="/pause/{simulation_name}")
+    public int pause(@PathVariable String simulation_name) {
+        manageSimulation.executePause(simulation_name);
+        return 0;
+    }
+
+    @PutMapping(value="/stop/{simulation_name}")
     public int stop(@PathVariable String simulation_name) {
         manageSimulation.executeStop(simulation_name);
         return 0;
