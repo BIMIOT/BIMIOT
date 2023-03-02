@@ -82,4 +82,10 @@ public class BimIotController {
         manageData.setRoomListDTO(roomListDTO);
         return 0;
     }
+
+    @PutMapping("/reset")
+    public int resetValues() {
+        manageData.resetRoomListDTO();
+        return 0;
+    }
 }
