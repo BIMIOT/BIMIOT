@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Component
@@ -63,7 +64,7 @@ public class ManageData {
             }
             if (found) {
                 return Optional.of(new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
-                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb),String.valueOf(sum / nb)));
+                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb), new DecimalFormat("#.#").format(sum / nb)));
             }
         }
 
