@@ -65,7 +65,7 @@ import TreeViewSensors from "@/components/TreeViewSensors";
   </template>
 
 <style>
-#showSensors {
+#showSensors{
   color: blue;
 }
 

@@ -1,3 +1,5 @@
+
+
 <template>
   <section>
     <div class="container">
@@ -6,40 +8,50 @@
           this.stop();
           this.$router.back()
       }" id="navbar">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
-            <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
-          </div>
-     </v-btn>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
+          <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
+        </div>
+      </v-btn>
       <input type="file" id="file-input"/>
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <transition name="fade" mode="out-in">
-      <div   id="progress-bar" >
-        {{knowledge}} %
-      </div>
-      </transition>
-      <div id="properties-text">
-        <p>
-          ID:
-          {{ entityData }}
-        </p>
-        <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
-      </div>
-      <div style="position: absolute; bottom: 30px; left: 0;">
-        <div class="block-display">
-          <v-btn id="controlBtn" icon @click="play">
-            <v-icon v-if="!playing">mdi-play</v-icon>
-            <v-icon v-if="playing">mdi-stop</v-icon>
-          </v-btn>
-          <TwoDToThreeDButton  @click="changeTo2d()" :state="currentPlan"/>
-          <SensorsList :room_list="room_list"/>
+        <div   id="progress-bar" >
+          {{knowledge}} %
         </div>
+      </transition>
+      <div style="position: absolute; bottom:30px; left: 0; margin-left: 20px;" class="align-items-center">
+          <div class=".top">
+            <v-btn  id="controlBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
+          </div>
+          <div class="spacer"></div>
+           <div class="bottom">
+             <v-btn id="controlBtn" icon @click="play">
+               <v-icon v-if="!playing">mdi-play</v-icon>
+               <v-icon v-if="playing">mdi-pause</v-icon>
+             </v-btn>
+           </div>
+          <div class="spacer"></div>
+            <TwoDToThreeDButton class="top"  @click="changeTo2d()" :state="currentPlan"/>
+          <div class="spacer"></div>
+            <SensorsList class="bottom" :room_list="room_list"/>
+          <div class="spacer"></div>
+          </div>
+
+
+        <div>
 
       </div>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
-
+    <div id="properties-text">
+      <p>
+        ID:
+        {{ entityData }}
+      </p>
+      <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
+    </div>
     <div id="model"/>
   </section>
 </template>
@@ -74,7 +86,7 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 import {roomsStateStore} from "@/store/rooms";
-import {storeToRefs} from "pinia";
+import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
 
@@ -101,6 +113,7 @@ export default {
       currentSenseType: "TEMPERATURE",
       structure: undefined,
       sensorMapping: [],
+      space_list: {},
       sensor_types: {},
       room_by_color: {},
       currentPlan: "3D",
@@ -110,7 +123,7 @@ export default {
         opacity: 0.5,
         color: 0xffffff,
         depthTest: true,
-        side: THREE.DoubleSide
+        side: THREE.SimpleSide
       }),
       preSelectMat: new MeshLambertMaterial({
         transparent: true,
@@ -124,7 +137,8 @@ export default {
         color: 0xfcba03,
       }),
       floorMesh: new MeshLambertMaterial({}),
-      navCube: undefined
+      navCube: undefined,
+      inSimulation: false
     }
   },
   setup() {
@@ -159,7 +173,7 @@ export default {
       if(!this.playing) {
         this.start()
       } else {
-        this.stop()
+        this.pause()
       }
       this.playing = !this.playing;
     },
@@ -168,7 +182,9 @@ export default {
         return;
       }
       const controls = this.viewer.context.ifcCamera.cameraControls;
+      const manager = this.viewer.IFC.loader.ifcManager;
       if(this.currentPlan === "3D") {
+        await this.changeSideProperty(this.room_list, manager, THREE.DoubleSide);
         this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
@@ -177,6 +193,7 @@ export default {
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
       } else {
+        await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
         this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
@@ -268,6 +285,65 @@ export default {
       await this.getSensors(structure, manager, this.model.modelID);
       this.sendMapping();
     },
+    calculateCenter(subset){
+      subset.geometry.computeBoundingSphere()
+      const coordinates = [];
+      const alreadySaved = new Set();
+      const position = subset.geometry.attributes.position;
+      for(let index of subset.geometry.index.array) {
+        if(!alreadySaved.has(index)){
+          coordinates.push(position.getX(index));
+          coordinates.push(position.getY(index));
+          coordinates.push(position.getZ(index));
+          alreadySaved.add(index);
+        }
+      }
+      const vertices = Float32Array.from(coordinates);
+
+      const verticex = [];
+      for (let i = 0; i < vertices.length; i += 3) {
+        const vertex = [vertices[i], vertices[i + 1], vertices[i + 2]];
+        verticex.push(vertex);
+      }
+
+      let minX = Number.POSITIVE_INFINITY;
+      let minY = Number.POSITIVE_INFINITY;
+      let minZ = Number.POSITIVE_INFINITY;
+      let maxX = Number.NEGATIVE_INFINITY;
+      let maxY = Number.NEGATIVE_INFINITY;
+      let maxZ = Number.NEGATIVE_INFINITY;
+
+      for (const vertex of verticex) {
+        minX = Math.min(minX, vertex[0]);
+        minY = Math.min(minY, vertex[1]);
+        minZ = Math.min(minZ, vertex[2]);
+        maxX = Math.max(maxX, vertex[0]);
+        maxY = Math.max(maxY, vertex[1]);
+        maxZ = Math.max(maxZ, vertex[2]);
+      }
+
+      const centerX = (minX + maxX) / 2;
+      const centerY = minY;
+      const centerZ = (minZ + maxZ) / 2;
+
+      return [centerX, centerY, centerZ];
+    },
+    createLabel(position, initContent, className, roomId){
+      const labelDiv = document.createElement( 'div' );
+      labelDiv.id = roomId;
+      labelDiv.className = className;
+      labelDiv.textContent = initContent;
+      labelDiv.style.marginTop = '-1em'
+      const label = new CSS2DObject(labelDiv);
+      label.position.set(position[0], position[1], position[2])
+      label.layers.set(0)
+      //console.log("label is :",label)
+      return label
+    },
+    modifyTextContent(roomId,newContent){
+      const labelDiv = document.getElementById(roomId)
+      labelDiv.textContent = newContent
+    },
     subscribe: function (greeting) {
 
       const manager = this.viewer.IFC.loader.ifcManager;
@@ -277,6 +353,7 @@ export default {
       if(response["sensorType"] === "END") {
         alert("Simulation terminate");
         this.play();
+        this.inSimulation = false;
       }
 
 
@@ -289,6 +366,10 @@ export default {
 
       this.roomStore.storeNewRoomColorByType(response["roomIfcID"],response["sensorType"],response["color"]);
 
+      if(this.space_list[response["roomIfcID"]] === undefined){
+        this.space_list[response["roomIfcID"]] = {};
+      }
+      this.space_list[response["roomIfcID"]][response["sensorType"]] = response["averageValue"];
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
@@ -300,6 +381,7 @@ export default {
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"])
       }
     },
     convertHexToInt: function (colors) {
@@ -335,7 +417,7 @@ export default {
           transparent: true,
           opacity: 0.4,
           color: 0xffffff,
-          side: THREE.DoubleSide,
+          side: THREE.SimpleSide,
           depthTest: true,
         })
 
@@ -350,7 +432,10 @@ export default {
           customID: id
         });
 
-       subsets.push(subset)
+        const center= this.calculateCenter(subset)
+        const label = this.createLabel(center,"","spaceLabel",id);
+        subset.add(label)
+        subsets.push(subset)
 
         console.log("hello")
       }
@@ -366,6 +451,14 @@ export default {
       }
       console.log("i finished")
     },
+    async changeSideProperty(room_ids, manager, side) {
+      const room_ids_iter = Object.keys(room_ids);
+      for (const id of room_ids_iter) {
+        const roomMesh = this.roomIdToMesh[id];
+        let subset = manager.getSubset(this.model.modelID,roomMesh,id);
+        subset.material.side = side;
+      }
+    },
     async changeColor(room_ids, manager, sensorType) {
       const room_ids_iter = Object.keys(room_ids);
       for (const id of room_ids_iter) {
@@ -379,6 +472,18 @@ export default {
         }
       }
     },
+    async changeLabelContent(room_ids,sensorType){
+      const room_ids_iter = Object.keys(room_ids);
+      let  newContent;
+      for (const id of room_ids_iter){
+        if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
+          newContent = ""
+        }else {
+          newContent = this.space_list[id][sensorType];
+        }
+        this.modifyTextContent(id, newContent);
+      }
+    },
     updateParent: async function (type) {
       this.currentSenseType = type
 
@@ -388,15 +493,19 @@ export default {
       switch (type) {
         case 'HUMIDITY':
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case 'LIGHT':
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case 'CO2':
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
           break;
         case "TEMPERATURE":
           await this.changeColor(this.room_list, manager, type);
+          await this.changeLabelContent(this.room_list,type);
 
           break;
         default:
@@ -436,10 +545,17 @@ export default {
       }
     },
     start: function () {
+      this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
       axios.put(`/api/bimiot/start/${this.store.currentProjectName}`, {})
     },
+    pause: function () {
+      window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
+      axios.put(`/api/bimiot/pause/${this.store.currentProjectName}`, {});
+    },
     stop: function () {
+      this.inSimulation = false;
+      this.playing = false;
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
       axios.put(`/api/bimiot/stop/${this.store.currentProjectName}`, {});
     },
@@ -522,8 +638,13 @@ export default {
   },
 
   async mounted() {
-   // document.getElementById("model").style.filter = "blur(2px)";
-    //document.getElementById("progress-bar").style.visibility = "visible";
+
+    if(this.store.currentProjectName === null){
+      this.$router.push({name: 'home'});
+    }
+    document.getElementById("model").style.filter = "blur(2px)";
+    document.getElementById("progress-bar").style.visibility = "visible";
+
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
@@ -662,19 +783,6 @@ export default {
 }
 
 
-
-#play {
-  position: relative;
-  color: blue;
-  margin: 0.5em 0.5em 0.5em;
-}
-
-#stop {
-  position: relative;
-  color: blue;
-  margin: 0.5em 0.5em 0.5em;
-}
-
 #properties-text {
   display:flex;
   position: absolute;
@@ -724,14 +832,31 @@ export default {
   font-size: 20px;
 }
 
+.top, .bottom{
+  width:400px;
+  display:block;
+  margin:0 auto;
+}
+
+
 #controlBtn{
   color: white;
   background-color: #0A0046;
 }
+
+.spacer{
+  display:block;
+  height:10px;
+  width:100%;
+  margin: 0 auto;
+  content:"";
+}
+
+
+
 .block-display button{
   margin:15px;
   display:block;
-
 }
 
 .container {
