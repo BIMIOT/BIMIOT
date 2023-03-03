@@ -1,13 +1,13 @@
 package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.*;
+import fr.bimiot.simulator.ConverterEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.DecimalFormat;
+import java.util.*;
 
 @Component
 public class ManageData {
@@ -16,7 +16,15 @@ public class ManageData {
     private List<Room> roomListDTO;
     private Map<SensorType, List<SensorColor>> sensorTypeListMap;
 
-    public Optional<WebSocketData> execute(Data data) {
+    public void execute(Data data) {
+        var optData = getWebSocketData(data);
+        if (optData.isPresent()) {
+            var event = new ConverterEvent(this, optData.get());
+            applicationEventPublisher.publishEvent(event);
+        }
+    }
+
+    private Optional<WebSocketData> getWebSocketData(Data data) {
         // Check if type received is valid
         if (!isTypeValid(data.getType())) {
             return Optional.empty();
@@ -56,7 +64,7 @@ public class ManageData {
             }
             if (found) {
                 return Optional.of(new WebSocketData(ifcID, data.getValue(), room.getRoomId(), data.getType(),
-                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb),String.valueOf(sum / nb)));
+                        getMatchingColor(SensorType.valueOf(data.getType()), sum / nb), new DecimalFormat("#.#").format(sum / nb)));
             }
         }
 
@@ -95,6 +103,31 @@ public class ManageData {
         for (var r : this.roomListDTO) {
             for (var s : r.getSensors()) {
                 s.setValue(null);
+            }
+        }
+    }
+
+    public void sendAllRoomsColors() {
+        for (var r : this.roomListDTO) {
+            var sums = new HashMap<SensorType, SumCalculator>();
+            for (SensorType t : SensorType.values()) {
+                sums.put(t, new SumCalculator());
+            }
+            for (var sensor : r.getSensors()) {
+                if (sensor.getValue() != null) {
+                    sums.get(sensor.getType()).addValue(Float.parseFloat(sensor.getValue()), sensor);
+                }
+            }
+            for (SensorType t : SensorType.values()) {
+                var sumCalc = sums.get(t);
+                var sum = sumCalc.getSum();
+                if (sum.isPresent()) {
+                    var firstSensor = sumCalc.getFirstSensor();
+                    var websocketdata = new WebSocketData(firstSensor.getSensorIFCid(), firstSensor.getValue(), r.getRoomId(),
+                            t.toString(), getMatchingColor(t, sum.get()), String.valueOf(sum.get()));
+                    var event = new ConverterEvent(this, websocketdata);
+                    applicationEventPublisher.publishEvent(event);
+                }
             }
         }
     }
