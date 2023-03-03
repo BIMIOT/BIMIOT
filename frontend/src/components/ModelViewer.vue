@@ -378,7 +378,7 @@ export default {
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
-          this.$refs.childComponent.room_list = this.room_list;
+          //this.$refs.childComponent.updateList(this.room_list);
         }
       }
 
@@ -689,7 +689,7 @@ export default {
 
 
     console.log("finished load file");
-    await this.loadFile();
+   /* await this.loadFile();
     await new Promise((resolve, reject) => {
       this.createAllSubsets(this.room_list);
       resolve();
@@ -701,7 +701,7 @@ export default {
     viewer.container = container;
     const navCube = new NavCube(viewer);
     navCube.onPick(this.model);
-    this.navCube = navCube;
+    this.navCube = navCube;*/
     
     const input = document.getElementById("file-input");
 
@@ -772,6 +772,8 @@ export default {
 
             if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
               this.$refs.childComponent.search(type === "IFCSPACE" ? id : this.sensorIFcToDataSet[id]);
+              this.room_list[207]["TEMPERATURE"][0].value = 30;
+              this.$refs.childComponent.updateList(this.room_list);
               this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
             } else {
               viewer.IFC.selector.unpickIfcItems();
@@ -793,7 +795,9 @@ export default {
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
 
+
          await new Promise(r => this.createAllSubsets(this.room_list, manager));
+
 
 
         },

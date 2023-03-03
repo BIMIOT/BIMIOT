@@ -13,6 +13,9 @@ export default {
     }
   },
   methods: {
+    updateList(roomList) {
+     // this.$refs.treeViewSensor.generateNodes(roomList);
+    },
     search(roomId) {
       this.$refs.treeViewSensor.searchFrom3d(roomId);
     }

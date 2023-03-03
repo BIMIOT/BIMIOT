@@ -1,21 +1,107 @@
 <template>
   <div id="search-bar">
-    <v-text-field
-        density="compact"
-        variant="solo"
-        label="Search templates"
-        append-inner-icon="mdi-magnify"
-        single-line
-        hide-details
-        v-model="searchTerm"
-        @input="searchGlobal"
-    ></v-text-field>
+    <v-row align="center" fill-height>
+      <v-col cols="8">
+        <v-text-field
+            variant="solo"
+            label="Search templates"
+            single-line
+            hide-details
+            v-model="searchTerm"
+            @input="searchGlobal"
+
+        ></v-text-field>
+      </v-col>
+      <v-col cols="4">
+        <v-select
+            :items="options"
+            hide-details
+            v-model="selectedOption"
+            align-self-center
+        ></v-select>
+      </v-col>
+    </v-row>
   </div>
+
+
+
+
   <v-divider></v-divider>
-  <div id="sidebar-left" class="sticky top-0 h-full w-full bg-gray-100 p-4">
-    <tree :nodes="nodes" :config="config">
-    </tree>
-  </div>
+  <v-card
+      class="mx-auto"
+      width="100%"
+  >
+    <div v-if="!sensor">
+      <v-list
+          v-for="(i) in localRoomList"
+          :key="i"
+      >
+        <v-list-group value="Admin">
+          <template v-slot:activator="{ props }">
+            <v-list-item
+                v-bind="props"
+                :title="i.roomId"
+            ></v-list-item>
+          </template>
+
+          <v-list
+              v-for="(y) in i.sensors"
+              :key="y"
+          >
+            <v-list-group value="Admin">
+              <template v-slot:activator="{ props }">
+                <v-list-item
+                    v-bind="props"
+                    :title="y.type + ' / '+ y.DataId"
+                ></v-list-item>
+              </template>
+              <v-list-item
+                  :title="y.DataId"
+              ></v-list-item>
+              <v-list-item
+                  :title="y.IFCid"
+              ></v-list-item>
+              <v-list-item
+                  :title="!y.value? 'Vide' : y.value"
+              ></v-list-item>
+              <v-list-item
+                  :title="y.roomId"
+              ></v-list-item>
+            </v-list-group>
+          </v-list>
+        </v-list-group>
+
+      </v-list>
+    </div>
+    <div v-if="sensor">
+      <v-list
+              v-for="(i) in localSensorList"
+              :key="i"
+      >
+            <v-list-group value="Admin">
+              <template v-slot:activator="{ props }">
+                <v-list-item
+                    v-bind="props"
+                    :title="i.type + ' / '+ i.DataId"
+                ></v-list-item>
+              </template>
+              <v-list-item
+                  :title="i.DataId"
+              ></v-list-item>
+              <v-list-item
+                  :title="i.IFCid"
+              ></v-list-item>
+              <v-list-item
+                  :title="!i.value? 'Vide' : i.value"
+              ></v-list-item>
+              <v-list-item
+                  :title="i.roomId"
+              ></v-list-item>
+            </v-list-group>
+
+      </v-list>
+    </div>
+  </v-card>
 </template>
 
 <script>
@@ -28,157 +114,115 @@ export default {
     searchFrom3dModel: {},
     room_list: {},
   },
-  components: {
-    tree: treeview,
-  },
   data() {
     return {
+      options:["rooms","sensors"],
+      selectedOption: "rooms",
+      sensor: false,
+      localRoomList: [],
+      localSensorList: [],
       searchTerm: "",
-      oldNodes: {},
-      configOld: {
-        roots: Object.keys(this.room_list),
-        openedIcon: {
-          type: "shape",
-          stroke: "black",
-          strokeWidth: 3,
-          viewBox: "0 0 24 24",
-          draw: `M12 2 L2 10 V20 H22 V10 L12 2 Z`,
-        },
-        closedIcon: {
-          type: "shape",
-          stroke: "black",
-          strokeWidth: 3,
-          viewBox: "0 0 24 24",
-          draw: `M12 2 L2 10 V20 H22 V10 L12 2 Z`,
-        },
-      },
-      config: {
-        roots: Object.keys(this.room_list),
-        openedIcon: {
-          type: "shape",
-          stroke: "black",
-          strokeWidth: 3,
-          viewBox: "0 0 24 24",
-          draw: `M12 2 L2 10 V20 H22 V10 L12 2 Z`,
-        },
-        closedIcon: {
-          type: "shape",
-          stroke: "black",
-          strokeWidth: 3,
-          viewBox: "0 0 24 24",
-          draw: `M12 2 L2 10 V20 H22 V10 L12 2 Z`,
-        },
-      },
-      nodes: {},
+      oldSensorList: [],
+      oldRoomList: [],
     };
   },
+  watch: {
+    selectedOption: {
+      handler(val, oldVal) {
+        this.sensor = val !== "rooms";
+      }
+  }
+  },
   mounted() {
-    this.nodes = this.generateNodes(this.room_list);
-
+    this.localRoomList = this.generateRoomList(this.room_list);
+    this.localSensorList = this.generateSensorList();
+    console.log(this.localSensorList)
   },
   methods: {
+    findSensorByDataId(dataId) {
+      return this.localSensorList.filter(sensor => {
+        return sensor.DataId.includes(dataId);
+      })
+    },
+    findRoomByRoomId(roomId) {
+      return this.localRoomList.filter(room => {
+        return room.roomId.includes(roomId);
+      });
+    },
     searchFrom3d(roomId) {
-      this.nodes = this.oldNodes
-      this.searchTerm = roomId + "";
-      if (!this.nodes[this.searchTerm]) {
-        this.nodes = this.oldNodes
-        this.config.roots = this.configOld.roots;
-        return;
-      }
-      if (this.nodes[this.searchTerm] && this.nodes[this.searchTerm].parent === null) {
-        this.searchRooms();
-      } else {
-        this.searchSensors();
-      }
-
-
+       this.searchTerm = roomId;
+       this.searchGlobal()
     },
     searchGlobal() {
-      if (!this.nodes[this.searchTerm]) {
-        this.nodes = this.oldNodes
-        this.config.roots = this.configOld.roots;
-        return;
-      }
-      if (this.nodes[this.searchTerm] && this.nodes[this.searchTerm].parent === null) {
-        this.searchRooms();
-      } else {
-        this.searchSensors();
-      }
-    },
-    searchSensors() {
-      const currentNode = {}
-      this.config.roots = [this.searchTerm];
-      currentNode[this.searchTerm] = this.nodes[this.searchTerm];
-      for (const child of this.nodes[this.searchTerm].children) {
-        currentNode[child] = (this.nodes[child])
-        if (child === undefined) {
-          currentNode[child] = {text: "Valeur : Aucune"};
-        } else {
-          currentNode[child] = this.nodes[child];
+      this.localRoomList = this.oldRoomList;
+      this.localSensorList = this.oldSensorList;
+      this.sensor = this.selectedOption !== "rooms";
+
+      if(this.selectedOption === "rooms") {
+        let rooms = this.findRoomByRoomId(this.searchTerm);
+        if(rooms.length > 0 && this.searchTerm) {
+          this.localRoomList = rooms;
+          this.sensor = false;
+        }
+      } else  {
+        let sensor =  this.findSensorByDataId(this.searchTerm);
+        if (sensor.length > 0 && this.searchTerm) {
+          this.sensor = true;
+          this.localSensorList = sensor;
         }
       }
-      this.nodes = currentNode;
     },
-    searchRooms() {
-      const currentNode = {}
-      this.config.roots = [this.searchTerm];
-      currentNode[this.searchTerm] = (this.nodes[this.searchTerm])
-      for (const child of this.nodes[this.searchTerm].children) {
-        currentNode[child] = (this.nodes[child]);
-        if (this.nodes[child] !== undefined) {
-          for (const childElement of this.nodes[child].children) {
-            currentNode[childElement] = this.nodes[childElement];
-          }
-        }
-        this.nodes = currentNode;
-      }
-    },
-    generateNodes(roomList) {
-      const nodes = {};
-      for (const roomId in roomList) {
-        const roomNode = {
-          text: `Pièce: ${roomId}`,
-          children: [],
+    generateSensorList() {
+       let output = this.localSensorList = this.localRoomList.flatMap((room) => {
+            return room.sensors.map((sensor) => {
+              return {
+                type: sensor.type,
+                IFCid: sensor.IFCid,
+                DataId: sensor.DataId,
+                roomId: room.roomId
+              };
+            });
+          });
+         this.oldSensorList = output;
+         return output;
+        },
+    generateRoomList(input) {
+      const output = [];
+
+      for (const roomId in input) {
+        const room = {
+          roomId,
+          sensors: []
         };
-        for (const type2 in roomList[roomId]) {
-          if (type2 !== "type") {
-            for (const sensor of roomList[roomId][type2]) {
-              if (sensor.IFCid) {
-                const sensorNode = {
-                  text: " Type " + type2 + " / " + roomId,
-                  parent: roomId + "",
-                  children: []
-                };
-                sensorNode.children.push(sensor.DataId + "#");
-                sensorNode.children.push(sensor.IFCid + "");
-                sensorNode.children.push(sensor.DataId + "-value");
 
-                roomNode.children.push(sensor.DataId);
-                nodes[sensor.DataId + ""] = sensorNode;
-                nodes[sensor.IFCid + ""] = {text: "Ifc Id : " + sensor.IFCid};
-                nodes[sensor.DataId + "#"] = {text: "Dataset Id : " + sensor.DataId};
-                nodes[sensor.DataId + "-value"] = {text: "Valeur : " + (sensor.value === undefined ? "Aucune" : sensor.value)};
-              }
+        for (const sensorType in input[roomId]) {
+          const sensorData = input[roomId][sensorType];
 
-            }
+          for (const sensor of sensorData) {
+            const sensorObj = {
+              type: sensorType,
+              ...sensor
+            };
+
+            room.sensors.push(sensorObj);
           }
         }
-        nodes[roomId + ""] = roomNode;
+
+        output.push(room);
       }
-      this.oldNodes = nodes;
-      return nodes;
+      this.oldRoomList = output;
+      return output;
     },
-  }
+    },
 };
 </script>
 
 <style>
 
-#sidebar-left {
-  margin-top: 10px;
-}
+
 #search-bar {
-  margin: 10px;
+  margin: 5px;
 }
+
 
 </style>
