@@ -14,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CreateProjectTest {
@@ -34,5 +33,15 @@ class CreateProjectTest {
         String result = createProject.execute(project);
         assertNotNull(result);
         assertEquals(PROJECT_ID, result);
+    }
+
+    @Test
+    void execute_shouldThrowDomainException() {
+        var project = ProjectFixture.aProjectWithoutSensorsAndWithoutId();
+        BDDMockito.doReturn(true).when(projectProvider).isExistedProject(project.getName());
+        var exception = assertThrows(DomainException.class, () -> createProject.execute(project));
+        assertNotNull(exception);
+        assertEquals("Project '" + project.getName() + "' already exists !", exception.getMessage());
+        assertEquals("400", exception.getCode());
     }
 }
