@@ -680,8 +680,6 @@ export default {
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
-    this.viewer.context.getRenderer().setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(this.viewer.context.getRenderer().domElement);
     this.viewer = viewer;
     viewer.axes.setAxes();
     viewer.grid.setGrid();
