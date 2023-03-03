@@ -16,8 +16,12 @@ export default {
     updateList(roomList) {
      // this.$refs.treeViewSensor.generateNodes(roomList);
     },
-    search(roomId) {
-      this.$refs.treeViewSensor.searchFrom3d(roomId);
+    search(obj) {
+      this.$refs.treeViewSensor.searchFrom3d(obj);
+    },
+    emitId(id) {
+      console.log(id,"hello")
+      this.$emit("id-emit",id)
     }
   },
   data () {
@@ -60,7 +64,7 @@ export default {
             </template>
           </v-list-item>
           <div v-if="dialog">
-            <TreeViewSensors ref="treeViewSensor" :room_list="this.room_list"/>
+            <TreeViewSensors v-on:id-emit="emitId" ref="treeViewSensor" :room_list="this.room_list"/>
           </div>
         </v-navigation-drawer>
       </v-layout>

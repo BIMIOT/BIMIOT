@@ -22,10 +22,6 @@
       </v-col>
     </v-row>
   </div>
-
-
-
-
   <v-divider></v-divider>
   <v-card
       class="mx-auto"
@@ -33,39 +29,51 @@
   >
     <div v-if="!sensor">
       <v-list
-          v-for="(i) in localRoomList"
-          :key="i"
+          v-for="(i,index) in localRoomList "
+          :key="index"
       >
         <v-list-group value="Admin">
           <template v-slot:activator="{ props }">
-            <v-list-item
+            <v-list-item :disabled="i.sensors.length === 0"
                 v-bind="props"
-                :title="i.roomId"
+                prepend-icon="mdi-home"
+                :title="'Piece ' + i.roomId"
+                @dblclick="emitId(i.roomId,'rooms')"
             ></v-list-item>
           </template>
-
           <v-list
-              v-for="(y) in i.sensors"
-              :key="y"
+              v-for="(y,index) in i.sensors"
+              :key="index"
+
           >
             <v-list-group value="Admin">
               <template v-slot:activator="{ props }">
                 <v-list-item
+                    prepend-icon="mdi-access-point"
                     v-bind="props"
                     :title="y.type + ' / '+ y.DataId"
-                ></v-list-item>
+                >
+                  <template v-slot:append>
+                    <v-chip
+                        class="ma-2"
+                        color="#0A0046"
+                        text-color="white"
+                        :append-icon="typeToIcon[y.type]"
+                    >
+                     {{!y.value? 'Vide' : y.value}}
+                    </v-chip>
+                  </template>
+                </v-list-item>
+
               </template>
               <v-list-item
-                  :title="y.DataId"
+                  prepend-icon="mdi-note-text-outline"
+                  :title="'Dataset Id : ' + y.DataId"
               ></v-list-item>
               <v-list-item
-                  :title="y.IFCid"
-              ></v-list-item>
-              <v-list-item
-                  :title="!y.value? 'Vide' : y.value"
-              ></v-list-item>
-              <v-list-item
-                  :title="y.roomId"
+                  prepend-icon="mdi-domain"
+                  @dblclick="emitId(y.IFCid,'sensors')"
+                  :title="'IFC id : ' + y.IFCid"
               ></v-list-item>
             </v-list-group>
           </v-list>
@@ -75,27 +83,42 @@
     </div>
     <div v-if="sensor">
       <v-list
-              v-for="(i) in localSensorList"
-              :key="i"
+              v-for="(i,index) in localSensorList"
+              :key="index"
       >
             <v-list-group value="Admin">
               <template v-slot:activator="{ props }">
                 <v-list-item
                     v-bind="props"
+                    prepend-icon="mdi-access-point"
                     :title="i.type + ' / '+ i.DataId"
-                ></v-list-item>
+                >
+                  <template v-slot:append>
+                    <v-chip
+                        class="ma-2"
+                        color="#0A0046"
+                        text-color="white"
+                        :append-icon="typeToIcon[i.type]"
+                    >
+                      {{!i.value? 'Vide' : i.value}}
+                    </v-chip>
+                  </template>
+
+                </v-list-item>
               </template>
               <v-list-item
-                  :title="i.DataId"
+                  prepend-icon="mdi-note-text-outline"
+                  :title="'Dataset Id : ' + i.DataId"
               ></v-list-item>
               <v-list-item
-                  :title="i.IFCid"
+                  prepend-icon="mdi-domain"
+                  @dblclick="emitId(i.IFCid,'sensors')"
+                  :title="'IFC id : ' + i.IFCid"
               ></v-list-item>
               <v-list-item
-                  :title="!i.value? 'Vide' : i.value"
-              ></v-list-item>
-              <v-list-item
-                  :title="i.roomId"
+                  prepend-icon="mdi-home"
+                  @dblclick="emitId(i.roomId,'rooms')"
+                  :title="'Piece ' + i.roomId"
               ></v-list-item>
             </v-list-group>
 
@@ -107,6 +130,7 @@
 <script>
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
+import {unitsTypeStore} from "@/store/unitsType";
 
 export default {
   name: "TreeViewSensors",
@@ -120,99 +144,123 @@ export default {
       selectedOption: "rooms",
       sensor: false,
       localRoomList: [],
+      typeToIcon: {
+        TEMPERATURE: "mdi-thermometer",
+        CO2:"mdi-molecule-co",
+        HUMIDITY:"mdi-water-percent",
+        LIGHT:"mdi-lightbulb-on"
+      },
       localSensorList: [],
       searchTerm: "",
       oldSensorList: [],
       oldRoomList: [],
     };
   },
-  watch: {
-    selectedOption: {
-      handler(val, oldVal) {
-        this.sensor = val !== "rooms";
-      }
-  }
-  },
-  mounted() {
-    this.localRoomList = this.generateRoomList(this.room_list);
-    this.localSensorList = this.generateSensorList();
-    console.log(this.localSensorList)
-  },
-  methods: {
-    findSensorByDataId(dataId) {
-      return this.localSensorList.filter(sensor => {
-        return sensor.DataId.includes(dataId);
-      })
-    },
-    findRoomByRoomId(roomId) {
-      return this.localRoomList.filter(room => {
-        return room.roomId.includes(roomId);
-      });
-    },
-    searchFrom3d(roomId) {
-       this.searchTerm = roomId;
-       this.searchGlobal()
-    },
-    searchGlobal() {
-      this.localRoomList = this.oldRoomList;
-      this.localSensorList = this.oldSensorList;
-      this.sensor = this.selectedOption !== "rooms";
-
-      if(this.selectedOption === "rooms") {
-        let rooms = this.findRoomByRoomId(this.searchTerm);
-        if(rooms.length > 0 && this.searchTerm) {
-          this.localRoomList = rooms;
-          this.sensor = false;
+    watch: {
+      selectedOption: {
+        handler(val, oldVal) {
+          this.sensor = val !== "rooms";
         }
-      } else  {
-        let sensor =  this.findSensorByDataId(this.searchTerm);
-        if (sensor.length > 0 && this.searchTerm) {
-          this.sensor = true;
-          this.localSensorList = sensor;
-        }
-      }
-    },
-    generateSensorList() {
-       let output = this.localSensorList = this.localRoomList.flatMap((room) => {
-            return room.sensors.map((sensor) => {
-              return {
-                type: sensor.type,
-                IFCid: sensor.IFCid,
-                DataId: sensor.DataId,
-                roomId: room.roomId
-              };
-            });
-          });
-         this.oldSensorList = output;
-         return output;
+      },
+      room_list: {
+        handler(newValue) {
+          this.localRoomList = this.generateRoomList(this.room_list);
+          this.localSensorList = this.generateSensorList();
         },
-    generateRoomList(input) {
-      const output = [];
+        deep: true
+      }
 
-      for (const roomId in input) {
-        const room = {
-          roomId,
-          sensors: []
-        };
+    },
+    setup() {
+      const unitsStore = unitsTypeStore();
+      return {unitsStore};
+    },
+    mounted() {
+      this.localRoomList = this.generateRoomList(this.room_list);
+      this.localSensorList = this.generateSensorList();
+    },
+    methods: {
+      emitId(id,type) {
+        this.selectedOption = type;
+        this.$emit("id-emit",id)
 
-        for (const sensorType in input[roomId]) {
-          const sensorData = input[roomId][sensorType];
+      },
+      findSensorByDataId(dataId) {
+        return this.localSensorList.filter(sensor => {
+          return sensor.DataId.includes(dataId);
+        })
+      },
+      findRoomByRoomId(roomId) {
+        return this.localRoomList.filter(room => {
+          return room.roomId.includes(roomId);
+        });
+      },
+      searchFrom3d(obj) {
+        this.searchTerm = obj.id;
+        this.selectedOption = obj.type;
+        this.searchGlobal()
+      },
+      searchGlobal() {
+        this.localRoomList = this.oldRoomList;
+        this.localSensorList = this.oldSensorList;
+        this.sensor = this.selectedOption !== "rooms";
 
-          for (const sensor of sensorData) {
-            const sensorObj = {
-              type: sensorType,
-              ...sensor
-            };
-
-            room.sensors.push(sensorObj);
+        if (this.selectedOption === "rooms") {
+          let rooms = this.findRoomByRoomId(this.searchTerm);
+          if (rooms.length > 0 && this.searchTerm) {
+            this.localRoomList = rooms;
+            this.sensor = false;
+          }
+        } else {
+          let sensor = this.findSensorByDataId(this.searchTerm);
+          if (sensor.length > 0 && this.searchTerm) {
+            this.sensor = true;
+            this.localSensorList = sensor;
           }
         }
+      },
+      generateSensorList() {
+        let output = this.localSensorList = this.localRoomList.flatMap((room) => {
+          return room.sensors.map((sensor) => {
+            return {
+              type: sensor.type,
+              IFCid: sensor.IFCid,
+              DataId: sensor.DataId,
+              roomId: room.roomId,
+              value: sensor.value
+            };
+          });
+        });
+        this.oldSensorList = output;
+        return output;
+      },
+      generateRoomList(input) {
+        const output = [];
 
-        output.push(room);
-      }
-      this.oldRoomList = output;
-      return output;
-    },
+        for (const roomId in input) {
+          const room = {
+            roomId,
+            sensors: []
+          };
+
+          for (const sensorType in input[roomId]) {
+            const sensorData = input[roomId][sensorType];
+
+            for (const sensor of sensorData) {
+              const sensorObj = {
+                type: sensorType,
+                ...sensor
+              };
+
+              room.sensors.push(sensorObj);
+            }
+          }
+
+          output.push(room);
+        }
+        this.oldRoomList = output;
+        return output;
+      },
     },
 };
 </script>

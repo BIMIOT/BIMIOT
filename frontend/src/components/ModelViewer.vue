@@ -21,7 +21,7 @@
         </div>
       </transition>
       <div style="position: absolute; bottom:30px; left: 0; margin-left: 20px;" class="align-items-center">
-          <div class=".top">
+        <div class=".top">
             <v-btn  id="controlBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
           </div>
           <div class="spacer"></div>
@@ -34,8 +34,9 @@
           <div class="spacer"></div>
             <TwoDToThreeDButton class="top"  @click="changeTo2d()" :state="currentPlan"/>
           <div class="spacer"></div>
-            <SensorsList  ref="childComponent" class="bottom" :room_list="room_list"/>
+            <SensorsList v-on:id-emit="pick3dElementFromList" ref="childComponent" class="bottom" :room_list="room_list"/>
           <div class="spacer"></div>
+           <HideValueButton  class="bottom" :hide="this.hideValue" @click="hideAllValue()"/>
           </div>
         <div>
       </div>
@@ -83,15 +84,18 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
 import {roomsStateStore} from "@/store/rooms";
+import {unitsTypeStore} from "@/store/unitsType";
 import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
+import HideValueButton from "@/components/HideValueButton.vue";
 
 
 export default {
   name: 'ModelViewer',
   props: ['token', 'projectId', 'discipline'],
   components: {
+    HideValueButton,
     ColorPickerSensor,
     SensorsList,
     SensorsControlButtons,
@@ -107,6 +111,7 @@ export default {
       client: undefined,
       viewer: undefined,
       playing: false,
+      hideValue:false,
       model: undefined,
       currentSenseType: "TEMPERATURE",
       structure: undefined,
@@ -116,18 +121,11 @@ export default {
       room_by_color: {},
       currentPlan: "3D",
       room_list: {},
-      units:{
-        "TEMPERATURE":" °C",
-        "LIGHT":" Lux",
-        "HUMIDITY":" %",
-        "CO2":" PPM",
-      },
       invisibleMat: new MeshLambertMaterial({
         transparent: true,
         opacity: 0.5,
         color: 0xffffff,
-        depthTest: true,
-        side: THREE.SimpleSide
+        depthTest: true
       }),
       preSelectMat: new MeshLambertMaterial({
         transparent: true,
@@ -148,8 +146,9 @@ export default {
   setup() {
     const store = projectStore();
     const roomStore = roomsStateStore()
+    const unitsStore = unitsTypeStore();
     store.fetchSensorColors();
-    return {store,roomStore};
+    return {store,roomStore,unitsStore};
   },
   watch: {
     arrayOfKids: {
@@ -168,6 +167,9 @@ export default {
     }
   },
   methods: {
+    pick3dElementFromList(id) {
+      this.viewer.IFC.selector.pickIfcItemsByID(this.model.modelID, [parseInt(id,10)], true);
+    },
     releaseMemory() {
       location.reload()
       this.viewer.dispose();
@@ -189,16 +191,19 @@ export default {
       const manager = this.viewer.IFC.loader.ifcManager;
       if(this.currentPlan === "3D") {
         await this.changeSideProperty(this.room_list, manager, THREE.DoubleSide);
-        this.navCube.changeActivation(); // False
+        //this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
         await this.viewer.context.ifcCamera.toggleProjection();
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
+
+        console.log(this.room_list)
+
       } else {
         await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
-        this.navCube.changeActivation(); // True
+       // this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
@@ -269,15 +274,16 @@ export default {
         }
         this.viewer.IFC.selector.prePickIfcItem()
       };
-
       window.ondblclick = async () => {
         const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
         const type = this.viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
 
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
+          this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+          this.$refs.childComponent.updateList(this.room_list);
         } else {
-          this.viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+          this.viewer.IFC.selector.unpickIfcItems();
         }
       }
 
@@ -286,7 +292,6 @@ export default {
       scene.add(sensors);
       scene.add(walls);
 
-      //await this.getMappingAndLoad(structure, manager);
       await this.getSensors(structure, manager, this.model.modelID);
       this.sendMapping();
     },
@@ -315,7 +320,6 @@ export default {
       let minY = Number.POSITIVE_INFINITY;
       let minZ = Number.POSITIVE_INFINITY;
       let maxX = Number.NEGATIVE_INFINITY;
-      let maxY = Number.NEGATIVE_INFINITY;
       let maxZ = Number.NEGATIVE_INFINITY;
 
       for (const vertex of verticex) {
@@ -323,7 +327,6 @@ export default {
         minY = Math.min(minY, vertex[1]);
         minZ = Math.min(minZ, vertex[2]);
         maxX = Math.max(maxX, vertex[0]);
-        maxY = Math.max(maxY, vertex[1]);
         maxZ = Math.max(maxZ, vertex[2]);
       }
 
@@ -342,12 +345,27 @@ export default {
       const label = new CSS2DObject(labelDiv);
       label.position.set(position[0], position[1], position[2])
       label.layers.set(0)
-      //console.log("label is :",label)
       return label
     },
     modifyTextContent(roomId,newContent){
       const labelDiv = document.getElementById(roomId)
       labelDiv.textContent = newContent
+    },
+    hideAllValue(){
+      this.hideValue = ! this.hideValue;
+      if(this.hideValue){
+        if (this.space_list !== {}){
+          for (const roomId in this.space_list) {
+            document.getElementById(roomId).style.visibility = "hidden";
+          }
+        }
+      }else{
+        if (this.space_list !== {}){
+          for (const roomId in this.space_list) {
+            document.getElementById(roomId).style.visibility = "visible";
+          }
+        }
+      }
     },
     subscribe: function (greeting) {
 
@@ -361,10 +379,7 @@ export default {
         this.inSimulation = false;
       }
 
-
-
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list)) {
-
          return;
       }
       console.log("im called")
@@ -375,6 +390,7 @@ export default {
         this.space_list[response["roomIfcID"]] = {};
       }
       this.space_list[response["roomIfcID"]][response["sensorType"]] = response["averageValue"];
+
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
@@ -387,7 +403,10 @@ export default {
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
         console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
-        this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.units[response["sensorType"]])
+        this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.unitsStore.getUnitFromType(response["sensorType"]));
+        if (this.hideValue) {
+          document.getElementById(response["roomIfcID"]).style.visibility = "hidden";
+        }
       }
     },
     convertHexToInt: function (colors) {
@@ -416,7 +435,8 @@ export default {
     createAllSubsets: function (room_ids) {
       const manager = this.viewer.IFC.loader.ifcManager;
       const room_ids_iter = Object.keys(room_ids);
-      let subsets = []
+      let subsets = [];
+      let ids = [];
 
       for (const id of room_ids_iter) {
         let mesh = new MeshLambertMaterial({
@@ -424,37 +444,31 @@ export default {
           opacity: 0.4,
           color: 0xffffff,
           depthTest: true,
-        })
+        });
 
         this.roomIdToMesh[parseInt(id, 10)] = mesh;
 
-       let subset = manager.createSubset({
-          modelID: this.model.modelID,
-          ids: [parseInt(id, 10)],
-          material: mesh,
-
-          removePrevious: false,
-          customID: id
+        let subset = manager.createSubset({
+           modelID: this.model.modelID,
+           ids: [parseInt(id, 10)],
+           material: mesh,
+           removePrevious: false,
+           customID: id
         });
-
-        const center= this.calculateCenter(subset)
-        const label = this.createLabel(center,"","spaceLabel",id);
-        subset.add(label)
-        subsets.push(subset)
-
-        console.log("hello")
+        subsets.push(subset);
+        ids.push(id);
       }
-      console.log("started to add subset to scene");
       let i = 1;
-      for (const subset of subsets) {
+      for (const index in subsets) {
         setTimeout(() => {
-          console.log("add one : ", this.knowledge);
-          this.viewer.context.getScene().add(subset);
+          const center = this.calculateCenter(subsets[index]);
+          const label = this.createLabel(center,"","spaceLabel", ids[index]);
+          subsets[index].add(label);
+          this.viewer.context.getScene().add(subsets[index]);
           this.arrayOfKids = this.viewer.context.getScene().children.filter(obj => obj.material && obj.material.type !== undefined && obj.material.type === "MeshLambertMaterial")
-        }, i*500);
+        }, i*1000);
         i++;
       }
-      console.log("i finished")
     },
     async changeSideProperty(room_ids, manager, side) {
       const room_ids_iter = Object.keys(room_ids);
@@ -484,7 +498,7 @@ export default {
         if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
           newContent = ""
         }else {
-          newContent = this.space_list[id][sensorType] + this.units[sensorType];
+          newContent = this.space_list[id][sensorType] + this.unitsStore.getUnitFromType(sensorType);
         }
         this.modifyTextContent(id, newContent);
       }
@@ -493,7 +507,7 @@ export default {
       this.currentSenseType = type
 
       const manager = this.viewer.IFC.loader.ifcManager;
-
+      //this.room_list[207]["TEMPERATURE"][0].value = 40
 
       switch (type) {
         case 'HUMIDITY':
@@ -687,21 +701,19 @@ export default {
       [IFCOPENINGELEMENT]: false
     });
 
-
     console.log("finished load file");
-   /* await this.loadFile();
+    await this.loadFile();
     await new Promise((resolve, reject) => {
       this.createAllSubsets(this.room_list);
       resolve();
     });
-
 
     this.model.geometry.computeBoundingSphere(); // Useful for 3D camera navigation cube
 
     viewer.container = container;
     const navCube = new NavCube(viewer);
     navCube.onPick(this.model);
-    this.navCube = navCube;*/
+    this.navCube = navCube;
     
     const input = document.getElementById("file-input");
 
@@ -771,8 +783,8 @@ export default {
             const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
 
             if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
-              this.$refs.childComponent.search(type === "IFCSPACE" ? id : this.sensorIFcToDataSet[id]);
-              this.room_list[207]["TEMPERATURE"][0].value = 30;
+              this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+
               this.$refs.childComponent.updateList(this.room_list);
               this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
             } else {
@@ -899,6 +911,10 @@ export default {
 .block-display button{
   margin:15px;
   display:block;
+}
+
+body {
+  overflow: hidden;
 }
 
 .container {
