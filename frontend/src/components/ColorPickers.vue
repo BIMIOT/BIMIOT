@@ -31,12 +31,12 @@
               v-model="value.threshold"
               :placeholder="value.threshold"
               type="number"
-              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
+              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit être inferieur ou égal au suivant']"
               validate-on="input"
           />
         </div>
       </v-tab-item>
-      <v-btn color="primary" v-on:click="save()">Save</v-btn>
+      <v-btn class="primary" v-on:click="save()">Save</v-btn>
       <v-btn v-on:click="cancel()">Cancel</v-btn>
 
     </v-app>
@@ -160,5 +160,10 @@ export default {
 
 .value-inputs {
   padding: 8px;
+}
+
+.primary {
+  color: white;
+  background-color: #023D57;
 }
 </style>

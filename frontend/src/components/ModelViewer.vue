@@ -1,7 +1,6 @@
-
-
 <template>
   <section>
+    <div id="model"/>
     <div class="container">
       <v-btn @click="() => {
           releaseMemory()
@@ -10,36 +9,39 @@
       }" id="navbar">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
-          <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
+          <span id="projectName" style="color: white; font-size: 150%">BimIot</span>
         </div>
       </v-btn>
       <input type="file" id="file-input"/>
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <transition name="fade" mode="out-in">
-        <div   id="progress-bar" >
+        <div id="progress-bar" >
           {{knowledge}} %
         </div>
       </transition>
-      <div style="position: absolute; bottom:30px; left: 0; margin-left: 20px;" class="align-items-center">
-        <div class=".top">
-            <v-btn  id="controlBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
-          </div>
-          <div class="spacer"></div>
-           <div class="bottom">
-             <v-btn id="controlBtn" icon @click="play">
-               <v-icon v-if="!playing">mdi-play</v-icon>
-               <v-icon v-if="playing">mdi-pause</v-icon>
-             </v-btn>
-           </div>
-          <div class="spacer"></div>
-            <TwoDToThreeDButton class="top"  @click="changeTo2d()" :state="currentPlan"/>
-          <div class="spacer"></div>
-            <SensorsList class="bottom" :room_list="room_list"/>
-          <div class="spacer"></div>
-          <HideValueButton class="bottom" :hide="this.hideValue" @click="hideAllValue()"/>
-          </div>
-        <div>
-      </div>
+      <v-container fluid id="panelControl">
+        <div class="fill-content">
+          <v-btn id="controlBtn" icon="mdi-stop" class="mx-3 my-3" :disabled="!inSimulation" @click="stop"/>
+        </div>
+
+        <div class="fill-content">
+          <v-btn id="controlBtn" icon class="mx-3 my-3" @click="play">
+            <v-icon v-if="!playing">mdi-play</v-icon>
+            <v-icon v-if="playing">mdi-pause</v-icon>
+          </v-btn>
+        </div>
+        <div class="fill-content">
+          <TwoDToThreeDButton @click="changeTo2d()" :state="currentPlan"/>
+        </div>
+        <div class="fill-content">
+          <HideValueButton :hide="this.hideValue" @click="hideAllValue()"/>
+        </div>
+        <div class="fill-content">
+          <SensorsList :room_list="room_list"/>
+        </div>
+
+
+      </v-container>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
@@ -50,7 +52,6 @@
       </p>
       <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
     </div>
-    <div id="model"/>
   </section>
 </template>
 
@@ -679,6 +680,8 @@ export default {
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
     const viewer = new IfcViewerAPI({container});
+    this.viewer.context.getRenderer().setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(this.viewer.context.getRenderer().domElement);
     this.viewer = viewer;
     viewer.axes.setAxes();
     viewer.grid.setGrid();
@@ -812,12 +815,9 @@ export default {
   filter: blur(0px);
 }
 
-
-
 #file-input {
   position: relative;
 }
-
 
 #properties-text {
   display:flex;
@@ -834,7 +834,7 @@ export default {
 #navbar {
   top: 0;
   border-radius: 0 0 25px 0;
-  background-color: #888888;
+  background-color: #023D57;
   elevation: 3deg;
   position: absolute;
   height: 5em;
@@ -852,12 +852,6 @@ export default {
   left:0;
 }
 
-.v-application__wrap {
-  min-height: auto;
-}
-
-
-
 #progress-bar  {
   position: fixed;
   top: 50%;
@@ -868,27 +862,10 @@ export default {
   font-size: 20px;
 }
 
-.top, .bottom{
-  width:400px;
-  display:block;
-  margin:0 auto;
-}
-
-
 #controlBtn{
   color: white;
   background-color: #0A0046;
 }
-
-.spacer{
-  display:block;
-  height:10px;
-  width:100%;
-  margin: 0 auto;
-  content:"";
-}
-
-
 
 .block-display button{
   margin:15px;
@@ -898,4 +875,27 @@ export default {
 .container {
   margin-top: 80px;
 }
+
+.fill-content{
+  float: left;
+}
+
+#panelControl {
+  position: fixed;
+  bottom: 30px;
+  float: left;
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: max-content;
+  background-color: #023D57;
+  border-radius: 25px 25px 25px 25px;
+  padding: 0;
+}
+
+body {
+  overflow: hidden; /* Hide scrollbars */
+}
+
 </style>
