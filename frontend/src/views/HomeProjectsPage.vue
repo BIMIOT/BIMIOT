@@ -44,7 +44,23 @@ export default {
   components: {HomeProjectCard},
   data() {
     return {
-      projects: [],
+      projects: [
+        {
+          name: 'Project1'
+        },
+        {
+          name: 'Project1'
+        },
+        {
+          name: 'Project1'
+        },
+        {
+          name: 'Project1'
+        },
+        {
+          name: 'Project1'
+        },
+      ],
     };
   },
   methods: {
@@ -64,3 +80,6 @@ export default {
   }
 }
 </script>
+<style>
+
+</style>
