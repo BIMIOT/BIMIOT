@@ -157,4 +157,10 @@ public class ProjectDatabaseProvider implements ProjectProvider {
     private Binary toBinary(byte[] file) throws IOException {
         return new Binary(BsonBinarySubType.BINARY, file);
     }
+
+    @Override
+    public boolean isExistedProject(String projectName) {
+        var existedProject = projectJpaRepository.findProjectJpaByName(projectName);
+        return existedProject != null;
+    }
 }

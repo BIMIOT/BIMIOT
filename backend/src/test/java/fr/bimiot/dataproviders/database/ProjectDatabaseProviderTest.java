@@ -5,8 +5,6 @@ import fr.bimiot.domain.entities.Project;
 import fr.bimiot.fixtures.ProjectFixture;
 import fr.bimiot.fixtures.ProjectJpaFixture;
 import fr.bimiot.fixtures.SensorColorMapFixture;
-import org.bson.BsonBinarySubType;
-import org.bson.types.Binary;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,7 +12,6 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -84,7 +81,19 @@ class ProjectDatabaseProviderTest {
         assertEquals("Project doesn't exist", exception.getMessage());
     }
 
-    private Binary toBinary(MultipartFile file) throws IOException {
-        return new Binary(BsonBinarySubType.BINARY, file.getBytes());
+    @Test
+    void isExistedProject_shouldReturnTrue() {
+        String projectName = ProjectFixture.aCompleteProject().getName();
+        BDDMockito.doReturn(ProjectJpaFixture.aCompleteProjectJpa()).when(projectJpaRepository).findProjectJpaByName(projectName);
+        var result = projectDatabaseProvider.isExistedProject(projectName);
+        assertTrue(result);
+    }
+
+    @Test
+    void isExistedProject_shouldReturnFalse(){
+        String projectName = ProjectFixture.aCompleteProject().getName();
+        BDDMockito.doReturn(null).when(projectJpaRepository).findProjectJpaByName(projectName);
+        var result = projectDatabaseProvider.isExistedProject(projectName);
+        assertFalse(result);
     }
 }
