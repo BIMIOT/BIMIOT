@@ -17,6 +17,9 @@ public class CreateProject {
     }
 
     public String execute(Project project) throws DomainException, IOException {
+        if (projectProvider.isExistedProject(project.getName())) {
+            throw new DomainException("Project '" + project.getName() + "' already exists !");
+        }
         return projectProvider.create(project);
     }
 

@@ -103,6 +103,7 @@ export default {
           .catch(error => {
             this.errorMessage = error.message;
             this.snackbar = true;
+            this.loading = false;
           });
     }
   },

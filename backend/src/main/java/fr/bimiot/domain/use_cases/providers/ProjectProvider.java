@@ -20,4 +20,5 @@ public interface ProjectProvider {
     List<Project> getAllProjects();
 
     byte[] loadIFCFile(String projectName);
+    boolean isExistedProject(String projectName);
 }
