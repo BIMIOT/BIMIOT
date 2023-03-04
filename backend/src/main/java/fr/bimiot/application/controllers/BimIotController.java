@@ -7,7 +7,6 @@ import fr.bimiot.domain.entities.Room;
 import fr.bimiot.domain.use_cases.GetAllProjects;
 import fr.bimiot.domain.use_cases.ManageData;
 import fr.bimiot.domain.use_cases.ManageSimulation;
-import fr.bimiot.simulator.ConverterEvent;
 import fr.bimiot.utils.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -55,19 +54,22 @@ public class BimIotController {
         manageData.execute(data);
     }
 
+    @Deprecated
     @PutMapping(value = "/start/{simulation_name}")
     public int start(@PathVariable String simulation_name) {
         manageSimulation.executeStart(simulation_name);
         return 0;
     }
 
-    @PutMapping(value="/pause/{simulation_name}")
+    @Deprecated
+    @PutMapping(value = "/pause/{simulation_name}")
     public int pause(@PathVariable String simulation_name) {
         manageSimulation.executePause(simulation_name);
         return 0;
     }
 
-    @PutMapping(value="/stop/{simulation_name}")
+    @Deprecated
+    @PutMapping(value = "/stop/{simulation_name}")
     public int stop(@PathVariable String simulation_name) {
         manageSimulation.executeStop(simulation_name);
         return 0;
