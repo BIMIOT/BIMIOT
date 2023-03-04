@@ -23,7 +23,20 @@
         <jacoco.version>0.8.8</jacoco.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.inclusions>**/*.java</sonar.inclusions>
+        <sonar.exclusions>
+            entities/*.java,
+            **/*.vue,
+            **/*.js,
+            **/*.ts,
+            **/*.xml,
+            dtos/*.java,
+            RouterRedirect.java,
+            RoomHashMapEvent.java,
+            exception/*.java,
+            simulator/*.java,
+            utils/*.java
+            websocket/*.java
+        </sonar.exclusions>
     </properties>
 
     <modules>

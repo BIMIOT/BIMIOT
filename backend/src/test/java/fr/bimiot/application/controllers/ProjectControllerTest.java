@@ -38,6 +38,8 @@ class ProjectControllerTest {
     UpdateSensorsColors updateSensorsColors;
     @MockBean
     GetSensorColorMap getSensorColorMap;
+    @MockBean
+    GetAllProjects getAllProjects;
 
     @Test
     void updateProjectColors() throws Exception {

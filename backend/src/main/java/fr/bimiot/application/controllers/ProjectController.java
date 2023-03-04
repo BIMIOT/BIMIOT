@@ -1,5 +1,6 @@
 package fr.bimiot.application.controllers;
 
+import fr.bimiot.application.mappers.ProjectMapper;
 import fr.bimiot.application.dtos.*;
 import fr.bimiot.dataproviders.exception.DataBaseException;
 import fr.bimiot.domain.entities.Project;
@@ -7,7 +8,6 @@ import fr.bimiot.domain.entities.SensorColor;
 import fr.bimiot.domain.entities.SensorType;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.*;
-import fr.bimiot.utils.Builder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,29 +27,30 @@ public class ProjectController {
     private final ManageData manageData;
     private final UpdateSensorsColors updateSensorsColors;
     private final GetSensorColorMap getSensorColorMap;
+    private final GetAllProjects getAllProjects;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap, GetAllProjects getAllProjects) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
         this.manageSimulation = manageSimulation;
         this.manageData = manageData;
         this.updateSensorsColors = updateSensorsColors;
         this.getSensorColorMap = getSensorColorMap;
+        this.getAllProjects = getAllProjects;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProjectApiGetAllResponse>> getAllProjects() {
+        var responseBody = getAllProjects.execute().stream()
+                .map(ProjectMapper::toProjectApiGetAllResponse)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
-        var projectResponse = createProject.execute(toProject(projectName, ifc, dataset), dataset);
+        var projectResponse = createProject.execute(ProjectMapper.toProject(projectName, ifc, dataset), dataset);
         return ResponseEntity.ok(toProjectApi(projectResponse));
-    }
-
-    private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) throws IOException {
-        return Builder.of(Project::new)
-                .with(Project::setName, projectName)
-                .with(Project::setIfcFile, ifc.getBytes())
-                .with(Project::setIfcFilename, ifc.getOriginalFilename())
-                .with(Project::setDatasetFilename, dataset.getOriginalFilename())
-                .build();
     }
 
     private ProjectApi toProjectApi(String projectId) {
