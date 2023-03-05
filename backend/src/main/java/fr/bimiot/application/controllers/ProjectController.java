@@ -23,16 +23,14 @@ import java.util.stream.Collectors;
 public class ProjectController {
     private final CreateProject createProject;
     private final DeleteProject deleteProject;
-    private final ManageSimulation manageSimulation;
     private final ManageData manageData;
     private final UpdateSensorsColors updateSensorsColors;
     private final GetSensorColorMap getSensorColorMap;
     private final GetAllProjects getAllProjects;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap, GetAllProjects getAllProjects) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap, GetAllProjects getAllProjects) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
-        this.manageSimulation = manageSimulation;
         this.manageData = manageData;
         this.updateSensorsColors = updateSensorsColors;
         this.getSensorColorMap = getSensorColorMap;
@@ -50,7 +48,7 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
         var projectResponse = createProject.execute(ProjectMapper.toProject(projectName, ifc, dataset), dataset);
-        return ResponseEntity.ok(toProjectApi(projectResponse));
+        return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(projectResponse));
     }
 
     private ProjectApi toProjectApi(String projectId) {
@@ -61,7 +59,6 @@ public class ProjectController {
 
     @DeleteMapping("/{projectName}")
     public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
-        manageSimulation.executeDelete(projectName);
         deleteProject.execute(projectName);
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
