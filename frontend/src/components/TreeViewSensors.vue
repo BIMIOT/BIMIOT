@@ -60,7 +60,7 @@
                         text-color="white"
                         :append-icon="typeToIcon[y.type]"
                     >
-                     {{!y.value? 'Vide' : y.value}}
+                     {{!y.value? 'Vide' : y.value + " " + unitsStore.getUnitFromType(y.type)}}
                     </v-chip>
                   </template>
                 </v-list-item>
@@ -100,7 +100,7 @@
                         text-color="white"
                         :append-icon="typeToIcon[i.type]"
                     >
-                      {{!i.value? 'Vide' : i.value}}
+                      {{!i.value? 'Vide' : i.value + " " + unitsStore.getUnitFromType(i.type)}}
                     </v-chip>
                   </template>
 
@@ -128,8 +128,6 @@
 </template>
 
 <script>
-import treeview from "vue3-treeview";
-import "vue3-treeview/dist/style.css";
 import {unitsTypeStore} from "@/store/unitsType";
 
 export default {

@@ -688,10 +688,8 @@ export default {
 
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
-    const viewer = new IfcViewerAPI({container});
+    const viewer = new IfcViewerAPI({container,backgroundColor: new THREE.Color(0x87CEEB) });
     this.viewer = viewer;
-    viewer.axes.setAxes();
-    viewer.grid.setGrid();
     await viewer.IFC.setWasmPath('../../IFCjs/');
 
     await viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
