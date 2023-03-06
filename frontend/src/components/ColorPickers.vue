@@ -4,8 +4,10 @@
          :key="index"
          :style="{ background: color.colorCode }"
          @click="openColorPicker(index)">
+      <div v-if="index > 0" class="values"> {{ index-1 !== -1 ? colorToValue[index-1].threshold : colorToValue[index].threshold}}</div>
 
     </div>
+
     <v-app :class="selectedTab === 0 ? 'color-picker-container-colors' : 'color-picker-container-values'" :style="{
         position: 'absolute',
         transform: 'translateX(-45px)'
@@ -69,21 +71,12 @@ export default {
       selectedColorIndex: null,
       selectedTab: 0,
       colorToValue: [
-        {
-          colorCode: '#ff0000',
-          threshold: 3
-        },
-        {
-          colorCode: '#00ff00',
-          threshold: 10
-        },
-        {
-          colorCode: '#0000ff',
-          threshold: 20
-        },
-        {
-          colorCode: '#ffff00',
-          threshold: Infinity
+        {"colorCode": "#7F00FF", "threshold": -10}, {
+          "colorCode": "#00FFFF",
+          "threshold": 20
+        }, {"colorCode": "#80FF00", "threshold": 30}, {
+          "colorCode": "#FE0000",
+          "threshold": Infinity
         }
       ]
     }
@@ -175,6 +168,11 @@ export default {
   max-width: 100%;
   min-height: 0vh;
   position: relative;
+}
+
+.values {
+  margin-top: 20px;
+  margin-right: 50px;
 }
 
 .primary {
