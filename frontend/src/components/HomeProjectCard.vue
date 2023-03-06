@@ -1,20 +1,47 @@
 <template>
   <v-card
-      class="text-center elevation-12 mb-5 rounded-xl"
-      max-width="400"
-      v-if="show"
-      style="background: transparent;"
+      class="mx-auto"
+      max-width="368"
   >
-    <v-card-title style="color: #0A0046">
-      {{ project.name }}
-    </v-card-title>
-    <v-card-subtitle>
-      {{ project.ifcFilename }}
-    </v-card-subtitle>
-    <v-card-subtitle>
-      {{ project.datasetFilename }}
-    </v-card-subtitle>
-    <v-card-actions class="justify-center">
+    <v-card-text class="py-0">
+      <v-row align="center" no-gutters>
+        <v-col
+            class="text-h4"
+            cols="6"
+        >
+          {{project.name}}
+        </v-col>
+
+        <v-col cols="6" class="text-right">
+          <img :src="logo" width="85" height="85">
+        </v-col>
+      </v-row>
+    </v-card-text>
+
+    <div class="d-flex">
+
+      <v-list-item
+          density="compact"
+          :title="project.datasetFilename"
+      >
+        <template v-slot:prepend>
+          <v-icon  style="margin: 10px" >mdi-note-text-outline</v-icon>
+        </template>
+      </v-list-item>
+
+      <v-list-item
+          density="compact"
+          :title="project.ifcFilename"
+      >
+        <template v-slot:prepend>
+          <v-icon  style="margin: 10px" >mdi-domain</v-icon>
+        </template>
+      </v-list-item>
+    </div>
+
+    <v-divider></v-divider>
+
+    <v-card-actions>
       <v-btn
           variant="elevated"
           class="text-white rounded-xl"
@@ -47,7 +74,6 @@
       </v-card>
     </v-dialog>
   </div>
-
 </template>
 
 <script>
@@ -58,6 +84,8 @@ export default {
   props: ["project"],
   data() {
     return {
+      logo: require("@/assets/bimiot-animated-logo.gif"),
+      expand: false,
       show: true,
       dialog: false,
     }
@@ -88,3 +116,8 @@ export default {
 
 }
 </script>
+<style>
+img {
+  margin-top: 15px;
+}
+</style>
