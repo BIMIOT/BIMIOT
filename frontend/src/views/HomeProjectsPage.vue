@@ -69,7 +69,6 @@ export default {
           .then(response => response.json())
           .then(data => {
             this.projects = data;
-            console.log(this.projects.length, "hooo")
           })
     }
   },
