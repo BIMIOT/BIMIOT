@@ -14,7 +14,7 @@ public class ProjectFixture {
     }
 
     public static Project aCompleteProject() {
-        return Builder.of(() -> aProjectWithoutSensorsAndWithoutId())
+        return Builder.of(ProjectFixture::aProjectWithoutSensorsAndWithoutId)
                 .with(Project::setId, "ProjectID")
                 .with(Project::setSensorColors, SensorColorMapFixture.sensorTypeListMapDomain())
                 .build();

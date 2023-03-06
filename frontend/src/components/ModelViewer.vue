@@ -1,7 +1,6 @@
-
-
 <template>
   <section>
+    <div id="model"/>
     <div class="container">
       <v-btn @click="() => {
           releaseMemory()
@@ -10,36 +9,36 @@
       }" id="navbar">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <bim-iot-logo id="logo" class="mx-3"></bim-iot-logo>
-          <span id="projectName" style="color: #0A0046; font-size: 150%">BimIot</span>
+          <span id="projectName" style="color: white; font-size: 150%">BimIot</span>
         </div>
       </v-btn>
       <input type="file" id="file-input"/>
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <transition name="fade" mode="out-in">
-        <div   id="progress-bar" >
+        <div id="progress-bar" >
           {{knowledge}} %
         </div>
       </transition>
-      <div style="position: absolute; bottom:30px; left: 0; margin-left: 20px;" class="align-items-center">
-        <div class=".top">
-            <v-btn  id="controlBtn" icon="mdi-stop" :disabled="!inSimulation" @click="stop"/>
-          </div>
-          <div class="spacer"></div>
-           <div class="bottom">
-             <v-btn id="controlBtn" icon @click="play">
-               <v-icon v-if="!playing">mdi-play</v-icon>
-               <v-icon v-if="playing">mdi-pause</v-icon>
-             </v-btn>
-           </div>
-          <div class="spacer"></div>
-            <TwoDToThreeDButton class="top"  @click="changeTo2d()" :state="currentPlan"/>
-          <div class="spacer"></div>
-            <SensorsList class="bottom" :room_list="room_list"/>
-          <div class="spacer"></div>
-          <HideValueButton class="bottom" :hide="this.hideValue" @click="hideAllValue()"/>
-          </div>
-        <div>
-      </div>
+      <v-container fluid id="panelControl">
+        <div class="fill-content">
+          <v-btn id="controlBtn" icon="mdi-stop" class="mx-3 my-3" :disabled="!inSimulation" @click="stop"/>
+        </div>
+        <div class="fill-content">
+          <v-btn id="controlBtn" icon class="mx-3 my-3" @click="play">
+            <v-icon v-if="!playing">mdi-play</v-icon>
+            <v-icon v-if="playing">mdi-pause</v-icon>
+          </v-btn>
+        </div>
+        <div class="fill-content">
+          <HideValueButton :hide="this.hideValue" @click="hideAllValue()"/>
+        </div>
+        <div class="fill-content">
+          <TwoDToThreeDButton @click="changeTo2d()" :state="currentPlan"/>
+        </div>
+        <div class="fill-content">
+          <SensorsList  v-on:id-emit="pick3dElementFromList" ref="childComponent"  :room_list="room_list"/>
+        </div>
+      </v-container>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
 
@@ -50,7 +49,6 @@
       </p>
       <v-btn size="x-small" icon="mdi-close" variant="text" v-if='entityData !== ""' v-on:click="resetSelection()"></v-btn>
     </div>
-    <div id="model"/>
   </section>
 </template>
 
@@ -104,6 +102,7 @@ export default {
   data() {
     return {
       entityData: '',
+      sensorIFcToDataSet: {},
       knowledge: 0,
       roomIdToMesh: {},
       arrayOfKids: [],
@@ -166,6 +165,9 @@ export default {
     }
   },
   methods: {
+    pick3dElementFromList(id) {
+      this.viewer.IFC.selector.pickIfcItemsByID(this.model.modelID, [parseInt(id,10)], true);
+    },
     releaseMemory() {
       location.reload()
       this.viewer.dispose();
@@ -194,6 +196,9 @@ export default {
         await this.viewer.context.ifcCamera.toggleProjection();
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
+
+        console.log(this.room_list)
+
       } else {
         await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
         this.navCube.changeActivation(); // True
@@ -218,7 +223,7 @@ export default {
       });
     },
     async loadFile() {
-      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProject.name}`, {
+      const response = await axios.get(`/api/bimiot/simulations/files/${this.store.currentProject.name}`, {
         responseType: 'blob',
       });
       const ifcURL = URL.createObjectURL(response.data);
@@ -270,10 +275,13 @@ export default {
       window.ondblclick = async () => {
         const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
         const type = this.viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
+          this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+          this.$refs.childComponent.updateList(this.room_list);
         } else {
-          this.viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+          this.viewer.IFC.selector.unpickIfcItems();
         }
       }
 
@@ -384,6 +392,7 @@ export default {
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
+          //this.$refs.childComponent.updateList(this.room_list);
         }
       }
 
@@ -496,7 +505,7 @@ export default {
       this.currentSenseType = type
 
       const manager = this.viewer.IFC.loader.ifcManager;
-
+      //this.room_list[207]["TEMPERATURE"][0].value = 40
 
       switch (type) {
         case 'HUMIDITY':
@@ -548,6 +557,7 @@ export default {
             "type": type_name,
             "value": undefined
           });
+          this.sensorIFcToDataSet[relIDs.children[component].expressID]=sensor.ObjectType.value.split(":")[0];
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
@@ -579,17 +589,17 @@ export default {
       }
       this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/start/${this.store.currentProject.name}`, {})
+      axios.put(`/api/bimiot/simulations/start/${this.store.currentProject.name}`, {})
     },
     pause: function () {
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/pause/${this.store.currentProject.name}`, {});
+      axios.put(`/api/bimiot/simulations/pause/${this.store.currentProject.name}`, {});
     },
     stop: function () {
       this.inSimulation = false;
       this.playing = false;
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/stop/${this.store.currentProject.name}`, {});
+      axios.put(`/api/bimiot/simulations/stop/${this.store.currentProject.name}`, {});
     },
     sendMapping: function () {
       let config = {
@@ -678,10 +688,8 @@ export default {
 
     this.moveComponentToSubDiv()
     const container = document.getElementById('model');
-    const viewer = new IfcViewerAPI({container});
+    const viewer = new IfcViewerAPI({container,backgroundColor: new THREE.Color(0x87CEEB) });
     this.viewer = viewer;
-    viewer.axes.setAxes();
-    viewer.grid.setGrid();
     await viewer.IFC.setWasmPath('../../IFCjs/');
 
     await viewer.IFC.loader.ifcManager.parser.setupOptionalCategories({
@@ -690,7 +698,6 @@ export default {
     });
 
     await this.loadFile();
-    console.log("finished load file");
     await new Promise((resolve, reject) => {
       this.createAllSubsets(this.room_list);
       resolve();
@@ -769,10 +776,14 @@ export default {
           window.ondblclick = async () => {
             const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
             const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+
             if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+              this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+
+              this.$refs.childComponent.updateList(this.room_list);
               this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
             } else {
-              viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+              viewer.IFC.selector.unpickIfcItems();
             }
           }
 
@@ -791,7 +802,9 @@ export default {
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
 
+
          await new Promise(r => this.createAllSubsets(this.room_list, manager));
+
 
 
         },
@@ -812,12 +825,9 @@ export default {
   filter: blur(0px);
 }
 
-
-
 #file-input {
   position: relative;
 }
-
 
 #properties-text {
   display:flex;
@@ -834,7 +844,7 @@ export default {
 #navbar {
   top: 0;
   border-radius: 0 0 25px 0;
-  background-color: #888888;
+  background-color: #023D57;
   elevation: 3deg;
   position: absolute;
   height: 5em;
@@ -852,12 +862,6 @@ export default {
   left:0;
 }
 
-.v-application__wrap {
-  min-height: auto;
-}
-
-
-
 #progress-bar  {
   position: fixed;
   top: 50%;
@@ -868,34 +872,44 @@ export default {
   font-size: 20px;
 }
 
-.top, .bottom{
-  width:400px;
-  display:block;
-  margin:0 auto;
-}
-
-
 #controlBtn{
   color: white;
   background-color: #0A0046;
 }
-
-.spacer{
-  display:block;
-  height:10px;
-  width:100%;
-  margin: 0 auto;
-  content:"";
-}
-
-
 
 .block-display button{
   margin:15px;
   display:block;
 }
 
+body {
+  overflow: hidden;
+}
+
 .container {
   margin-top: 80px;
 }
+
+.fill-content{
+  float: left;
+}
+
+#panelControl {
+  position: fixed;
+  bottom: 30px;
+  float: left;
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: max-content;
+  background-color: #023D57;
+  border-radius: 25px 25px 25px 25px;
+  padding: 0;
+}
+
+body {
+  overflow: hidden; /* Hide scrollbars */
+}
+
 </style>
