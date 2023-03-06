@@ -1,7 +1,7 @@
 <template>
   <v-card
       class="mx-auto"
-      max-width="368"
+
   >
     <v-card-text class="py-0">
       <v-row align="center" no-gutters>
@@ -18,26 +18,7 @@
       </v-row>
     </v-card-text>
 
-    <div class="d-flex">
 
-      <v-list-item
-          density="compact"
-          :title="project.datasetFilename"
-      >
-        <template v-slot:prepend>
-          <v-icon  style="margin: 10px" >mdi-note-text-outline</v-icon>
-        </template>
-      </v-list-item>
-
-      <v-list-item
-          density="compact"
-          :title="project.ifcFilename"
-      >
-        <template v-slot:prepend>
-          <v-icon  style="margin: 10px" >mdi-domain</v-icon>
-        </template>
-      </v-list-item>
-    </div>
 
     <v-divider></v-divider>
 
@@ -55,7 +36,32 @@
           color="error"
           @click="this.dialog = true"
       ></v-btn>
+      <v-btn  size="large" @click="expand = !expand">
+      Infos
+      </v-btn>
     </v-card-actions>
+    <v-expand-transition>
+      <div v-if="expand">
+        <v-list-item
+            density="compact"
+            :title="project.datasetFilename"
+        >
+          <template v-slot:prepend>
+            <v-icon  style="margin: 10px" >mdi-note-text-outline</v-icon>
+          </template>
+        </v-list-item>
+
+        <v-list-item
+            density="compact"
+            :title="project.ifcFilename"
+        >
+          <template v-slot:prepend>
+            <v-icon  style="margin: 10px" >mdi-domain</v-icon>
+          </template>
+        </v-list-item>
+
+      </div>
+    </v-expand-transition>
   </v-card>
 
   <div class="text-center">
@@ -68,8 +74,10 @@
           Êtes-vous sûr de vouloir supprimer ce projet ?
         </v-card-text>
         <v-card-actions>
+
           <v-btn color="red" @click="deleteProject">Confirmer</v-btn>
           <v-btn color="blue" @click="dialog = false">Annuler</v-btn>
+
         </v-card-actions>
       </v-card>
     </v-dialog>
