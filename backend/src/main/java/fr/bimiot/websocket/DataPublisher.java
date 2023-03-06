@@ -29,7 +29,7 @@ public class DataPublisher implements ApplicationListener<ConverterEvent> {
         var data = event.getMessage();
         var sensorJson = new JSONObject()
                 .put("sensorIfcID", Integer.parseInt(data.sensorIfcID()))
-                .put("value", Integer.parseInt(data.value()))
+                .put("value", Float.parseFloat(data.value()))
                 .put("roomIfcID", Integer.parseInt(data.roomIfcID()))
                 .put("sensorType", data.type())
                 .put("color", data.color())
