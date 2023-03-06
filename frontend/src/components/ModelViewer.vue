@@ -189,7 +189,7 @@ export default {
       const manager = this.viewer.IFC.loader.ifcManager;
       if(this.currentPlan === "3D") {
         await this.changeSideProperty(this.room_list, manager, THREE.DoubleSide);
-        //this.navCube.changeActivation(); // False
+        this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
@@ -201,7 +201,7 @@ export default {
 
       } else {
         await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
-       // this.navCube.changeActivation(); // True
+        this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
