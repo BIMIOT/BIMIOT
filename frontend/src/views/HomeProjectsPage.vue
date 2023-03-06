@@ -71,88 +71,13 @@ export default {
             this.projects = data;
             console.log(this.projects.length, "hooo")
           })
-    },
-    getProjects() {
-        this.projects  = [{
-          name: 'Project1',
-          ifcFilename:"jojojojoj.ifc",
-          datasetFilename: "dadaojoj.json"
-        },
-          {
-            name: 'Project2',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project3',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project4',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project5',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project6',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project7',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project8',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project9',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project10',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project11',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project1',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project1',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project1',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project1',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          },
-          {
-            name: 'Project1',
-            ifcFilename:"jojo.ifc",
-            datasetFilename: "dada.json"
-          }]
+    }
+  },
+  watch: {
+    page() {
+      this.startVisible = (this.page - 1) * this.pageSize;
+      this.endVisible = this.startVisible + this.pageSize;
+      console.log(this.startVisible, this.endVisible)
     }
   },
   watch: {
@@ -164,7 +89,6 @@ export default {
   },
   mounted() {
    this.getAllProjects();
-   this.getProjects()
   }
 }
 </script>

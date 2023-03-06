@@ -189,7 +189,7 @@ export default {
       const manager = this.viewer.IFC.loader.ifcManager;
       if(this.currentPlan === "3D") {
         await this.changeSideProperty(this.room_list, manager, THREE.DoubleSide);
-        //this.navCube.changeActivation(); // False
+        this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
@@ -201,7 +201,7 @@ export default {
 
       } else {
         await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
-       // this.navCube.changeActivation(); // True
+        this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
@@ -223,7 +223,7 @@ export default {
       });
     },
     async loadFile() {
-      const response = await axios.get(`/api/bimiot/simulation/files/${this.store.currentProject.name}`, {
+      const response = await axios.get(`/api/bimiot/simulations/files/${this.store.currentProject.name}`, {
         responseType: 'blob',
       });
       const ifcURL = URL.createObjectURL(response.data);
@@ -589,17 +589,17 @@ export default {
       }
       this.inSimulation = true;
       window.addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/start/${this.store.currentProject.name}`, {})
+      axios.put(`/api/bimiot/simulations/start/${this.store.currentProject.name}`, {})
     },
     pause: function () {
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/pause/${this.store.currentProject.name}`, {});
+      axios.put(`/api/bimiot/simulations/pause/${this.store.currentProject.name}`, {});
     },
     stop: function () {
       this.inSimulation = false;
       this.playing = false;
       window.removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
-      axios.put(`/api/bimiot/stop/${this.store.currentProject.name}`, {});
+      axios.put(`/api/bimiot/simulations/stop/${this.store.currentProject.name}`, {});
     },
     sendMapping: function () {
       let config = {
