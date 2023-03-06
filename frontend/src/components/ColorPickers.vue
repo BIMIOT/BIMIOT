@@ -6,7 +6,7 @@
          @click="openColorPicker(index)">
 
     </div>
-    <v-app class="color-picker-container" :style="{
+    <v-app :class="selectedTab === 0 ? 'color-picker-container-colors' : 'color-picker-container-values'" :style="{
         position: 'absolute',
         transform: 'translateX(-45px)'
 
@@ -138,9 +138,16 @@ export default {
   align-items: center;
 }
 
-.color-picker-container {
+.color-picker-container-colors {
   position: absolute;
-  top: 100%;
+  top: 450%;
+  left: 0;
+  align-items: center;
+}
+
+.color-picker-container-values {
+  position: absolute;
+  top: 375%;
   left: 0;
   align-items: center;
 }
@@ -159,7 +166,11 @@ export default {
 }
 
 .value-inputs {
-  padding: 8px;
+
+}
+
+.v-application__wrap {
+  background-color: white;
 }
 
 .primary {
