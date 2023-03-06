@@ -21,8 +21,8 @@ import TreeViewSensors from "@/components/TreeViewSensors";
   }
 </script>
 <template>
-    <v-row justify="center">
-      <v-btn icon id="showSensors"
+    <div>
+      <v-btn icon class="mx-3 my-3"
         color='#0A0046'
         dark
         @click.stop=" dialog = true"
@@ -61,13 +61,10 @@ import TreeViewSensors from "@/components/TreeViewSensors";
           </v-navigation-drawer>
         </v-layout>
       </v-card>
-    </v-row>
+    </div>
   </template>
 
 <style>
-#showSensors{
-  color: blue;
-}
 
 .input-wrapper {
   font-size: 16px;
