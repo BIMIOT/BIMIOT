@@ -22,11 +22,11 @@ public class SimulatorProviderImpl implements SimulatorProvider {
     @Value("${simulator.port}")
     private Integer simulatorPort;
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String SESSIONS_PATH = "/api/sessions/";
-    private static final String CREATE_PATH = SESSIONS_PATH + "create/";
-    private static final String STOP_PATH = SESSIONS_PATH + "stop/";
-    private static final String START_PATH = SESSIONS_PATH + "start/";
-    private static final String PAUSE_PATH = SESSIONS_PATH + "pause/";
+    private static final String SESSIONS_PATH = "/api/sessions";
+    private static final String CREATE_PATH = SESSIONS_PATH + "/create/";
+    private static final String STOP_PATH = SESSIONS_PATH + "/stop/";
+    private static final String START_PATH = SESSIONS_PATH + "/start/";
+    private static final String PAUSE_PATH = SESSIONS_PATH + "/pause/";
 
     @Override
     public void start(String projectName) {
@@ -85,7 +85,7 @@ public class SimulatorProviderImpl implements SimulatorProvider {
     }
 
     private String getBaseUrl() {
-        return simulatorHost + simulatorPort;
+        return simulatorHost + ":" + simulatorPort;
     }
 
     private String getSimulationId(String projectName) {

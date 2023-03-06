@@ -35,7 +35,9 @@ class UpdateSimulationSettingsTest {
     @CsvSource({
             "localhost, 80",
             "localhost, 27020",
-            " , 4000"
+            " , 4000",
+            "localhost, -40",
+            "localhost, "
     })
     void execute_shouldThrowDomainException(String host, Integer port) throws DomainException {
         assertThrows(DomainException.class, () -> updateSimulationSettings.execute(host, port));

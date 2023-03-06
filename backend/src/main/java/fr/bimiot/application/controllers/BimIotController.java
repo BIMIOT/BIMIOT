@@ -27,14 +27,12 @@ public class BimIotController {
     }
 
     @PostMapping("/mapping")
-    public int createMapping(@RequestBody List<Room> roomListDTO) {
+    public void createMapping(@RequestBody List<Room> roomListDTO) {
         manageData.setRoomListDTO(roomListDTO);
-        return 0;
     }
 
     @PutMapping("/reset")
-    public int resetValues() {
+    public void resetValues() {
         manageData.resetRoomListDTO();
-        return 0;
     }
 }

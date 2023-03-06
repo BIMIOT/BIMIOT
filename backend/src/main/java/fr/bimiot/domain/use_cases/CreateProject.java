@@ -5,7 +5,6 @@ import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.providers.ProjectProvider;
 import fr.bimiot.domain.use_cases.simulation.CreateSimulation;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,13 +24,8 @@ public class CreateProject {
         if (projectProvider.isExistedProject(project.getName())) {
             throw new DomainException("Project '" + project.getName() + "' already exists !");
         }
-        try {
-            createSimulation.execute(project.getName(), dataset);
-        } catch (RestClientException e) {
-            throw new DomainException("Problem with simulator : address/port or json dataset");
-        }
+        createSimulation.execute(project.getName(), dataset);
+
         return projectProvider.create(project);
     }
-
-
 }
