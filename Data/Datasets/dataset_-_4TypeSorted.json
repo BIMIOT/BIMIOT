@@ -1,0 +1,3241 @@
+
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "20.89",
+   "timestamp": 1643846400
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "20.79",
+   "timestamp": 1643846400
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "585.2",
+   "timestamp": 1643846400
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "897.6",
+   "timestamp": 1643846400
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "20.9266666666667",
+   "timestamp": 1643846401
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "20.79",
+   "timestamp": 1643846401
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "578.4",
+   "timestamp": 1643846401
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "900.5",
+   "timestamp": 1643846401
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "20.89",
+   "timestamp": 1643846402
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "20.87",
+   "timestamp": 1643846402
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "572.666666666667",
+   "timestamp": 1643846402
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "908.8",
+   "timestamp": 1643846402
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "20.89",
+   "timestamp": 1643846403
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "20.89",
+   "timestamp": 1643846403
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "493.75",
+   "timestamp": 1643846403
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "918.0",
+   "timestamp": 1643846403
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "20.9175",
+   "timestamp": 1643846404
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "20.89",
+   "timestamp": 1643846404
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "488.6",
+   "timestamp": 1643846404
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "925.2",
+   "timestamp": 1643846404
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "20.978",
+   "timestamp": 1643846405
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "20.8733333333333",
+   "timestamp": 1643846405
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "568.666666666667",
+   "timestamp": 1643846405
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "929.4",
+   "timestamp": 1643846405
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "21.0",
+   "timestamp": 1643846406
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "20.8733333333333",
+   "timestamp": 1643846406
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "536.333333333333",
+   "timestamp": 1643846406
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "936.4",
+   "timestamp": 1643846406
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "21.0",
+   "timestamp": 1643846407
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "20.89",
+   "timestamp": 1643846407
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "509.0",
+   "timestamp": 1643846407
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "950.0",
+   "timestamp": 1643846407
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "21.025",
+   "timestamp": 1643846408
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "20.89",
+   "timestamp": 1643846408
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "476.0",
+   "timestamp": 1643846408
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "961.0",
+   "timestamp": 1643846408
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "21.075",
+   "timestamp": 1643846409
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "20.89",
+   "timestamp": 1643846409
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "510.0",
+   "timestamp": 1643846409
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "963.0",
+   "timestamp": 1643846409
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "21.076",
+   "timestamp": 1643846410
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "21.1666666666667",
+   "timestamp": 1643846410
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "481.5",
+   "timestamp": 1643846410
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "958.6",
+   "timestamp": 1643846410
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "20.978",
+   "timestamp": 1643846411
+ }
+ {
+   "id": "sensorHum11",
+   "type": "HUMIDITY",
+   "value": "21.174",
+   "timestamp": 1643846411
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "481.8",
+   "timestamp": 1643846411
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "965.333333333333",
+   "timestamp": 1643846411
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "21.0",
+   "timestamp": 1643846412
+ }
+ {
+   "id": "sensorHum12",
+   "type": "HUMIDITY",
+   "value": "21.175",
+   "timestamp": 1643846412
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "475.25",
+   "timestamp": 1643846412
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "979.25",
+   "timestamp": 1643846412
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "21.0",
+   "timestamp": 1643846413
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "21.15",
+   "timestamp": 1643846413
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "469.0",
+   "timestamp": 1643846413
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "978.428571428571",
+   "timestamp": 1643846413
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "21.025",
+   "timestamp": 1643846414
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "21.1833333333333",
+   "timestamp": 1643846414
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "455.8",
+   "timestamp": 1643846414
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "983.0",
+   "timestamp": 1643846414
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "21.075",
+   "timestamp": 1643846415
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "21.21",
+   "timestamp": 1643846415
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "451.6",
+   "timestamp": 1643846415
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "992.6",
+   "timestamp": 1643846415
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "21.076",
+   "timestamp": 1643846416
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "21.22",
+   "timestamp": 1643846416
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "451.6",
+   "timestamp": 1643846416
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "997.2",
+   "timestamp": 1643846416
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "21.077",
+   "timestamp": 1643846417
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "21.23",
+   "timestamp": 1643846417
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "454.75",
+   "timestamp": 1643846417
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "999.5",
+   "timestamp": 1643846417
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "21.1333333333333",
+   "timestamp": 1643846418
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "21.254",
+   "timestamp": 1643846418
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "454.75",
+   "timestamp": 1643846418
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1001.0",
+   "timestamp": 1643846418
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "21.1666666666667",
+   "timestamp": 1643846419
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "21.255",
+   "timestamp": 1643846419
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "457.5",
+   "timestamp": 1643846419
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1001.1",
+   "timestamp": 1643846419
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "21.174",
+   "timestamp": 1643846420
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "21.29",
+   "timestamp": 1643846420
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "464.0",
+   "timestamp": 1643846420
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1019.0",
+   "timestamp": 1643846420
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "21.175",
+   "timestamp": 1643846421
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "21.29",
+   "timestamp": 1643846421
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "464.0",
+   "timestamp": 1643846421
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1021.0",
+   "timestamp": 1643846421
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "21.15",
+   "timestamp": 1643846422
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "21.29",
+   "timestamp": 1643846422
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "498.4",
+   "timestamp": 1643846422
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1024.66666666667",
+   "timestamp": 1643846422
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "21.16",
+   "timestamp": 1643846423
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "21.315",
+   "timestamp": 1643846423
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "530.2",
+   "timestamp": 1643846423
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1030.42857142857",
+   "timestamp": 1643846423
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "21.17",
+   "timestamp": 1643846424
+ }
+ {
+   "id": "sensorHum11",
+   "type": "HUMIDITY",
+   "value": "21.3066666666667",
+   "timestamp": 1643846424
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "533.6",
+   "timestamp": 1643846424
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1026.25",
+   "timestamp": 1643846424
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "21.18",
+   "timestamp": 1643846425
+ }
+ {
+   "id": "sensorHum12",
+   "type": "HUMIDITY",
+   "value": "21.31",
+   "timestamp": 1643846425
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "524.25",
+   "timestamp": 1643846425
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1028.0",
+   "timestamp": 1643846425
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "21.23",
+   "timestamp": 1643846426
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "21.3566666666667",
+   "timestamp": 1643846426
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "498.666666666667",
+   "timestamp": 1643846426
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "1028.1",
+   "timestamp": 1643846426
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "21.254",
+   "timestamp": 1643846427
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "21.31",
+   "timestamp": 1643846427
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "516.333333333333",
+   "timestamp": 1643846427
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1028.2",
+   "timestamp": 1643846427
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "21.217",
+   "timestamp": 1643846428
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "21.29",
+   "timestamp": 1643846428
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "501.2",
+   "timestamp": 1643846428
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "1055.25",
+   "timestamp": 1643846428
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "21.218",
+   "timestamp": 1643846429
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "21.35",
+   "timestamp": 1643846429
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "522.0",
+   "timestamp": 1643846429
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1050.0",
+   "timestamp": 1643846429
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "21.236",
+   "timestamp": 1643846430
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "21.34",
+   "timestamp": 1643846430
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "520.5",
+   "timestamp": 1643846430
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1051.25",
+   "timestamp": 1643846430
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "21.23",
+   "timestamp": 1643846431
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "22.15",
+   "timestamp": 1643846431
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "505.285714285714",
+   "timestamp": 1643846431
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1051.26",
+   "timestamp": 1643846431
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "21.2225",
+   "timestamp": 1643846432
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "22.16",
+   "timestamp": 1643846432
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "488.333333333333",
+   "timestamp": 1643846432
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1051.27",
+   "timestamp": 1643846432
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "21.245",
+   "timestamp": 1643846433
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "22.1166666666667",
+   "timestamp": 1643846433
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "512.0",
+   "timestamp": 1643846433
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1055.0",
+   "timestamp": 1643846433
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "21.26",
+   "timestamp": 1643846434
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "22.1666666666667",
+   "timestamp": 1643846434
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "511.0",
+   "timestamp": 1643846434
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1055.1",
+   "timestamp": 1643846434
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "21.27",
+   "timestamp": 1643846435
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "22.18",
+   "timestamp": 1643846435
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "501.5",
+   "timestamp": 1643846435
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1060.0",
+   "timestamp": 1643846435
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "21.28",
+   "timestamp": 1643846436
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "22.1333333333333",
+   "timestamp": 1643846436
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "503.666666666667",
+   "timestamp": 1643846436
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "1060.1",
+   "timestamp": 1643846436
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "21.29",
+   "timestamp": 1643846437
+ }
+ {
+   "id": "sensorHum11",
+   "type": "HUMIDITY",
+   "value": "22.16",
+   "timestamp": 1643846437
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "483.166666666667",
+   "timestamp": 1643846437
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1060.2",
+   "timestamp": 1643846437
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "21.30",
+   "timestamp": 1643846438
+ }
+ {
+   "id": "sensorHum12",
+   "type": "HUMIDITY",
+   "value": "22.174",
+   "timestamp": 1643846438
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "483.5",
+   "timestamp": 1643846438
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "1081.0",
+   "timestamp": 1643846438
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "21.31",
+   "timestamp": 1643846439
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "22.175",
+   "timestamp": 1643846439
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "473.0",
+   "timestamp": 1643846439
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1082.0",
+   "timestamp": 1643846439
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "21.32",
+   "timestamp": 1643846440
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "22.176",
+   "timestamp": 1643846440
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "470.333333333333",
+   "timestamp": 1643846440
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1088.83333333333",
+   "timestamp": 1643846440
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "21.33",
+   "timestamp": 1643846441
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "22.177",
+   "timestamp": 1643846441
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "480.142857142857",
+   "timestamp": 1643846441
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1086.1",
+   "timestamp": 1643846441
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "21.34",
+   "timestamp": 1643846442
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "22.178",
+   "timestamp": 1643846442
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "464.0",
+   "timestamp": 1643846442
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1086.0",
+   "timestamp": 1643846442
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "21.35",
+   "timestamp": 1643846443
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "22.179",
+   "timestamp": 1643846443
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "474.4",
+   "timestamp": 1643846443
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1086.1",
+   "timestamp": 1643846443
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "22.58",
+   "timestamp": 1643846444
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "22.180",
+   "timestamp": 1643846444
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "470.0",
+   "timestamp": 1643846444
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1103.75",
+   "timestamp": 1643846444
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "22.575",
+   "timestamp": 1643846445
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "22.181",
+   "timestamp": 1643846445
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "501.2",
+   "timestamp": 1643846445
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1103.76",
+   "timestamp": 1643846445
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "22.576",
+   "timestamp": 1643846446
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "22.182",
+   "timestamp": 1643846446
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "522.0",
+   "timestamp": 1643846446
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "1103.77",
+   "timestamp": 1643846446
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "22.577",
+   "timestamp": 1643846447
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "21.23",
+   "timestamp": 1643846447
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "520.5",
+   "timestamp": 1643846447
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1112.0",
+   "timestamp": 1643846447
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "22.578",
+   "timestamp": 1643846448
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "21.254",
+   "timestamp": 1643846448
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "505.285714285714",
+   "timestamp": 1643846448
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "1105.66666666667",
+   "timestamp": 1643846448
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "22.6666666666667",
+   "timestamp": 1643846449
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "21.255",
+   "timestamp": 1643846449
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "488.333333333333",
+   "timestamp": 1643846449
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1104.0",
+   "timestamp": 1643846449
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "22.675",
+   "timestamp": 1643846450
+ }
+ {
+   "id": "sensorHum11",
+   "type": "HUMIDITY",
+   "value": "21.256",
+   "timestamp": 1643846450
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "488.7",
+   "timestamp": 1643846450
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1104.1",
+   "timestamp": 1643846450
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "22.676",
+   "timestamp": 1643846451
+ }
+ {
+   "id": "sensorHum12",
+   "type": "HUMIDITY",
+   "value": "21.257",
+   "timestamp": 1643846451
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "488.8",
+   "timestamp": 1643846451
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1121.25",
+   "timestamp": 1643846451
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "22.677",
+   "timestamp": 1643846452
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "21.258",
+   "timestamp": 1643846452
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "462.333333333333",
+   "timestamp": 1643846452
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1115.66666666667",
+   "timestamp": 1643846452
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "22.7225",
+   "timestamp": 1643846453
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "21.259",
+   "timestamp": 1643846453
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "469.0",
+   "timestamp": 1643846453
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1120.0",
+   "timestamp": 1643846453
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "22.745",
+   "timestamp": 1643846454
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "21.260",
+   "timestamp": 1643846454
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "469.0",
+   "timestamp": 1643846454
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1123.75",
+   "timestamp": 1643846454
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "22.745",
+   "timestamp": 1643846455
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "23.1833333333333",
+   "timestamp": 1643846455
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "469.0",
+   "timestamp": 1643846455
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1116.0",
+   "timestamp": 1643846455
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "22.79",
+   "timestamp": 1643846456
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "23.15",
+   "timestamp": 1643846456
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "464.0",
+   "timestamp": 1643846456
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "1116.1",
+   "timestamp": 1643846456
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "22.79",
+   "timestamp": 1643846457
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "23.16",
+   "timestamp": 1643846457
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "456.5",
+   "timestamp": 1643846457
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1112.75",
+   "timestamp": 1643846457
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "22.79",
+   "timestamp": 1643846458
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "23.17",
+   "timestamp": 1643846458
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "457.0",
+   "timestamp": 1643846458
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "1112.76",
+   "timestamp": 1643846458
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "22.84",
+   "timestamp": 1643846459
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "23.18",
+   "timestamp": 1643846459
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "450.25",
+   "timestamp": 1643846459
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1108.0",
+   "timestamp": 1643846459
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "22.87",
+   "timestamp": 1643846460
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "23.19",
+   "timestamp": 1643846460
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "446.0",
+   "timestamp": 1643846460
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1127.83333333333",
+   "timestamp": 1643846460
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "22.89",
+   "timestamp": 1643846461
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "23.20",
+   "timestamp": 1643846461
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "451.6",
+   "timestamp": 1643846461
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1128.75",
+   "timestamp": 1643846461
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "22.89",
+   "timestamp": 1643846462
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "23.175",
+   "timestamp": 1643846462
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "454.75",
+   "timestamp": 1643846462
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1124.25",
+   "timestamp": 1643846462
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "22.9083333333333",
+   "timestamp": 1643846463
+ }
+ {
+   "id": "sensorHum11",
+   "type": "HUMIDITY",
+   "value": "23.176",
+   "timestamp": 1643846463
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "448.0",
+   "timestamp": 1643846463
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1124.26",
+   "timestamp": 1643846463
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "22.956",
+   "timestamp": 1643846464
+ }
+ {
+   "id": "sensorHum12",
+   "type": "HUMIDITY",
+   "value": "23.14",
+   "timestamp": 1643846464
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "524.25",
+   "timestamp": 1643846464
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1138.0",
+   "timestamp": 1643846464
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "22.9633333333333",
+   "timestamp": 1643846465
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "23.18",
+   "timestamp": 1643846465
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "498.666666666667",
+   "timestamp": 1643846465
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1144.0",
+   "timestamp": 1643846465
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.0",
+   "timestamp": 1643846466
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "23.19",
+   "timestamp": 1643846466
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "516.333333333333",
+   "timestamp": 1643846466
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "1140.0",
+   "timestamp": 1643846466
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "22.956",
+   "timestamp": 1643846467
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "23.20",
+   "timestamp": 1643846467
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "501.2",
+   "timestamp": 1643846467
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1139.25",
+   "timestamp": 1643846467
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "23.0",
+   "timestamp": 1643846468
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "23.21",
+   "timestamp": 1643846468
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "522.0",
+   "timestamp": 1643846468
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "1167.33333333333",
+   "timestamp": 1643846468
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "23.0",
+   "timestamp": 1643846469
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "23.2225",
+   "timestamp": 1643846469
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "520.5",
+   "timestamp": 1643846469
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1157.74",
+   "timestamp": 1643846469
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.1",
+   "timestamp": 1643846470
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "23.2225",
+   "timestamp": 1643846470
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "505.285714285714",
+   "timestamp": 1643846470
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1157.75",
+   "timestamp": 1643846470
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.2",
+   "timestamp": 1643846471
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "23.245",
+   "timestamp": 1643846471
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "488.333333333333",
+   "timestamp": 1643846471
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1157.76",
+   "timestamp": 1643846471
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.3",
+   "timestamp": 1643846472
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "23.254",
+   "timestamp": 1643846472
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "512.0",
+   "timestamp": 1643846472
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1157.77",
+   "timestamp": 1643846472
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.4",
+   "timestamp": 1643846473
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "23.26",
+   "timestamp": 1643846473
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "511.0",
+   "timestamp": 1643846473
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1160.0",
+   "timestamp": 1643846473
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.5",
+   "timestamp": 1643846474
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "23.272",
+   "timestamp": 1643846474
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "501.5",
+   "timestamp": 1643846474
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1160.1",
+   "timestamp": 1643846474
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.6",
+   "timestamp": 1643846475
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "23.245",
+   "timestamp": 1643846475
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "503.666666666667",
+   "timestamp": 1643846475
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1176.16666666667",
+   "timestamp": 1643846475
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.14",
+   "timestamp": 1643846476
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "23.29",
+   "timestamp": 1643846476
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "483.166666666667",
+   "timestamp": 1643846476
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "1175.25",
+   "timestamp": 1643846476
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "23.18",
+   "timestamp": 1643846477
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "23.245",
+   "timestamp": 1643846477
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "483.5",
+   "timestamp": 1643846477
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1175.26",
+   "timestamp": 1643846477
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "23.19",
+   "timestamp": 1643846478
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "23.215",
+   "timestamp": 1643846478
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "473.0",
+   "timestamp": 1643846478
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "1140.25",
+   "timestamp": 1643846478
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "23.22",
+   "timestamp": 1643846479
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "23.215",
+   "timestamp": 1643846479
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "470.333333333333",
+   "timestamp": 1643846479
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1140.26",
+   "timestamp": 1643846479
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.23",
+   "timestamp": 1643846480
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "23.216",
+   "timestamp": 1643846480
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "480.142857142857",
+   "timestamp": 1643846480
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1140.27",
+   "timestamp": 1643846480
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.24",
+   "timestamp": 1643846481
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "23.217",
+   "timestamp": 1643846481
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "464.0",
+   "timestamp": 1643846481
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1140.28",
+   "timestamp": 1643846481
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.25",
+   "timestamp": 1643846482
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "23.218",
+   "timestamp": 1643846482
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "474.4",
+   "timestamp": 1643846482
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1140.29",
+   "timestamp": 1643846482
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.26",
+   "timestamp": 1643846483
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "23.219",
+   "timestamp": 1643846483
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "470.0",
+   "timestamp": 1643846483
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1140.30",
+   "timestamp": 1643846483
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846484
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "23.220",
+   "timestamp": 1643846484
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "454.0",
+   "timestamp": 1643846484
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1061.66666666667",
+   "timestamp": 1643846484
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.272",
+   "timestamp": 1643846485
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "23.221",
+   "timestamp": 1643846485
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "454.0",
+   "timestamp": 1643846485
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1058.33333333333",
+   "timestamp": 1643846485
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846486
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "23.222",
+   "timestamp": 1643846486
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "476.0",
+   "timestamp": 1643846486
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "1074.2",
+   "timestamp": 1643846486
+ }
+ {
+   "id": "SensorTem13",
+   "type": "TEMPERATURE",
+   "value": "23.2675",
+   "timestamp": 1643846487
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "23.1857142857143",
+   "timestamp": 1643846487
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "510.0",
+   "timestamp": 1643846487
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "1074.1",
+   "timestamp": 1643846487
+ }
+ {
+   "id": "SensorTem14",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846488
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "23.06",
+   "timestamp": 1643846488
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "481.5",
+   "timestamp": 1643846488
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "1074.0",
+   "timestamp": 1643846488
+ }
+ {
+   "id": "SensorTem16",
+   "type": "TEMPERATURE",
+   "value": "23.245",
+   "timestamp": 1643846489
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "23.07",
+   "timestamp": 1643846489
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "481.8",
+   "timestamp": 1643846489
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "1086.25",
+   "timestamp": 1643846489
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.254",
+   "timestamp": 1643846490
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "23.08",
+   "timestamp": 1643846490
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "475.25",
+   "timestamp": 1643846490
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "1086.26",
+   "timestamp": 1643846490
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.26",
+   "timestamp": 1643846491
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "23.09",
+   "timestamp": 1643846491
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "475.26",
+   "timestamp": 1643846491
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "1085.0",
+   "timestamp": 1643846491
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.272",
+   "timestamp": 1643846492
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "23.10",
+   "timestamp": 1643846492
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846492
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "1085.0",
+   "timestamp": 1643846492
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.245",
+   "timestamp": 1643846493
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "23.11",
+   "timestamp": 1643846493
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846493
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "1088.0",
+   "timestamp": 1643846493
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846494
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "23.12",
+   "timestamp": 1643846494
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846494
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "1091.75",
+   "timestamp": 1643846494
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.20",
+   "timestamp": 1643846495
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "23.13",
+   "timestamp": 1643846495
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846495
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "1091.33333333333",
+   "timestamp": 1643846495
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.21",
+   "timestamp": 1643846496
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "23.14",
+   "timestamp": 1643846496
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846496
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "976.0",
+   "timestamp": 1643846496
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.22",
+   "timestamp": 1643846497
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "23.15",
+   "timestamp": 1643846497
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846497
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "976.1",
+   "timestamp": 1643846497
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.23",
+   "timestamp": 1643846498
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "23.16",
+   "timestamp": 1643846498
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846498
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "976.2",
+   "timestamp": 1643846498
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.254",
+   "timestamp": 1643846499
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "23.17",
+   "timestamp": 1643846499
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846499
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "980.75",
+   "timestamp": 1643846499
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.2675",
+   "timestamp": 1643846500
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "23.18",
+   "timestamp": 1643846500
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846500
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "971.333333333333",
+   "timestamp": 1643846500
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.272",
+   "timestamp": 1643846501
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "23.173",
+   "timestamp": 1643846501
+ }
+ {
+   "id": "SensorLum9",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846501
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "966.666666666667",
+   "timestamp": 1643846501
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846502
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "23.174",
+   "timestamp": 1643846502
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846502
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "963.0",
+   "timestamp": 1643846502
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846503
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "23.175",
+   "timestamp": 1643846503
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846503
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "952.333333333333",
+   "timestamp": 1643846503
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846504
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "23.1833333333333",
+   "timestamp": 1643846504
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846504
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "948.0",
+   "timestamp": 1643846504
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846505
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "28.79",
+   "timestamp": 1643846505
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846505
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "945.0",
+   "timestamp": 1643846505
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846506
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "28.79",
+   "timestamp": 1643846506
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846506
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "941.6",
+   "timestamp": 1643846506
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846507
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "28.89",
+   "timestamp": 1643846507
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846507
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "929.8",
+   "timestamp": 1643846507
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846508
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "28.89",
+   "timestamp": 1643846508
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846508
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "918.25",
+   "timestamp": 1643846508
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846509
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "28.83",
+   "timestamp": 1643846509
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846509
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "919.4",
+   "timestamp": 1643846509
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846510
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "28.945",
+   "timestamp": 1643846510
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846510
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "927.333333333333",
+   "timestamp": 1643846510
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846511
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "28.956",
+   "timestamp": 1643846511
+ }
+ {
+   "id": "SensorLum9",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846511
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "920.25",
+   "timestamp": 1643846511
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846512
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "29.0",
+   "timestamp": 1643846512
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846512
+ }
+ {
+   "id": "SensorCarb3",
+   "type": "CO2",
+   "value": "902.4",
+   "timestamp": 1643846512
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846513
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "29.075",
+   "timestamp": 1643846513
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846513
+ }
+ {
+   "id": "SensorCarb4",
+   "type": "CO2",
+   "value": "904.4",
+   "timestamp": 1643846513
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846514
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "28.918",
+   "timestamp": 1643846514
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846514
+ }
+ {
+   "id": "SensorCarb5",
+   "type": "CO2",
+   "value": "897.0",
+   "timestamp": 1643846514
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846515
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "27.925",
+   "timestamp": 1643846515
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846515
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "892.0",
+   "timestamp": 1643846515
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846516
+ }
+ {
+   "id": "sensorHum11",
+   "type": "HUMIDITY",
+   "value": "27.772",
+   "timestamp": 1643846516
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846516
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "882.5",
+   "timestamp": 1643846516
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846517
+ }
+ {
+   "id": "sensorHum",
+   "type": "HUMIDITY",
+   "value": "27.556",
+   "timestamp": 1643846517
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846517
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "887.2",
+   "timestamp": 1643846517
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846518
+ }
+ {
+   "id": "sensorHum1",
+   "type": "HUMIDITY",
+   "value": "27.8188333333333",
+   "timestamp": 1643846518
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846518
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "889.25",
+   "timestamp": 1643846518
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846519
+ }
+ {
+   "id": "sensorHum2",
+   "type": "HUMIDITY",
+   "value": "28.0816666666667",
+   "timestamp": 1643846519
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846519
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "889.2",
+   "timestamp": 1643846519
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846520
+ }
+ {
+   "id": "sensorHum3",
+   "type": "HUMIDITY",
+   "value": "27.956",
+   "timestamp": 1643846520
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846520
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "880.75",
+   "timestamp": 1643846520
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846521
+ }
+ {
+   "id": "sensorHum4",
+   "type": "HUMIDITY",
+   "value": "27.9083333333333",
+   "timestamp": 1643846521
+ }
+ {
+   "id": "SensorLum9",
+   "type": "LIGHT",
+   "value": "0.0",
+   "timestamp": 1643846521
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "868.75",
+   "timestamp": 1643846521
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.33",
+   "timestamp": 1643846522
+ }
+ {
+   "id": "sensorHum5",
+   "type": "HUMIDITY",
+   "value": "27.9266666666667",
+   "timestamp": 1643846522
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "565.2",
+   "timestamp": 1643846522
+ }
+ {
+   "id": "SensorCarb6",
+   "type": "CO2",
+   "value": "868.76",
+   "timestamp": 1643846522
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846523
+ }
+ {
+   "id": "sensorHum6",
+   "type": "HUMIDITY",
+   "value": "28.018",
+   "timestamp": 1643846523
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "578.4",
+   "timestamp": 1643846523
+ }
+ {
+   "id": "SensorCarb7",
+   "type": "CO2",
+   "value": "868.77",
+   "timestamp": 1643846523
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.35",
+   "timestamp": 1643846524
+ }
+ {
+   "id": "sensorHum7",
+   "type": "HUMIDITY",
+   "value": "28.0666666666667",
+   "timestamp": 1643846524
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "572.666666666667",
+   "timestamp": 1643846524
+ }
+ {
+   "id": "SensorCarb8",
+   "type": "CO2",
+   "value": "868.78",
+   "timestamp": 1643846524
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.315",
+   "timestamp": 1643846525
+ }
+ {
+   "id": "sensorHum8",
+   "type": "HUMIDITY",
+   "value": "23.08",
+   "timestamp": 1643846525
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "493.75",
+   "timestamp": 1643846525
+ }
+ {
+   "id": "SensorCarb9",
+   "type": "CO2",
+   "value": "868.79",
+   "timestamp": 1643846525
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846526
+ }
+ {
+   "id": "sensorHum9",
+   "type": "HUMIDITY",
+   "value": "23.09",
+   "timestamp": 1643846526
+ }
+ {
+   "id": "SensorLum4",
+   "type": "LIGHT",
+   "value": "488.6",
+   "timestamp": 1643846526
+ }
+ {
+   "id": "SensorCarb",
+   "type": "CO2",
+   "value": "868.80",
+   "timestamp": 1643846526
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.29",
+   "timestamp": 1643846527
+ }
+ {
+   "id": "sensorHum10",
+   "type": "HUMIDITY",
+   "value": "23.10",
+   "timestamp": 1643846527
+ }
+ {
+   "id": "SensorLum5",
+   "type": "LIGHT",
+   "value": "568.666666666667",
+   "timestamp": 1643846527
+ }
+ {
+   "id": "SensorCarb1",
+   "type": "CO2",
+   "value": "868.81",
+   "timestamp": 1643846527
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.12",
+   "timestamp": 1643846528
+ }
+ {
+   "id": "sensorHum11",
+   "type": "HUMIDITY",
+   "value": "23.11",
+   "timestamp": 1643846528
+ }
+ {
+   "id": "SensorLum6",
+   "type": "LIGHT",
+   "value": "536.333333333333",
+   "timestamp": 1643846528
+ }
+ {
+   "id": "SensorCarb2",
+   "type": "CO2",
+   "value": "868.82",
+   "timestamp": 1643846528
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.13",
+   "timestamp": 1643846529
+ }
+ {
+   "id": "SensorLum7",
+   "type": "LIGHT",
+   "value": "509.0",
+   "timestamp": 1643846529
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.14",
+   "timestamp": 1643846530
+ }
+ {
+   "id": "SensorLum8",
+   "type": "LIGHT",
+   "value": "476.0",
+   "timestamp": 1643846530
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.125",
+   "timestamp": 1643846531
+ }
+ {
+   "id": "SensorLum",
+   "type": "LIGHT",
+   "value": "510.0",
+   "timestamp": 1643846531
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.126",
+   "timestamp": 1643846532
+ }
+ {
+   "id": "SensorLum1",
+   "type": "LIGHT",
+   "value": "481.5",
+   "timestamp": 1643846532
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.127",
+   "timestamp": 1643846533
+ }
+ {
+   "id": "SensorLum2",
+   "type": "LIGHT",
+   "value": "481.8",
+   "timestamp": 1643846533
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.128",
+   "timestamp": 1643846534
+ }
+ {
+   "id": "SensorLum3",
+   "type": "LIGHT",
+   "value": "475.25",
+   "timestamp": 1643846534
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.018",
+   "timestamp": 1643846535
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.019",
+   "timestamp": 1643846536
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.020",
+   "timestamp": 1643846537
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.021",
+   "timestamp": 1643846538
+ }
+ {
+   "id": "SensorTem2",
+   "type": "TEMPERATURE",
+   "value": "23.022",
+   "timestamp": 1643846539
+ }
+ {
+   "id": "SensorTem3",
+   "type": "TEMPERATURE",
+   "value": "23.023",
+   "timestamp": 1643846540
+ }
+ {
+   "id": "SensorTem4",
+   "type": "TEMPERATURE",
+   "value": "23.024",
+   "timestamp": 1643846541
+ }
+ {
+   "id": "SensorTem7",
+   "type": "TEMPERATURE",
+   "value": "23.025",
+   "timestamp": 1643846542
+ }
+ {
+   "id": "SensorTem8",
+   "type": "TEMPERATURE",
+   "value": "23.0166666666667",
+   "timestamp": 1643846543
+ }
+ {
+   "id": "SensorTem12",
+   "type": "TEMPERATURE",
+   "value": "23.0",
+   "timestamp": 1643846544
+ }
+ {
+   "id": "SensorTem1",
+   "type": "TEMPERATURE",
+   "value": "23.0",
+   "timestamp": 1643846545
+ }
+ {
+   "id": "",
+   "type": "END",
+   "value": "23.0",
+   "timestamp": 1643846546
+ }

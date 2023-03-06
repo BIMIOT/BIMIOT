@@ -1,0 +1,3 @@
+simulator:
+  host: http://host.docker.internal
+  port: 8090

@@ -82,6 +82,7 @@ export default {
   },
   mounted() {
    this.getAllProjects();
+
   }
 }
 </script>

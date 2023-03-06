@@ -1,7 +1,7 @@
 <template>
   <v-card
       class="mx-auto"
-
+      max-width="368"
   >
     <v-card-text class="py-0">
       <v-row align="center" no-gutters>
@@ -17,9 +17,6 @@
         </v-col>
       </v-row>
     </v-card-text>
-
-
-
     <v-divider></v-divider>
 
     <v-card-actions>
