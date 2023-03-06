@@ -23,7 +23,6 @@
         <div class="fill-content">
           <v-btn id="controlBtn" icon="mdi-stop" class="mx-3 my-3" :disabled="!inSimulation" @click="stop"/>
         </div>
-
         <div class="fill-content">
           <v-btn id="controlBtn" icon class="mx-3 my-3" @click="play">
             <v-icon v-if="!playing">mdi-play</v-icon>
@@ -31,16 +30,14 @@
           </v-btn>
         </div>
         <div class="fill-content">
-          <TwoDToThreeDButton @click="changeTo2d()" :state="currentPlan"/>
-        </div>
-        <div class="fill-content">
           <HideValueButton :hide="this.hideValue" @click="hideAllValue()"/>
         </div>
         <div class="fill-content">
-          <SensorsList :room_list="room_list"/>
+          <TwoDToThreeDButton @click="changeTo2d()" :state="currentPlan"/>
         </div>
-
-
+        <div class="fill-content">
+          <SensorsList  v-on:id-emit="pick3dElementFromList" ref="childComponent"  :room_list="room_list"/>
+        </div>
       </v-container>
       <SensorsControlButtons v-on:child-method="updateParent"/>
     </div>
@@ -105,6 +102,7 @@ export default {
   data() {
     return {
       entityData: '',
+      sensorIFcToDataSet: {},
       knowledge: 0,
       roomIdToMesh: {},
       arrayOfKids: [],
@@ -167,6 +165,9 @@ export default {
     }
   },
   methods: {
+    pick3dElementFromList(id) {
+      this.viewer.IFC.selector.pickIfcItemsByID(this.model.modelID, [parseInt(id,10)], true);
+    },
     releaseMemory() {
       location.reload()
       this.viewer.dispose();
@@ -188,16 +189,19 @@ export default {
       const manager = this.viewer.IFC.loader.ifcManager;
       if(this.currentPlan === "3D") {
         await this.changeSideProperty(this.room_list, manager, THREE.DoubleSide);
-        this.navCube.changeActivation(); // False
+        //this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
         await controls.reset(false);
         await this.viewer.context.ifcCamera.toggleProjection();
         await controls.setPosition(0, 1, 0, false);
         this.currentPlan = "2D"
+
+        console.log(this.room_list)
+
       } else {
         await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
-        this.navCube.changeActivation(); // True
+       // this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
         await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
         await controls.reset(false);
@@ -271,10 +275,13 @@ export default {
       window.ondblclick = async () => {
         const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
         const type = this.viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
+          this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+          this.$refs.childComponent.updateList(this.room_list);
         } else {
-          this.viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+          this.viewer.IFC.selector.unpickIfcItems();
         }
       }
 
@@ -385,6 +392,7 @@ export default {
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
+          //this.$refs.childComponent.updateList(this.room_list);
         }
       }
 
@@ -497,7 +505,7 @@ export default {
       this.currentSenseType = type
 
       const manager = this.viewer.IFC.loader.ifcManager;
-
+      //this.room_list[207]["TEMPERATURE"][0].value = 40
 
       switch (type) {
         case 'HUMIDITY':
@@ -549,6 +557,7 @@ export default {
             "type": type_name,
             "value": undefined
           });
+          this.sensorIFcToDataSet[relIDs.children[component].expressID]=sensor.ObjectType.value.split(":")[0];
         }
         await this.getSensors(relIDs.children[component], manager, modelID);
       }
@@ -691,7 +700,6 @@ export default {
     });
 
     await this.loadFile();
-    console.log("finished load file");
     await new Promise((resolve, reject) => {
       this.createAllSubsets(this.room_list);
       resolve();
@@ -770,10 +778,14 @@ export default {
           window.ondblclick = async () => {
             const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
             const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
+
             if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
+              this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+
+              this.$refs.childComponent.updateList(this.room_list);
               this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
             } else {
-              viewer.IFC.selector.unpickIfcItems(); // Unselect everything that is not room or sensor
+              viewer.IFC.selector.unpickIfcItems();
             }
           }
 
@@ -792,7 +804,9 @@ export default {
           await this.getSensors(structure, manager, model.modelID);
           this.sendMapping();
 
+
          await new Promise(r => this.createAllSubsets(this.room_list, manager));
+
 
 
         },
@@ -868,6 +882,10 @@ export default {
 .block-display button{
   margin:15px;
   display:block;
+}
+
+body {
+  overflow: hidden;
 }
 
 .container {

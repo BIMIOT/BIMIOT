@@ -165,12 +165,16 @@ export default {
   margin-bottom: 18px;
 }
 
-.value-inputs {
-
-}
 
 .v-application__wrap {
   background-color: white;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-height: 0vh;
+  position: relative;
 }
 
 .primary {
