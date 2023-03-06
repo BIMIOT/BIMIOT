@@ -13,14 +13,10 @@ export default {
     }
   },
   methods: {
-    updateList(roomList) {
-     // this.$refs.treeViewSensor.generateNodes(roomList);
-    },
     search(obj) {
       this.$refs.treeViewSensor.searchFrom3d(obj);
     },
     emitId(id) {
-      console.log(id,"hello")
       this.$emit("id-emit",id)
     }
   },
@@ -33,8 +29,8 @@ export default {
 }
 </script>
 <template>
-  <v-row justify="center">
-    <v-btn icon id="showSensors"
+  <div>
+    <v-btn icon class="mx-3 my-3"
            color='#0A0046'
            dark
            @click.stop=" dialog = true"
@@ -43,7 +39,9 @@ export default {
         mdi-access-point
       </v-icon>
     </v-btn>
+
     <v-card>
+
       <v-layout>
         <v-navigation-drawer
             v-bind:width="425"
@@ -69,13 +67,9 @@ export default {
         </v-navigation-drawer>
       </v-layout>
     </v-card>
-  </v-row>
+  </div>
 </template>
-
 <style>
-#showSensors{
-  color: blue;
-}
 
 .input-wrapper {
   font-size: 16px;

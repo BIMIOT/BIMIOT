@@ -6,7 +6,7 @@
          @click="openColorPicker(index)">
 
     </div>
-    <v-app class="color-picker-container" :style="{
+    <v-app :class="selectedTab === 0 ? 'color-picker-container-colors' : 'color-picker-container-values'" :style="{
         position: 'absolute',
         transform: 'translateX(-45px)'
 
@@ -31,12 +31,12 @@
               v-model="value.threshold"
               :placeholder="value.threshold"
               type="number"
-              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
+              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit être inferieur ou égal au suivant']"
               validate-on="input"
           />
         </div>
       </v-tab-item>
-      <v-btn color="primary" v-on:click="save()">Save</v-btn>
+      <v-btn class="primary" v-on:click="save()">Save</v-btn>
       <v-btn v-on:click="cancel()">Cancel</v-btn>
 
     </v-app>
@@ -138,9 +138,16 @@ export default {
   align-items: center;
 }
 
-.color-picker-container {
+.color-picker-container-colors {
   position: absolute;
-  top: 100%;
+  top: 450%;
+  left: 0;
+  align-items: center;
+}
+
+.color-picker-container-values {
+  position: absolute;
+  top: 375%;
   left: 0;
   align-items: center;
 }
@@ -158,7 +165,20 @@ export default {
   margin-bottom: 18px;
 }
 
-.value-inputs {
-  padding: 8px;
+
+.v-application__wrap {
+  background-color: white;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-height: 0vh;
+  position: relative;
+}
+
+.primary {
+  color: white;
+  background-color: #023D57;
 }
 </style>

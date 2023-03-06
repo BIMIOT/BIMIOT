@@ -39,8 +39,8 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
-        manageSimulation.executeCreate(projectName, dataset);
         var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
+        manageSimulation.executeCreate(projectName, dataset);
         return ResponseEntity.ok(toProjectApi(projectResponse));
     }
 
