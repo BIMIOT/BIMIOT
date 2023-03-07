@@ -3,10 +3,7 @@ package fr.bimiot.application.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.bimiot.application.dtos.UpdateSimulationSettingsRequest;
 import fr.bimiot.domain.use_cases.LoadIfcFile;
-import fr.bimiot.domain.use_cases.simulation.PauseSimulation;
-import fr.bimiot.domain.use_cases.simulation.StartSimulation;
-import fr.bimiot.domain.use_cases.simulation.StopSimulation;
-import fr.bimiot.domain.use_cases.simulation.UpdateSimulationSettings;
+import fr.bimiot.domain.use_cases.simulation.*;
 import fr.bimiot.fixtures.ProjectFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +37,9 @@ class SimulationControllerTest {
     PauseSimulation pauseSimulation;
     @MockBean
     UpdateSimulationSettings updateSimulationSettings;
+
+    @MockBean
+    GetSimulationSettings getSimulationSettings;
 
     @Test
     void startSimulation_shouldCallExecuteOfStartSimulation() throws Exception {

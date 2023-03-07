@@ -134,7 +134,7 @@ export class NavCube {
             this.cast(event);
             this.mouseOn = true;
         });
-        this.renderer.domElement.addEventListener("mouseout", (event) => {
+        this.renderer.domElement.addEventListener("mouseout", () => {
             this.mouseOn = false;
         });
     }
@@ -177,7 +177,7 @@ export class NavCube {
         const filterElementClick = this.scene.children.filter((child) => {
             return child.userData.Element;
         });
-        this.renderer.domElement.onclick = (event) => {
+        this.renderer.domElement.onclick = () => {
             if (this.mouse.x !== 0 || this.mouse.y !== 0) {
                 this.rayCaster.setFromCamera(this.mouse, this.camera);
                 const intersects = this.rayCaster.intersectObjects(filterElementClick);
@@ -200,7 +200,6 @@ export class NavCube {
             camera.position.z - controls._target.z
         );
         vector = vector.normalize();
-        const Vector2 = new Vector3(vector.x * r, vector.y * r, vector.z * r);
         var newV = new Vector3(0, 0, 0).add(vector.clone().multiplyScalar(r));
         this.camera.position.x = newV.x;
         this.camera.position.y = newV.y;

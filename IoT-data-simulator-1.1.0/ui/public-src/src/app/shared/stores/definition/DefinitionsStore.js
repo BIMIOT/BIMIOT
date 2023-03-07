@@ -28,11 +28,9 @@ export default class DefinitionsStore {
     }
 
     getAll() {
-        console.log("...loading definitions");
         return this.appStore.transportLayer
             .get("/api/definitions")
             .then(({ data = [] }) => {
-                console.log("definitions loaded: ", data);
                 this.items = data.map(params => {
                     return new DefinitionEntry(params);
                 });
@@ -83,48 +81,37 @@ export default class DefinitionsStore {
     }
 
     delete(dataDefinitionId) {
-        console.log("...deleting definition ", dataDefinitionId);
         return this.appStore.transportLayer
             .delete(`/api/definitions/${dataDefinitionId}`)
             .then(({ data }) => {
-                console.log(`${dataDefinitionId} successfully deleted`);
                 this.deletedItemId = dataDefinitionId;
                 return data;
             });
     }
 
     getById(dataDefinitionId) {
-        console.log("...get details for definition ", dataDefinitionId);
         return this.appStore.transportLayer
             .get(`/api/definitions/${dataDefinitionId}`)
             .then(({ data }) => {
-                console.log(`${dataDefinitionId} details received:`, data);
                 return new DefinitionEntry(data);
             });
     }
 
     getSchemaProperties(dataDefinitionId) {
-        console.log(
-            "...get schema properties for definition ",
-            dataDefinitionId
-        );
+
         return this.appStore.transportLayer
             .get(`/api/definitions/${dataDefinitionId}/schema/properties`)
             .then(({ data }) => {
-                console.log(
-                    `${dataDefinitionId} schema properties received:`,
-                    data
-                );
                 return data;
             });
     }
 
     getSchemaRules(dataDefinitionId) {
-        console.log("...get schema rules for definition ", dataDefinitionId);
+
         return this.appStore.transportLayer
             .get(`/api/definitions/${dataDefinitionId}/schema/rules`)
             .then(({ data }) => {
-                console.log(`${dataDefinitionId} schema rules received`, data);
+
                 return new JsonSchema(data);
             });
     }

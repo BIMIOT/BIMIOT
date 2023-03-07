@@ -6,7 +6,7 @@
     <v-card-text class="py-0">
       <v-row align="center" no-gutters>
         <v-col
-            class="text-h4"
+            class="text-lg-body-1"
             cols="6"
         >
           {{project.name}}
