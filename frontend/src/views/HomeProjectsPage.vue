@@ -45,8 +45,6 @@
 
 <script>
 import HomeProjectCard from "@/components/HomeProjectCard";
-import HomePageTitle from "@/components/HomePageTitle";
-import UrlChanger from "@/components/UrlChanger";
 
 export default {
   components: {HomeProjectCard},

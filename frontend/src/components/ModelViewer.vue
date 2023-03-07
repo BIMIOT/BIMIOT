@@ -141,7 +141,7 @@ export default {
   },
   watch: {
     arrayOfKids: {
-      handler(val, oldVal) {
+      handler(val) {
         const room_ids_iter = Object.keys(this.room_list);
         let value = Math.trunc((val.length*100)/room_ids_iter.length);
         if(value > 100) {
@@ -612,7 +612,7 @@ export default {
       };
     }
 
-    client.onConnect = (frame) => {
+    client.onConnect = () => {
       // Do something, all subscribes must be done is this callback
       // This is needed because this will be executed after a (re)connect
       client.subscribe('/data/sensors', (greeting) => {
@@ -624,7 +624,7 @@ export default {
 
     };
 
-    client.onStompError = function (frame) {
+    client.onStompError = function () {
       // Will be invoked in case of error encountered at Broker
       // Bad login/passcode typically will cause an error
       // Complaint brokers will set `message` header with a brief message. Body may contain details.
@@ -659,7 +659,7 @@ export default {
     });
 
     await this.loadFile();
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve) => {
       this.createAllSubsets(this.room_list);
       resolve();
     });
@@ -670,7 +670,7 @@ export default {
     const navCube = new NavCube(viewer);
     navCube.onPick(this.model);
     this.navCube = navCube;
-  },
+  }
 }
 </script>
 
