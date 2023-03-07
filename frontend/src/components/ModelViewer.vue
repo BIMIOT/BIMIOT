@@ -12,7 +12,7 @@
           <span id="projectName" style="color: white; font-size: 150%">BimIot</span>
         </div>
       </v-btn>
-      <input type="file" id="file-input"/>
+
       <ColorPickerSensor id="colorPickers" :selectedType="this.currentSenseType"/>
       <transition name="fade" mode="out-in">
         <div id="progress-bar" >
@@ -87,6 +87,7 @@ import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import { NavCube } from "./NavCube/NavCube";
 import HideValueButton from "@/components/HideValueButton.vue";
+import UrlChanger from "@/components/UrlChanger";
 
 
 export default {
@@ -106,6 +107,8 @@ export default {
       knowledge: 0,
       roomIdToMesh: {},
       arrayOfKids: [],
+      host:null,
+      port:null,
       client: undefined,
       viewer: undefined,
       playing: false,
@@ -709,108 +712,6 @@ export default {
     const navCube = new NavCube(viewer);
     navCube.onPick(this.model);
     this.navCube = navCube;
-    
-    const input = document.getElementById("file-input");
-
-    input.addEventListener("change",
-
-        async (changed) => {
-          const file = changed.target.files[0];
-          const ifcURL = URL.createObjectURL(file);
-          const model = await viewer.IFC.loadIfcUrl(ifcURL, true);
-          this.model = model;
-
-
-
-          model.removeFromParent();
-
-         // document.getElementById("model").style.filter = "blur(2px)";
-         // document.getElementById("progress-bar").style.visibility = "visible";
-
-
-          const structure = await this.showStructure(viewer, model.modelID);
-          this.structure = structure;
-
-
-          const types = await viewer.IFC.getAllItemsOfType(model.modelID, IFCSENSORTYPE, true);
-          for (let type in types) {
-            this.sensor_types[types[type].Name.value] = types[type].PredefinedType.value;
-          }
-
-          const manager = this.viewer.IFC.loader.ifcManager;
-
-          /**
-           * HERE IS THE code YOU WANT IT START FROM HERE
-           * */
-
-          const floor = {
-            modelID: this.model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(this.model.modelID, IFCSLAB, false),
-            removePrevious: true,
-            material: this.floorMesh,
-            customID: "floor"
-          };
-
-          const sensor = {
-            modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCDISTRIBUTIONCONTROLELEMENT, false),
-            material: this.sensorColor,
-            removePrevious: true,
-            customID: "stuff2"
-          }
-
-          const wall = {
-            modelID: model.modelID,
-            ids: await viewer.IFC.loader.ifcManager.getAllItemsOfType(model.modelID, IFCWALLSTANDARDCASE, false),
-            removePrevious: true,
-            customID: "stuff3"
-          }
-
-
-          window.onmousemove = () => {
-            if (this.viewer === null) {
-              return;
-            }
-            this.viewer.IFC.selector.prePickIfcItem()
-          };
-          window.ondblclick = async () => {
-            const {modelID, id} = await viewer.IFC.selector.pickIfcItem(true);
-            const type = viewer.IFC.loader.ifcManager.getIfcType(modelID, id);
-
-            if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
-              this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
-
-              this.$refs.childComponent.updateList(this.room_list);
-              this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
-            } else {
-              viewer.IFC.selector.unpickIfcItems();
-            }
-          }
-
-          let floors = await viewer.IFC.loader.ifcManager.createSubset(floor);
-          let sensors = await viewer.IFC.loader.ifcManager.createSubset(sensor);
-          let walls = await viewer.IFC.loader.ifcManager.createSubset(wall);
-          //  let sp = await viewer.IFC.loader.ifcManager.createSubset(spaces);
-
-
-          const scene = this.viewer.context.getScene();
-          scene.add(floors);
-          scene.add(sensors);
-          scene.add(walls);
-
-
-          await this.getSensors(structure, manager, model.modelID);
-          this.sendMapping();
-
-
-         await new Promise(r => this.createAllSubsets(this.room_list, manager));
-
-
-
-        },
-
-        false
-    );
   },
 }
 </script>

@@ -17,11 +17,9 @@ export default class DatasetsStore {
     }
 
     getAll() {
-        console.log("...loading datasets");
         return this.appStore.transportLayer
             .get("/api/datasets")
             .then(({ data = [] }) => {
-                console.log("datasets loaded: ", data);
                 this.datasets = data.map(params => {
                     return new DatasetEntry(params);
                 });
@@ -45,7 +43,6 @@ export default class DatasetsStore {
                 }
             })
             .then(({ data }) => {
-                console.log("Dataset created. Response:", data);
                 return new DatasetEntry(data);
             });
 
@@ -57,7 +54,6 @@ export default class DatasetsStore {
             return this.appStore.transportLayer
                 .post("/api/datasets", options)
                 .then(({ data }) => {
-                    console.log("Dataset created. Response:", data);
                     return new DatasetEntry(data);
                 });
         }
@@ -66,17 +62,14 @@ export default class DatasetsStore {
                 ...options
             })
             .then(({ data }) => {
-                console.log("Dataset updated. Response:", data);
                 return new DatasetEntry(data);
             });
     }
 
     getSchemaById(datasetId) {
-        console.log("...retrieving schema for dataset:", datasetId);
         return this.appStore.transportLayer
             .get(`/api/datasets/${datasetId}/schema`)
             .then(({ data }) => {
-                console.log("Schema received: ", data);
                 return data;
                 //return new JsonSchema(data);
             });
@@ -91,9 +84,7 @@ export default class DatasetsStore {
     }
 
     delete(datasetId) {
-        console.log('...deleting dataset ', datasetId);
         return this.appStore.transportLayer.delete(`/api/datasets/${datasetId}`).then(({ data }) => {
-            console.log(`dataset ${datasetId} successfully deleted`);
             this.deletedItemId = datasetId;
             return data;
         });

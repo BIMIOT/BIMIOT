@@ -39,7 +39,6 @@ class StompQueryManager {
                 this.subscribe(subscriptionPath, stompConnection);
 
                 // Sending query
-                console.log(`>>> Sending query to the API with the following params: ${JSON.stringify(params)}`);
                 stompConnection.send(destinationPath, {requestId: this.requestId}, JSON.stringify(payload));
             })
             .catch(this.handleConnectionError.bind(this, deferred));
@@ -56,7 +55,6 @@ class StompQueryManager {
 
         if (this.isSubscriptionNotExists(subscriptionPath)) {
 
-            console.log(`>>> Creating new subscription for the path: ${subscriptionPath}`);
             this.subscriptions[subscriptionPath] = stompConnection.subscribe(subscriptionPath, this.handleSubscriptionMessage.bind(this, subscriptionPath));
         }
     };
@@ -81,7 +79,6 @@ class StompQueryManager {
 
         if (response.result === WEBSOCKET_RESPONSE_SUCCESS) {
 
-            console.log(`>>> Resolving promise for destination path: ${deferred.destinationPath} with payload: ${JSON.stringify(response)}`);
             deferred.resolve(response);
 
         } else {

@@ -72,7 +72,6 @@ export default {
     childMethod: function(type) {
       this.$emit('child-method', type)
       this.selected = type;
-      console.log(this.selected);
     },
     pickColor: function(value) {
       if (this.selected === value) {
