@@ -38,7 +38,10 @@ Puis il faut exécuter la commande __`docker-compose up`__.
   
 ![simulation-ui](https://user-images.githubusercontent.com/45150352/223389844-d386eb0c-57c6-4c4f-b809-0ed27b6f012a.png)
 
-  * [Simulateur fourni]() 
+  * [Simulateur fourni](http://localhost:8090)
+  
+![simulator-ui](https://user-images.githubusercontent.com/45150352/223399615-273ba7b2-93b8-4193-8927-5e9665394c6c.png)
+ 
 
   * [Base de données MongoDB](http://localhost:27020)
     * No auth
