@@ -23,7 +23,7 @@
       <v-btn
           variant="elevated"
           class="text-white rounded-xl"
-          style="background-color: #023D57;"
+          style="background-color: #0A0046;"
           @click="sendProjectName"
           icon="mdi-location-enter"
       />
@@ -33,7 +33,7 @@
           color="error"
           @click="this.dialog = true"
       ></v-btn>
-      <v-btn  size="large" @click="expand = !expand">
+      <v-btn  size="large" @click="expand = !expand" color="grey">
       Infos
       </v-btn>
     </v-card-actions>
