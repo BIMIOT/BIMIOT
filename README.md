@@ -11,6 +11,9 @@ Les données IOT ne sont pas fournies par de réels capteurs, il faut donc utili
   
   * Un cas d'utilisation permet de changer l'adresse et le port du simulateur utilisé via l'interface graphique ou via de la swagger dont le lien figure plus loin.
 
+  * Un simulateur est présent dans le repository du projet qui _IoT-data-simulator-1.1.0_. Pour lancé le simulateur, il suffit de se placer dans le répertoire du simulateur via la command __`cd`__.
+Puis il faut exécuter la commande __`docker-compose up`__.
+
 ## Lancement de BIMIOT
   * Pour build l'application, par exemple en cas de changement dans le code __`docker-compose build`__ avant __`docker-compose up`__
   
@@ -35,7 +38,9 @@ Les données IOT ne sont pas fournies par de réels capteurs, il faut donc utili
   
 ![simulation-ui](https://user-images.githubusercontent.com/45150352/223389844-d386eb0c-57c6-4c4f-b809-0ed27b6f012a.png)
 
-  * [Base de données MongoDB] (http://localhost:27020)
+  * [Simulateur fourni]() 
+
+  * [Base de données MongoDB](http://localhost:27020)
     * No auth
     
 Il n'y pas d'interface graphique dans notre application permettant de visualiser le contenu de la base de données. Mais il possible d'utiliser une application tiers qui vous permet de visualiser les données stockées via l'URL qui suit : **mongodb://localhost:27020**
