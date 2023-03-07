@@ -31,8 +31,8 @@
         <v-btn
             fab
             dark
-            prepend-icon="mdi-plus"
-            color="#023D57"
+            prepend-icon="mdi-plus-thick"
+            color="#0A0046"
             class="text-white rounded-xl"
             @click="toCreateProjectPage">
           Ajouter un projet
