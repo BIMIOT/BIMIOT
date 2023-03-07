@@ -4,7 +4,6 @@
       <v-col cols="12" class="text-center">
         <img :src="logoPage" width="90" height="90">
         <h1 style="font-family: Helvetica; font-size: 30px; color: #0A0046">BIMIOT</h1>
-
       </v-col>
     </v-row>
     <div>
@@ -38,6 +37,7 @@
             @click="toCreateProjectPage">
           Ajouter un projet
         </v-btn>
+
       </v-col>
     </v-row>
   </v-container>
@@ -45,7 +45,6 @@
 
 <script>
 import HomeProjectCard from "@/components/HomeProjectCard";
-import HomePageTitle from "@/components/HomePageTitle";
 
 export default {
   components: {HomeProjectCard},
@@ -76,7 +75,6 @@ export default {
     page() {
       this.startVisible = (this.page - 1) * this.pageSize;
       this.endVisible = this.startVisible + this.pageSize;
-      console.log(this.startVisible, this.endVisible)
     }
   },
   mounted() {

@@ -156,12 +156,12 @@ export default {
   },
     watch: {
       selectedOption: {
-        handler(val, oldVal) {
+        handler(val) {
           this.sensor = val !== "rooms";
         }
       },
       room_list: {
-        handler(newValue) {
+        handler() {
           this.localRoomList = this.generateRoomList(this.room_list);
           this.localSensorList = this.generateSensorList();
         },

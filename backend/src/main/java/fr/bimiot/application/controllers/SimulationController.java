@@ -1,5 +1,6 @@
 package fr.bimiot.application.controllers;
 
+import fr.bimiot.application.dtos.HostPort;
 import fr.bimiot.application.dtos.UpdateSimulationSettingsRequest;
 import fr.bimiot.application.exception.type.BaseException;
 import fr.bimiot.domain.exception.DomainException;
@@ -21,13 +22,16 @@ public class SimulationController {
     private final PauseSimulation pauseSimulation;
     private final UpdateSimulationSettings updateSimulationSettings;
 
+    private final GetSimulationSettings getSimulationSettings;
+
     @Autowired
-    public SimulationController(LoadIfcFile loadIfcFile, StartSimulation startSimulation, StopSimulation stopSimulation, PauseSimulation pauseSimulation, UpdateSimulationSettings updateSimulationSettings) {
+    public SimulationController(LoadIfcFile loadIfcFile, StartSimulation startSimulation, StopSimulation stopSimulation, PauseSimulation pauseSimulation, UpdateSimulationSettings updateSimulationSettings, GetSimulationSettings getSimulationSettings) {
         this.loadIfcFile = loadIfcFile;
         this.startSimulation = startSimulation;
         this.stopSimulation = stopSimulation;
         this.pauseSimulation = pauseSimulation;
         this.updateSimulationSettings = updateSimulationSettings;
+        this.getSimulationSettings = getSimulationSettings;
     }
 
     @PutMapping("/start/{projectName}")
@@ -48,6 +52,11 @@ public class SimulationController {
     @PutMapping
     public void updateSettings(@RequestBody UpdateSimulationSettingsRequest updateSimulationSettingsRequest) throws DomainException {
         updateSimulationSettings.execute(updateSimulationSettingsRequest.getHost(), updateSimulationSettingsRequest.getPort());
+    }
+
+    @GetMapping("/settings")
+    public ResponseEntity<HostPort> getSettings() {
+        return ResponseEntity.status(HttpStatus.OK).body(new HostPort(getSimulationSettings.execute()));
     }
 
 

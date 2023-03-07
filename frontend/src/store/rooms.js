@@ -1,5 +1,4 @@
-import { defineStore } from 'pinia'
-import {ref} from "vue";
+import { defineStore } from 'pinia';
 
 export const roomsStateStore = defineStore('rooms', {
     state: () => ({
@@ -18,5 +17,4 @@ export const roomsStateStore = defineStore('rooms', {
                 this.hashmap = {};
             }
         }
-
 })

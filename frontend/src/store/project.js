@@ -47,7 +47,6 @@ export const projectStore = defineStore('project', {
             }
             const response = await axios.put(`/api/bimiot/projects/colors/${this.currentProject.name}`, JSON.stringify(colors), config);
             this.colors = response.data.sensorsColorsApi;
-            console.log(this.colors);
         },
         async fetchSensorColors() {
             let config = {

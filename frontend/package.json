@@ -33,7 +33,8 @@
     "vue3-treeview": "^0.4.1",
     "vuetify": "^3.0.0-beta.0",
     "web-ifc-viewer": "1.0.213",
-    "webfontloader": "^1.0.0"
+    "webfontloader": "^1.0.0",
+    "openbim-components": "^0.0.39"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",

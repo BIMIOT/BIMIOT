@@ -34,10 +34,10 @@ export default class DevicesStore {
     }
 
     getAll() {
-        console.log('...loading devices');
+
         return this.appStore.transportLayer.get('/api/devices')
             .then(({ data = [] }) => {
-                console.log('devices loaded: ', data);
+
                 this.items = data.map((params) => {
                     return new DeviceEntry(params);
                 });
@@ -76,9 +76,9 @@ export default class DevicesStore {
     }
 
     delete(deviceId) {
-        console.log('...deleting device ', deviceId);
+
         return this.appStore.transportLayer.delete(`/api/devices/${deviceId}`).then(({ data }) => {
-            console.log(`${deviceId} successfully deleted`);
+
             return data;
         });
     }
