@@ -4,7 +4,7 @@
       <v-col cols="8">
         <v-text-field
             variant="solo"
-            label="Search templates"
+            label="Nom ou identifiant"
             single-line
             hide-details
             v-model="searchTerm"
@@ -68,7 +68,7 @@
               </template>
               <v-list-item
                   prepend-icon="mdi-note-text-outline"
-                  :title="'Dataset Id : ' + y.DataId"
+                  :title="'Dataset id : ' + y.DataId"
               ></v-list-item>
               <v-list-item
                   prepend-icon="mdi-domain"
