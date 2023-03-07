@@ -56,8 +56,6 @@
 import {IfcViewerAPI, NavigationModes} from 'web-ifc-viewer';
 
 import * as THREE from 'three';
-
-
 import {MeshLambertMaterial} from 'three';
 import axios from 'axios';
 import sockjs from "sockjs-client/dist/sockjs"
@@ -83,9 +81,9 @@ import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 import {projectStore} from "@/store/project";
 import {roomsStateStore} from "@/store/rooms";
 import {unitsTypeStore} from "@/store/unitsType";
-import {CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+import {CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
-import { NavCube } from "./NavCube/NavCube";
+import {NavCube} from "./NavCube/NavCube";
 import HideValueButton from "@/components/HideValueButton.vue";
 import UrlChanger from "@/components/UrlChanger";
 
@@ -128,12 +126,6 @@ export default {
         color: 0xffffff,
         depthTest: true
       }),
-      preSelectMat: new MeshLambertMaterial({
-        transparent: true,
-        opacity: 0.3,
-        color: 0xff0000,
-        depthTest: false,
-      }),
       sensorColor: new MeshLambertMaterial({
         transparent: false,
         opacity: 1,
@@ -157,7 +149,7 @@ export default {
         const room_ids_iter = Object.keys(this.room_list);
         let value = Math.trunc((val.length*100)/room_ids_iter.length);
         if(value > 100) {
-          this.knowledge = 100
+          this.knowledge = 100;
           document.getElementById("progress-bar").style.visibility = "hidden";
           document.getElementById("model").style.filter = "blur(0px)";
         } else  {
@@ -178,9 +170,9 @@ export default {
     },
     play() {
       if(!this.playing) {
-        this.start()
+        this.start();
       } else {
-        this.pause()
+        this.pause();
       }
       this.playing = !this.playing;
     },
@@ -194,36 +186,26 @@ export default {
         await this.changeSideProperty(this.room_list, manager, THREE.DoubleSide);
         this.navCube.changeActivation(); // False
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = false;
-        await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan)
+        await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Plan);
         await controls.reset(false);
         await this.viewer.context.ifcCamera.toggleProjection();
         await controls.setPosition(0, 1, 0, false);
-        this.currentPlan = "2D"
-
-        console.log(this.room_list)
-
+        this.currentPlan = "2D";
       } else {
         await this.changeSideProperty(this.room_list, manager, THREE.SimpleSide);
         this.navCube.changeActivation(); // True
         this.viewer.IFC.loader.ifcManager.getSubset(this.model.modelID, this.floorMesh, "floor").material.visible = true;
-        await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit)
+        await this.viewer.context.ifcCamera.setNavigationMode(NavigationModes.Orbit);
         await controls.reset(false);
-        await controls.setPosition(0, 1, 0, false)
-        await this.viewer.context.ifcCamera.toggleProjection()
-        this.currentPlan = "3D"
+        await controls.setPosition(0, 1, 0, false);
+        await this.viewer.context.ifcCamera.toggleProjection();
+        this.currentPlan = "3D";
       }
     },
     moveComponentToSubDiv() {
       const subContainer = document.getElementById('sub-container');
       const childComponent =  document.getElementById('model');
       subContainer.appendChild(childComponent);
-    },
-    async getMappingAndLoad(structure, manager) {
-      await this.getSensors(structure, manager, this.model.modelID);
-      await new Promise((resolve, reject) => {
-        this.createAllSubsets(this.room_list);
-        resolve();
-      });
     },
     async loadFile() {
       const response = await axios.get(`/api/bimiot/simulations/files/${this.store.currentProject.name}`, {
@@ -267,13 +249,13 @@ export default {
 
       let floors = await this.viewer.IFC.loader.ifcManager.createSubset(floor);
       let sensors = await this.viewer.IFC.loader.ifcManager.createSubset(sensor);
-      let walls = await this.viewer.IFC.loader.ifcManager.createSubset(wall)
+      let walls = await this.viewer.IFC.loader.ifcManager.createSubset(wall);
 
       window.onmousemove = () => {
         if(this.viewer === null) {
           return;
         }
-        this.viewer.IFC.selector.prePickIfcItem()
+        this.viewer.IFC.selector.prePickIfcItem();
       };
       window.ondblclick = async () => {
         const {modelID, id} = await this.viewer.IFC.selector.pickIfcItem(true);
@@ -338,29 +320,29 @@ export default {
       return [centerX, centerY, centerZ];
     },
     createLabel(position, initContent, className, roomId){
-      const labelDiv = document.createElement( 'div' );
+      const labelDiv = document.createElement( 'div');
       labelDiv.id = roomId;
       labelDiv.className = className;
       labelDiv.textContent = initContent;
-      labelDiv.style.marginTop = '-1em'
+      labelDiv.style.marginTop = '-1em';
       const label = new CSS2DObject(labelDiv);
-      label.position.set(position[0], position[1], position[2])
-      label.layers.set(0)
-      return label
+      label.position.set(position[0], position[1], position[2]);
+      label.layers.set(0);
+      return label;
     },
-    modifyTextContent(roomId,newContent){
-      const labelDiv = document.getElementById(roomId)
-      labelDiv.textContent = newContent
+    modifyTextContent(roomId,newContent) {
+      const labelDiv = document.getElementById(roomId);
+      labelDiv.textContent = newContent;
     },
-    hideAllValue(){
+    hideAllValue() {
       this.hideValue = ! this.hideValue;
-      if(this.hideValue){
-        if (this.space_list !== {}){
+      if(this.hideValue) {
+        if (this.space_list !== {}) {
           for (const roomId in this.space_list) {
             document.getElementById(roomId).style.visibility = "hidden";
           }
         }
-      }else{
+      } else{
         if (this.space_list !== {}){
           for (const roomId in this.space_list) {
             document.getElementById(roomId).style.visibility = "visible";
@@ -369,9 +351,7 @@ export default {
       }
     },
     subscribe: function (greeting) {
-
       const manager = this.viewer.IFC.loader.ifcManager;
-
       const response = greeting;
 
       if(response["sensorType"] === "END") {
@@ -383,11 +363,10 @@ export default {
       if (this.model === undefined || !(response["roomIfcID"] in this.room_list)) {
          return;
       }
-      console.log("im called")
 
       this.roomStore.storeNewRoomColorByType(response["roomIfcID"],response["sensorType"],response["color"]);
 
-      if(this.space_list[response["roomIfcID"]] === undefined){
+      if(this.space_list[response["roomIfcID"]] === undefined) {
         this.space_list[response["roomIfcID"]] = {};
       }
       this.space_list[response["roomIfcID"]][response["sensorType"]] = response["averageValue"];
@@ -395,31 +374,18 @@ export default {
       for (let sensor in this.room_list[response["roomIfcID"]][response["sensorType"]]) {
         if (this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].IFCid === response["sensorIfcID"]) {
           this.room_list[response["roomIfcID"]][response["sensorType"]][sensor].value = response["value"];
-          //this.$refs.childComponent.updateList(this.room_list);
         }
       }
 
       if (response["sensorType"] === this.currentSenseType) {
         const roomMesh =  this.roomIdToMesh[response["roomIfcID"]];
         let room = manager.getSubset(this.model.modelID,roomMesh,response["roomIfcID"]);
-        console.log(room, "i got here but something worng")
         room.material.color.set(response["color"])
         this.modifyTextContent(response["roomIfcID"], response["averageValue"]+this.unitsStore.getUnitFromType(response["sensorType"]));
         if (this.hideValue) {
           document.getElementById(response["roomIfcID"]).style.visibility = "hidden";
         }
       }
-    },
-    convertHexToInt: function (colors) {
-      return colors.map(color => {
-        let color2 = new THREE.Color(color.value);
-        return new MeshLambertMaterial({
-          transparent: true,
-          opacity: 0.3,
-          color: color2.getHex(),
-          depthTest: false,
-        });
-      });
     },
     removeAll: function (room_ids, manager) {
       const room_ids_iter = Object.keys(room_ids);
@@ -497,7 +463,7 @@ export default {
       let  newContent;
       for (const id of room_ids_iter){
         if(this.space_list[id] === undefined || this.space_list[id][sensorType] === undefined){
-          newContent = ""
+          newContent = "";
         }else {
           newContent = this.space_list[id][sensorType] + this.unitsStore.getUnitFromType(sensorType);
         }
@@ -505,10 +471,8 @@ export default {
       }
     },
     updateParent: async function (type) {
-      this.currentSenseType = type
-
+      this.currentSenseType = type;
       const manager = this.viewer.IFC.loader.ifcManager;
-      //this.room_list[207]["TEMPERATURE"][0].value = 40
 
       switch (type) {
         case 'HUMIDITY':
@@ -534,8 +498,7 @@ export default {
     },
     showStructure: async function (viewer, modelID) {
       const manager = viewer.IFC.loader.ifcManager;
-      const relIDs = await manager.getSpatialStructure(modelID);
-      return relIDs;
+      return await manager.getSpatialStructure(modelID);
     },
     getSensors: async function (relIDs, manager, modelID) {
       if (relIDs.type === "IFCSPACE") {
@@ -581,10 +544,9 @@ export default {
       for (const roomId in this.space_list) {
         this.modifyTextContent(roomId,"");
         for (const type in this.space_list[roomId]) {
-          this.space_list[roomId][type] = undefined
+          this.space_list[roomId][type] = undefined;
         }
       }
-      console.log("space list after resetting",this.space_list)
     },
     start: function () {
       if (this.inSimulation === false) {
