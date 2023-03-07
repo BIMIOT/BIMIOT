@@ -2,22 +2,22 @@ package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.application.exception.type.BaseException;
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoadIfcFile {
-    private final ProjectDatabaseProvider projectDatabaseProvider;
+    private final ProjectProvider projectProvider;
 
-    public LoadIfcFile(ProjectDatabaseProvider projectDatabaseProvider) {
-        this.projectDatabaseProvider = projectDatabaseProvider;
+    public LoadIfcFile(ProjectProvider projectProvider) {
+        this.projectProvider = projectProvider;
     }
 
     public byte[] execute(String projectName) throws BaseException {
         if (isInvalidProjectName(projectName)) {
             throw new DomainException("Invalid project name !");
         }
-        return projectDatabaseProvider.loadIFCFile(projectName);
+        return projectProvider.loadIFCFile(projectName);
     }
 
     private boolean isInvalidProjectName(String projectName) {

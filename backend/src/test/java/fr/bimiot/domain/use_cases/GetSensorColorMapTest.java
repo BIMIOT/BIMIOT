@@ -1,7 +1,7 @@
 package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.entities.SensorType;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
 import fr.bimiot.fixtures.SensorColorMapFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,19 +21,19 @@ class GetSensorColorMapTest {
     GetSensorColorMap getSensorColorMap;
 
     @Mock
-    ProjectDatabaseProvider projectDatabaseProvider;
+    ProjectProvider projectProvider;
 
     @Test
     void execute_shouldReturnCompleteSensorColorMap() {
         //  Given
         String projectName = "Project X";
         BDDMockito.doReturn(SensorColorMapFixture.sensorTypeListMapDomain())
-                .when(projectDatabaseProvider)
+                .when(projectProvider)
                 .findSensorColorMapByProjectName(projectName);
         //  When
         var result = getSensorColorMap.execute(projectName);
         //  Then
         assertNotNull(result);
-        assertTrue(result.keySet().containsAll(Arrays.stream(SensorType.values()).collect(Collectors.toSet())));
+        assertTrue(result.keySet().containsAll(Arrays.stream(SensorType.values()).filter(type -> !SensorType.END.equals(type)).toList()));
     }
 }

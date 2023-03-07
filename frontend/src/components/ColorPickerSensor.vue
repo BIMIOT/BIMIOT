@@ -31,10 +31,7 @@
 <script>
 
 import ColorPickers from "@/components/ColorPickers";
-import axios from 'axios';
-import {sensorsStore} from "@/store/sensors";
 import {projectStore} from "@/store/project";
-
 
 export default {
   props: ['selectedType'],
@@ -86,7 +83,7 @@ export default {
       // Save the current mouse position for the next mousemove event
       this.lastMousePos = { x: event.clientX, y: event.clientY };
     },
-    handleMouseUp(event) {
+    handleMouseUp() {
       // Unset the isDragging flag and remove the event listeners
       this.isDragging = false;
       document.removeEventListener('mousemove', this.handleMouseMove);

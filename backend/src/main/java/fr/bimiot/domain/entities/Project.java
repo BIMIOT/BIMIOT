@@ -1,7 +1,5 @@
 package fr.bimiot.domain.entities;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -9,19 +7,10 @@ import java.util.Objects;
 public class Project{
     private String id;
     private String name;
-    private MultipartFile ifc;
-    private MultipartFile dataset;
+    private String ifcFilename;
+    private String datasetFilename;
+    private byte[] ifcFile;
     private Map<SensorType, List<SensorColor>> sensorColors;
-
-    public Project() {
-    }
-
-    public Project(String id, String name, MultipartFile ifc, MultipartFile dataset) {
-        this.id = id;
-        this.name = name;
-        this.ifc = ifc;
-        this.dataset = dataset;
-    }
 
     public String getId() {
         return id;
@@ -39,20 +28,28 @@ public class Project{
         this.name = name;
     }
 
-    public MultipartFile getIfc() {
-        return ifc;
+    public String getIfcFilename() {
+        return ifcFilename;
     }
 
-    public void setIfc(MultipartFile ifc) {
-        this.ifc = ifc;
+    public void setIfcFilename(String ifcFilename) {
+        this.ifcFilename = ifcFilename;
     }
 
-    public MultipartFile getDataset() {
-        return dataset;
+    public String getDatasetFilename() {
+        return datasetFilename;
     }
 
-    public void setDataset(MultipartFile dataset) {
-        this.dataset = dataset;
+    public void setDatasetFilename(String datasetFilename) {
+        this.datasetFilename = datasetFilename;
+    }
+
+    public byte[] getIfcFile() {
+        return ifcFile;
+    }
+
+    public void setIfcFile(byte[] ifcFile) {
+        this.ifcFile = ifcFile;
     }
 
     public Map<SensorType, List<SensorColor>> getSensorColors() {

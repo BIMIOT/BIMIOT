@@ -1,11 +1,11 @@
 <template>
-  <v-btn class="Two2d3D" icon id="not"
-         color='#0A0046'
-         dark
-         style="color: white"
-  >
-   {{state}}
-  </v-btn>
+    <v-btn class="mx-3 my-3" icon
+           color='#0A0046'
+           dark
+           style="color: white"
+    >
+     {{state}}
+    </v-btn>
 </template>
 <script>
 
@@ -16,10 +16,3 @@ export default {
   },
 }
 </script>
-<style>
-.Two2d3D{
-  bottom: 90px;
-  left: 35px;
-  color: blue;
-}
-</style>

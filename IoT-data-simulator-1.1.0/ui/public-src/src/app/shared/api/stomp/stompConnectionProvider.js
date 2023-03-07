@@ -53,19 +53,18 @@ class StompConnectionProvider {
                 stompConnection.debug = null;
             }
 
-            console.log(`>>> Opening connection to the ${this.config.websocketUrl} API via Websocket & STOMP protocol`);
+
             stompConnection.connect(
 
                 {},
 
                 (frame) => {
-                    console.log(`>>> Successfully connected to the API via websockets & STOMP: ${frame}`);
+
                     resolve(stompConnection);
                 },
 
                 (error) => {
 
-                    console.error(`>>> Websockets & STOMP connection error: ${error}`);
                     this.connection = null;
                     stompConnection = null;
 
@@ -87,7 +86,7 @@ class StompConnectionProvider {
 
         setTimeout(() => {
 
-            console.log(">>> Trying to re-connect to websocket STOMP API.");
+
             this.getConnection()
                 .then((stompConnection) => {
                     this.reconnectionListeners.forEach((listener) => listener(stompConnection));

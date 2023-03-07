@@ -1,22 +1,23 @@
 package fr.bimiot.fixtures;
 
 import fr.bimiot.domain.entities.Project;
-import org.springframework.mock.web.MockMultipartFile;
+import fr.bimiot.utils.Builder;
 
 public class ProjectFixture {
-    public static Project aProjectWithoutSensorsAndWithoutId(){
-        var project = new Project();
-        project.setName("Project X");
-        project.setIfc(new MockMultipartFile("file.ifc", "Hello world".getBytes()));
-        project.setDataset(new MockMultipartFile("file.json", "Hello world".getBytes()));
-        return project;
+    public static Project aProjectWithoutSensorsAndWithoutId() {
+        return Builder.of(Project::new)
+                .with(Project::setName, "Project X")
+                .with(Project::setIfcFile, "Hello world".getBytes())
+                .with(Project::setIfcFilename, "file.ifc")
+                .with(Project::setDatasetFilename, "file.json")
+                .build();
     }
 
-    public static Project aProjectWithOnlyTemperatureSensor(){
-        var project = aProjectWithoutSensorsAndWithoutId();
-        project.setId("ProjectID");
-        project.setSensorColors(SensorColorMapFixture.sensorTypeListMapDomain());
-        return project;
+    public static Project aCompleteProject() {
+        return Builder.of(ProjectFixture::aProjectWithoutSensorsAndWithoutId)
+                .with(Project::setId, "ProjectID")
+                .with(Project::setSensorColors, SensorColorMapFixture.sensorTypeListMapDomain())
+                .build();
     }
 
 

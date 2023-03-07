@@ -21,7 +21,6 @@ class StompSubscriptionManager {
      */
     subscribe = (params) => {
 
-        console.log(`Subscribing to the API with the following params: ${JSON.stringify(params)}`);
         let {subscriptionPath, consumer} = params;
 
         let deferred = new Deferred();
@@ -51,7 +50,6 @@ class StompSubscriptionManager {
      */
     createSubscription = (stompConnection, subscriptionPath) => {
 
-        console.log(`>>> Creating new subscription for the path: ${subscriptionPath}`);
         let unsubscribe = stompConnection.subscribe(subscriptionPath, this.handleSubscriptionMessage.bind(this, subscriptionPath)).unsubscribe;
         this.subscriptions[subscriptionPath] = {consumers: [], unsubscribe};
     };
@@ -98,7 +96,6 @@ class StompSubscriptionManager {
 
             if (this.subscriptions[subscriptionPath]) {
 
-                console.log(`>>> Unsubscribing consumer for path: ${subscriptionPath}`);
 
                 let consumers = this.subscriptions[subscriptionPath].consumers;
                 let consumerIndex  = consumers.indexOf(consumer);
@@ -109,7 +106,6 @@ class StompSubscriptionManager {
                  */
                 if (consumers.length === 0) {
 
-                    console.log(`>>> Unsubscribing from the API listening for the path: ${subscriptionPath}`);
                     this.subscriptions[subscriptionPath].unsubscribe();
                     delete this.subscriptions[subscriptionPath];
                 }
@@ -140,7 +136,6 @@ class StompSubscriptionManager {
         Object.entries(this.subscriptions)
               .forEach(([subscriptionPath, subscription]) => {
 
-                  console.log(`>>> Resubscribing STOMP API for path ${subscriptionPath}`);
                   subscription.unsubscribe = stompConnection.subscribe(subscriptionPath,
                       this.handleSubscriptionMessage.bind(this, subscriptionPath)).unsubscribe;
               });

@@ -8,30 +8,30 @@
               Créer un projet
             </v-card-title>
             <v-card-text>
-                <v-text-field
+              <v-text-field
                   v-model="projectName"
                   label="Nom du projet"
                   @change="validateForm"
                   required
-                ></v-text-field>
-                <v-file-input
+              ></v-text-field>
+              <v-file-input
                   v-model="ifc"
                   label="Fichier IFC"
                   accept=".ifc"
                   @change="validateForm"
                   required
                   @click:clear="this.valid = false"
-                ></v-file-input>
-                <v-file-input
+              ></v-file-input>
+              <v-file-input
                   v-model="dataset"
                   label="Dataset"
                   accept="application/json"
                   @change="validateForm"
                   required
                   @click:clear="this.valid = false"
-                ></v-file-input>
-
+              ></v-file-input>
             </v-card-text>
+
             <v-card-actions class="justify-center">
               <v-btn
                   variant="elevated"
@@ -40,7 +40,8 @@
                   color="success"
                   dark
                   type="submit"
-              > Créer </v-btn>
+              > Créer
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
@@ -68,6 +69,8 @@ export default {
   data() {
     return {
       projectName: null,
+      host:null,
+      port:null,
       ifc: null,
       dataset: null,
       snackbar: false,
@@ -79,7 +82,6 @@ export default {
   },
   methods: {
     validateForm() {
-      // Check if all form fields are filled in
       this.valid = !!this.projectName && !!this.ifc && !!this.dataset;
     },
     async saveDatas() {
@@ -88,6 +90,7 @@ export default {
       formData.append('name', this.projectName);
       formData.append('ifc', this.ifc[0]);
       formData.append('dataset', this.dataset[0]);
+
       fetch('/api/bimiot/projects', {
         method: 'POST',
         body: formData
@@ -98,15 +101,19 @@ export default {
               console.log(data);
               throw new Error(data.message);
             }
+
             this.$router.push({name: 'home'});
           })
           .catch(error => {
             this.errorMessage = error.message;
             this.snackbar = true;
+            this.loading = false;
           });
+
     }
   },
   mounted() {
+
     this.validateForm();
   }
 }

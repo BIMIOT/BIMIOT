@@ -82,16 +82,15 @@ class BucketFormComponent extends Component {
         let { dataset } = definition;
         let { name, ...rest} = this.form.values();
 
-        console.log('setting bucket options', this.form.values())
+
         dataset.setName(name);
         dataset.setBucketOptions(rest);
     }
 
     handleChange(field, e) {
         //field.set('value', e.target.value);
-        console.log('validate form');
+
         this.form.validate({ showErrors: false }).then((form) => {
-            console.log('form is valid:', form.isValid)
             if(form.isValid) {
                 form.submit({
                     onSuccess: this.onSuccess

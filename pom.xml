@@ -20,6 +20,10 @@
 
     <properties>
         <main.basedir>${project.basedir}</main.basedir>
+        <jacoco.version>0.8.8</jacoco.version>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.inclusions>**/*.java</sonar.inclusions>
     </properties>
 
     <modules>
@@ -27,33 +31,37 @@
         <module>backend</module>
     </modules>
 
-    <!--	<build>
-            <plugins>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${build-plugin.jacoco.version}</version>
-                    <executions>
-                        &lt;!&ndash; Prepares the property pointing to the JaCoCo
-                        runtime agent which is passed as VM argument when Maven the Surefire plugin
-                        is executed. &ndash;&gt;
-                        <execution>
-                            <id>pre-unit-test</id>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                        &lt;!&ndash; Ensures that the code coverage report for
-                        unit tests is created after unit tests have been run. &ndash;&gt;
-                        <execution>
-                            <id>post-unit-test</id>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </build>-->
+    <dependencies>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -72,7 +72,6 @@ export default {
     childMethod: function(type) {
       this.$emit('child-method', type)
       this.selected = type;
-      console.log(this.selected);
     },
     pickColor: function(value) {
       if (this.selected === value) {
@@ -93,13 +92,16 @@ export default {
 
 #sensorsControl {
   position: fixed;
-  bottom: 0;
+  bottom: 30px;
   float: right;
-  right: 0;
+  right: 25px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   width: max-content;
+  background-color: #023D57;
+  border-radius: 25px 25px 25px 25px;
+  padding: 0;
 }
 
 

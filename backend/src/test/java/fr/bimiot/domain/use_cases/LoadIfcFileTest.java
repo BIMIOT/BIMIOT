@@ -2,7 +2,7 @@ package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.application.exception.type.BaseException;
 import fr.bimiot.domain.entities.Project;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
 import fr.bimiot.fixtures.ProjectFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,18 +24,18 @@ class LoadIfcFileTest {
     LoadIfcFile loadIfcFile;
 
     @Mock
-    ProjectDatabaseProvider projectDatabaseProvider;
+    ProjectProvider projectProvider;
 
     @Test
     void execute_shouldReturnCorrectBytesArray() throws IOException, BaseException {
         //  Given
-        Project project = ProjectFixture.aProjectWithOnlyTemperatureSensor();
-        BDDMockito.doReturn(project.getIfc().getBytes()).when(projectDatabaseProvider).loadIFCFile(project.getName());
+        Project project = ProjectFixture.aCompleteProject();
+        BDDMockito.doReturn(project.getIfcFile()).when(projectProvider).loadIFCFile(project.getName());
         //  When
         var result = loadIfcFile.execute(project.getName());
         //  Then
         assertNotNull(result);
-        assertEquals(result, project.getIfc().getBytes());
+        assertEquals(result, project.getIfcFile());
     }
 
     @ParameterizedTest

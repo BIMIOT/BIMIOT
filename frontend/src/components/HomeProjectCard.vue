@@ -1,31 +1,64 @@
 <template>
-  <v-card class="text-center mx-auto" v-if="show">
-    <v-card-title>
-      {{ title }}
-    </v-card-title>
-    <v-card-actions class="justify-center">
+  <v-card
+      class="mx-auto"
+      max-width="368"
+  >
+    <v-card-text class="py-0">
+      <v-row align="center" no-gutters>
+        <v-col
+            class="text-lg-body-1"
+            cols="6"
+        >
+          {{project.name}}
+        </v-col>
+
+        <v-col cols="6" class="text-right">
+          <img :src="logo" width="85" height="85">
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <v-divider></v-divider>
+
+    <v-card-actions>
       <v-btn
           variant="elevated"
-          color="primary"
+          class="text-white rounded-xl"
+          style="background-color: #0A0046;"
           @click="sendProjectName"
-      >
-        Simulation
-      </v-btn>
-      <v-btn
-          variant="outlined"
-          icon="mdi-pencil"
-          color="secondary"
-          size="x-small"
-          @click="this.dialog = true"
-      ></v-btn>
+          icon="mdi-location-enter"
+      />
       <v-btn
           variant="outlined"
           icon="mdi-delete"
           color="error"
-          size="x-small"
           @click="this.dialog = true"
       ></v-btn>
+      <v-btn  size="large" @click="expand = !expand" color="grey">
+      Infos
+      </v-btn>
     </v-card-actions>
+    <v-expand-transition>
+      <div v-if="expand">
+        <v-list-item
+            density="compact"
+            :title="project.datasetFilename"
+        >
+          <template v-slot:prepend>
+            <v-icon  style="margin: 10px" >mdi-note-text-outline</v-icon>
+          </template>
+        </v-list-item>
+
+        <v-list-item
+            density="compact"
+            :title="project.ifcFilename"
+        >
+          <template v-slot:prepend>
+            <v-icon  style="margin: 10px" >mdi-domain</v-icon>
+          </template>
+        </v-list-item>
+
+      </div>
+    </v-expand-transition>
   </v-card>
 
   <div class="text-center">
@@ -38,13 +71,14 @@
           Êtes-vous sûr de vouloir supprimer ce projet ?
         </v-card-text>
         <v-card-actions>
+
           <v-btn color="red" @click="deleteProject">Confirmer</v-btn>
           <v-btn color="blue" @click="dialog = false">Annuler</v-btn>
+
         </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
-
 </template>
 
 <script>
@@ -52,9 +86,11 @@ import axios from "axios";
 import {projectStore} from "@/store/project";
 
 export default {
-  props: ["title"],
+  props: ["project"],
   data() {
     return {
+      logo: require("@/assets/bimiot-animated-logo.gif"),
+      expand: false,
       show: true,
       dialog: false,
     }
@@ -65,7 +101,7 @@ export default {
   },
   methods: {
     sendProjectName() {
-      this.store.currentProjectName = this.title;
+      this.store.currentProject = this.project;
       this.$router.push({name: "simulation"});
     },
 
@@ -73,7 +109,7 @@ export default {
       this.show = false;
       this.dialog = false;
       const response = await axios
-          .delete("/api/bimiot/projects/" + this.title, {})
+          .delete("/api/bimiot/projects/" + this.project.name, {})
           .catch((error) => {
             console.log("Error of deleting project: ", error);
           })
@@ -85,3 +121,8 @@ export default {
 
 }
 </script>
+<style>
+img {
+  margin-top: 15px;
+}
+</style>

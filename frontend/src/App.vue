@@ -17,4 +17,12 @@ export default {
 </template>
 
 <style>
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(to bottom, #ffffff, #D1FFFF);
+}
 </style>

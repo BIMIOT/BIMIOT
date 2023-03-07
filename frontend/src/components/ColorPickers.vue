@@ -1,17 +1,19 @@
 <template>
-  <div class="color-block-container" >
+  <div class="color-block-container">
     <div class="color-block" v-for="(color,index) in colorToValue"
          :key="index"
          :style="{ background: color.colorCode }"
          @click="openColorPicker(index)">
+      <div v-if="index > 0" class="values"> {{ index-1 !== -1 ? colorToValue[index-1].threshold : colorToValue[index].threshold}}</div>
 
     </div>
-    <v-app class="color-picker-container" :style="{
+
+    <v-app :class="selectedTab === 0 ? 'color-picker-container-colors' : 'color-picker-container-values'" :style="{
         position: 'absolute',
         transform: 'translateX(-45px)'
 
       }" v-if="selectedColorIndex !== null" id="colorPicker">
-      <v-tabs v-model="selectedTab" >
+      <v-tabs v-model="selectedTab">
         <v-tab>Color Picker</v-tab>
         <v-tab>Interval List</v-tab>
       </v-tabs>
@@ -22,7 +24,7 @@
 
       </v-tab-item>
 
-      <v-tab-item  v-if="selectedTab === 1">
+      <v-tab-item v-if="selectedTab === 1">
         <div class="value-inputs">
           <p>Modify the interval</p>
           <v-text-field
@@ -31,12 +33,12 @@
               v-model="value.threshold"
               :placeholder="value.threshold"
               type="number"
-              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit inferieur ou égal à suivant']"
+              :rules="[v => v <= this.colorToValue[index+1].threshold ||  'Le seuil doit être inferieur ou égal au suivant']"
               validate-on="input"
           />
         </div>
       </v-tab-item>
-      <v-btn color="primary" v-on:click="save()">Save</v-btn>
+      <v-btn class="primary" v-on:click="save()">Save</v-btn>
       <v-btn v-on:click="cancel()">Cancel</v-btn>
 
     </v-app>
@@ -50,14 +52,14 @@ import {projectStore} from "@/store/project";
 export default {
   name: "ColorPickers",
   props: {
-    sensorType:{}
+    sensorType: {}
   },
   watch: {
     colorToValue: {
-      handler:function (newValue){
+      handler: function (newValue) {
         this.$emit('colorToValue', newValue)
       },
-      deep:true
+      deep: true
     }
   },
   setup() {
@@ -69,21 +71,12 @@ export default {
       selectedColorIndex: null,
       selectedTab: 0,
       colorToValue: [
-        {
-          colorCode: '#ff0000',
-          threshold: 3
-        },
-        {
-          colorCode: '#00ff00',
-          threshold: 10
-        },
-        {
-          colorCode: '#0000ff',
-          threshold: 20
-        },
-        {
-          colorCode: '#ffff00',
-          threshold: Infinity
+        {"colorCode": "#7F00FF", "threshold": -10}, {
+          "colorCode": "#00FFFF",
+          "threshold": 20
+        }, {"colorCode": "#80FF00", "threshold": 30}, {
+          "colorCode": "#FE0000",
+          "threshold": Infinity
         }
       ]
     }
@@ -92,12 +85,11 @@ export default {
   mounted() {
     this.store.fetchSensorColors().then(() => {
       const v = this.store.getColors.data
-      this.colorToValue =  v[this.sensorType];
-      console.log(v, "heeeeeeee")
+      this.colorToValue = v[this.sensorType];
     });
 
     this.$emit('colorToValue', this.colorToValue)
-    console.log("colorToValue",this.colorToValue)
+    console.log("colorToValue", this.colorToValue)
     document.addEventListener('click', this.closeColorPickerOnClickOutside)
   },
   beforeUnmount() {
@@ -105,12 +97,16 @@ export default {
   },
   methods: {
     save() {
-      this.$emit('save', "save")
+      this.$emit('save', "save");
+      this.closeColorPicker();
     },
     cancel() {
-      this.selectedColorIndex = null;
-    }
-    ,
+      this.closeColorPicker();
+      this.store.fetchSensorColors().then(()=>{
+          const v = this.store.getColors.data;
+          this.colorToValue = v[this.sensorType];
+      });
+    },
     openColorPicker(id) {
       this.selectedColorIndex = id
     },
@@ -135,9 +131,16 @@ export default {
   align-items: center;
 }
 
-.color-picker-container {
+.color-picker-container-colors {
   position: absolute;
-  top: 100%;
+  top: 450%;
+  left: 0;
+  align-items: center;
+}
+
+.color-picker-container-values {
+  position: absolute;
+  top: 375%;
   left: 0;
   align-items: center;
 }
@@ -155,7 +158,25 @@ export default {
   margin-bottom: 18px;
 }
 
-.value-inputs {
-  padding: 8px;
+
+.v-application__wrap {
+  background-color: white;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-height: 0vh;
+  position: relative;
+}
+
+.values {
+  margin-top: 20px;
+  margin-right: 50px;
+}
+
+.primary {
+  color: white;
+  background-color: #023D57;
 }
 </style>

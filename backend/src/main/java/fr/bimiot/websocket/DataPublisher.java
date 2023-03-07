@@ -11,7 +11,6 @@ import java.time.LocalTime;
 
 @Component
 public class DataPublisher implements ApplicationListener<ConverterEvent> {
-
     private final MessageSendingOperations<String> messageSendingOperations;
 
     public DataPublisher(MessageSendingOperations<String> messageSendingOperations) {
@@ -20,20 +19,17 @@ public class DataPublisher implements ApplicationListener<ConverterEvent> {
 
     @Override
     public void onApplicationEvent(ConverterEvent event) {
-        System.out.println("im in the data pub" + event);
-        System.out.println("before sending message: " + event.getMessage());
         sendMessage(event);
     }
-
     public void sendMessage(ConverterEvent event) {
         var data = event.getMessage();
         var sensorJson = new JSONObject()
                 .put("sensorIfcID", Integer.parseInt(data.sensorIfcID()))
-                .put("value", Integer.parseInt(data.value()))
+                .put("value", Float.parseFloat(data.value()))
                 .put("roomIfcID", Integer.parseInt(data.roomIfcID()))
                 .put("sensorType", data.type())
-                .put("color", data.color());
-        System.out.println("before sending ws: " + sensorJson);
+                .put("color", data.color())
+                .put("averageValue", data.averageValue());
         this.messageSendingOperations.convertAndSend("/data/sensors", sensorJson.toString());
     }
 }

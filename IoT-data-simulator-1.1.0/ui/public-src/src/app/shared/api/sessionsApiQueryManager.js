@@ -11,7 +11,6 @@ class SessionsApiQueryManager {
      */
     getSessionsStatus = () => {
 
-        console.log(">>> Getting sessions status...");
         let params = this.buildParams(stompPathsConfig.paths.getSessionsStatusQueryDestinationPath());
         return this.stompQueryManager.send(params);
     };
@@ -22,7 +21,7 @@ class SessionsApiQueryManager {
      */
     startSession = (sessionId) => {
 
-        console.log(`>>> Starting session ${sessionId}`);
+
         return this.manageSession(sessionId, "start");
     };
 
@@ -32,7 +31,6 @@ class SessionsApiQueryManager {
      */
     pauseSession = (sessionId) => {
 
-        console.log(`>>> Pausing session ${sessionId}`);
         return this.manageSession(sessionId, "pause");
     };
 
@@ -42,7 +40,7 @@ class SessionsApiQueryManager {
      */
     resumeSession = (sessionId) => {
 
-        console.log(`>>> Resuming session ${sessionId}`);
+
         return this.manageSession(sessionId, "start");
     };
 
@@ -52,7 +50,7 @@ class SessionsApiQueryManager {
      */
     stopSession = (sessionId) => {
 
-        console.log(`>>> Stopping session ${sessionId}`);
+
         return this.manageSession(sessionId, "stop");
     };
 
@@ -62,7 +60,7 @@ class SessionsApiQueryManager {
      */
     restartSession = (sessionId) => {
 
-        console.log(`>>> Restarting session ${sessionId}`);
+
         return this.stopSession(sessionId).then(() => this.startSession(sessionId));
     };
 

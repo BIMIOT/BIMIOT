@@ -1,7 +1,8 @@
 package fr.bimiot.domain.use_cases;
 
 import fr.bimiot.domain.exception.DomainException;
-import fr.bimiot.domain.use_cases.providers.ProjectDatabaseProvider;
+import fr.bimiot.domain.use_cases.providers.ProjectProvider;
+import fr.bimiot.domain.use_cases.simulation.DeleteSimulation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +20,9 @@ class DeleteProjectTest {
     DeleteProject deleteProject;
 
     @Mock
-    ProjectDatabaseProvider projectDatabaseProvider;
-
+    ProjectProvider projectProvider;
+    @Mock
+    DeleteSimulation deleteSimulation;
 
 
     private final static String PROJECT_NAME = "deleteTest";
@@ -31,7 +33,8 @@ class DeleteProjectTest {
         deleteProject.execute(PROJECT_NAME);
 
         //Then
-        verify(projectDatabaseProvider, times(1)).delete(PROJECT_NAME);
+        verify(projectProvider, times(1)).delete(PROJECT_NAME);
+        verify(deleteSimulation, times(1)).execute(PROJECT_NAME);
     }
 
 }

@@ -10,7 +10,11 @@ public class SensorColorMapFixture {
     public static Map<SensorType, List<SensorColor>> sensorTypeListMapDomain() {
         var map = new HashMap<SensorType, List<SensorColor>>();
         Arrays.stream(SensorType.values())
-                .forEach(sensorType -> map.put(sensorType, aCompletePaletteSensorColor()));
+                .forEach(sensorType -> {
+                    if (!SensorType.END.equals(sensorType)) {
+                        map.put(sensorType, aCompletePaletteSensorColor());
+                    }
+                });
         return map;
     }
 

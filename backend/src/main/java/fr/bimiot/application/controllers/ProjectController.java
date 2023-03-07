@@ -1,11 +1,11 @@
 package fr.bimiot.application.controllers;
 
-import fr.bimiot.application.dtos.ProjectApi;
-import fr.bimiot.application.dtos.SensorColorApi;
-import fr.bimiot.application.dtos.SensorColorApiMap;
-import fr.bimiot.application.dtos.SensorTypeApi;
+import fr.bimiot.application.mappers.ProjectMapper;
+import fr.bimiot.application.dtos.*;
 import fr.bimiot.dataproviders.exception.DataBaseException;
-import fr.bimiot.domain.entities.*;
+import fr.bimiot.domain.entities.Project;
+import fr.bimiot.domain.entities.SensorColor;
+import fr.bimiot.domain.entities.SensorType;
 import fr.bimiot.domain.exception.DomainException;
 import fr.bimiot.domain.use_cases.*;
 import org.springframework.http.HttpStatus;
@@ -23,29 +23,32 @@ import java.util.stream.Collectors;
 public class ProjectController {
     private final CreateProject createProject;
     private final DeleteProject deleteProject;
-    private final ManageSimulation manageSimulation;
     private final ManageData manageData;
     private final UpdateSensorsColors updateSensorsColors;
     private final GetSensorColorMap getSensorColorMap;
+    private final GetAllProjects getAllProjects;
 
-    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageSimulation manageSimulation, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap) {
+    public ProjectController(CreateProject createProject, DeleteProject deleteProject, ManageData manageData, UpdateSensorsColors updateSensorsColors, GetSensorColorMap getSensorColorMap, GetAllProjects getAllProjects) {
         this.createProject = createProject;
         this.deleteProject = deleteProject;
-        this.manageSimulation = manageSimulation;
         this.manageData = manageData;
         this.updateSensorsColors = updateSensorsColors;
         this.getSensorColorMap = getSensorColorMap;
+        this.getAllProjects = getAllProjects;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProjectApiGetAllResponse>> getAllProjects() {
+        var responseBody = getAllProjects.execute().stream()
+                .map(ProjectMapper::toProjectApiGetAllResponse)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @PostMapping
     public ResponseEntity<ProjectApi> create(@RequestParam("name") String projectName, @RequestParam("ifc") MultipartFile ifc, @RequestParam("dataset") MultipartFile dataset) throws DomainException, IOException {
-        manageSimulation.executeCreate(projectName, dataset);
-        var projectResponse = createProject.execute(toProject(projectName, ifc, dataset));
-        return ResponseEntity.ok(toProjectApi(projectResponse));
-    }
-
-    private Project toProject(String projectName, MultipartFile ifc, MultipartFile dataset) {
-        return new Project(null, projectName, ifc, dataset);
+        var projectResponse = createProject.execute(ProjectMapper.toProject(projectName, ifc, dataset), dataset);
+        return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(projectResponse));
     }
 
     private ProjectApi toProjectApi(String projectId) {
@@ -56,7 +59,6 @@ public class ProjectController {
 
     @DeleteMapping("/{projectName}")
     public ResponseEntity<String> deleteProject(@PathVariable("projectName") String projectName) throws DomainException {
-        manageSimulation.executeDelete(projectName);
         deleteProject.execute(projectName);
         return ResponseEntity.status(HttpStatus.OK).body("The project is deleted");
     }
@@ -65,6 +67,7 @@ public class ProjectController {
     public ResponseEntity<ProjectApi> updateProjectColors(@PathVariable("projectName") String projectName, @RequestBody SensorColorApiMap sensorColorApiMap) throws DataBaseException {
         var project = updateSensorsColors.execute(projectName, toSensorColorMap(sensorColorApiMap));
         manageData.setSensorTypeListMap(project.getSensorColors());
+        manageData.sendAllRoomsColors();
         return ResponseEntity.status(HttpStatus.OK).body(toProjectApi(project));
     }
 
@@ -97,7 +100,7 @@ public class ProjectController {
 
     private Map<SensorType, List<SensorColor>> toSensorColorMap(SensorColorApiMap sensorColorApiMap) {
         return sensorColorApiMap.getSensorColorApis().entrySet().stream()
-                .collect(Collectors.toMap(entry -> SensorType.valueOf(entry.getKey()), entry -> toSensorColorList(entry.getValue())));
+                .collect(Collectors.toMap(entry -> SensorType.valueOf(entry.getKey().name()), entry -> toSensorColorList(entry.getValue())));
     }
 
     private List<SensorColor> toSensorColorList(List<SensorColorApi> sensorColorApis) {

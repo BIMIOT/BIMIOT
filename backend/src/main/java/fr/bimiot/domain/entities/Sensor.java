@@ -37,6 +37,18 @@ public class Sensor {
         this.value = value;
     }
 
+    public void setSensorDataSetId(String sensorDataSetId) {
+        this.sensorDataSetId = sensorDataSetId;
+    }
+
+    public void setSensorIFCid(String sensorIFCid) {
+        this.sensorIFCid = sensorIFCid;
+    }
+
+    public void setType(SensorType type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

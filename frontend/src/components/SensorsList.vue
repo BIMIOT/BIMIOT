@@ -1,79 +1,81 @@
 <script>
-  export default {
-    props: {
-        room_list: {
-            type: Object,
-            required: true
-        }
+
+import TreeViewSensors from "@/components/TreeViewSensors";
+
+export default {
+  components: {
+    TreeViewSensors,
+  },
+  props: {
+    room_list: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    search(obj) {
+      this.$refs.treeViewSensor.searchFrom3d(obj);
     },
-    data () {
-      return {
-        dialog: false,
-      }
-    },
-  }
+    emitId(id) {
+      this.$emit("id-emit",id)
+    }
+  },
+  data () {
+    return {
+      roomId: "",
+      dialog: false
+    }
+  },
+}
 </script>
-
 <template>
-    <v-row justify="center">
-      <v-btn icon id="showSensors"
-        color='#0A0046'
-        dark
-        @click.stop="dialog = true"
-      >
-        <v-icon color="white">
-          mdi-access-point
-        </v-icon>
-      </v-btn>
+  <div>
+    <v-btn icon class="mx-3 my-3"
+           color='#0A0046'
+           dark
+           @click.stop=" dialog = true"
+    >
+      <v-icon color="white">
+        mdi-access-point
+      </v-icon>
+    </v-btn>
 
-  
-      <v-dialog
-        v-model="dialog"
-        max-width="750"
-      >
-        <v-card>
-          <v-card-title class="text-h5">
-            Liste des capteurs
-          </v-card-title>
+    <v-card>
 
-          <v-card-text>
-            <ul  v-for="(type,roomId) in room_list " :key="type.id">
-              <li v-if='roomId!=="roomId"'>
-                Pièce : {{ roomId }}
-                <ul v-for="(sensor,type2) in room_list[roomId]" :key="sensor.id">
-                  <li v-if='type2!=="type"'>
-                    Type : {{ type2 }}
-                    <ul v-for="sensor in room_list[roomId][type2]" :key="sensor.id">
-                      <li v-if="sensor.IFCid">
-                        Capteur : {{ sensor.IFCid }} / {{ sensor.DataId }}, valeur : {{ sensor.value === undefined ? "Aucune" : sensor.value }}
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <br>
-            </ul>
-          </v-card-text>
-  
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="green darken-1"
-              text
-              @click="dialog = false"
-            >
-              Fermer
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-  </template>
-
+      <v-layout>
+        <v-navigation-drawer
+            v-bind:width="425"
+            v-model="dialog"
+            temporary
+        >
+          <v-list-item
+              title="Liste des capteurs"
+              nav
+          >
+            <template v-slot:append>
+              <v-btn
+                  variant="text"
+                  icon="mdi-chevron-left"
+                  size="large"
+                  @click.stop="dialog = !dialog"
+              ></v-btn>
+            </template>
+          </v-list-item>
+          <div v-if="dialog">
+            <TreeViewSensors v-on:id-emit="emitId" ref="treeViewSensor" :room_list="this.room_list"/>
+          </div>
+        </v-navigation-drawer>
+      </v-layout>
+    </v-card>
+  </div>
+</template>
 <style>
-#showSensors{
-  bottom: 125px;
-  left: 35px;
-  color: blue;
+
+.input-wrapper {
+  font-size: 16px;
+}
+
+.v-list-item--nav .v-list-item-title {
+  font-size: 1.1rem;
 }
 </style>
