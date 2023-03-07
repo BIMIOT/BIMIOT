@@ -61,7 +61,6 @@ import axios from 'axios';
 import sockjs from "sockjs-client/dist/sockjs"
 import * as StompJs from '@stomp/stompjs';
 
-
 import {
   IFCDISTRIBUTIONCONTROLELEMENT,
   IFCOPENINGELEMENT,
@@ -75,7 +74,6 @@ import SensorsList from './SensorsList.vue'
 import SensorsControlButtons from "@/components/SensorsControlButtons";
 import ColorPickerSensor from "@/components/ColorPickerSensor";
 
-
 import TwoDToThreeDButton from "@/components/TwoDToThreeDButton";
 
 import {projectStore} from "@/store/project";
@@ -85,8 +83,6 @@ import {CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import {NavCube} from "./NavCube/NavCube";
 import HideValueButton from "@/components/HideValueButton.vue";
-import UrlChanger from "@/components/UrlChanger";
-
 
 export default {
   name: 'ModelViewer',
