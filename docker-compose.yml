@@ -9,7 +9,7 @@ services:
     volumes:
       - data:/data
   bimiot:
-    image: 'bimiot/bimiot:1.0.0'
+    image: 'bimiot/bimiot:1.1.0'
     depends_on:
       - mongodb
     build:
