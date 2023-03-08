@@ -7,6 +7,7 @@ export default {
     TreeViewSensors,
   },
   props: {
+    roomIfcToName: {},
     room_list: {
       type: Object,
       required: true
@@ -62,7 +63,7 @@ export default {
             </template>
           </v-list-item>
           <div v-if="dialog">
-            <TreeViewSensors v-on:id-emit="emitId" ref="treeViewSensor" :room_list="this.room_list"/>
+            <TreeViewSensors :room-ifc-to-name="roomIfcToName" v-on:id-emit="emitId" ref="treeViewSensor" :room_list="this.room_list"/>
           </div>
         </v-navigation-drawer>
       </v-layout>
