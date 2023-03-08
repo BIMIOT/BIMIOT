@@ -7,6 +7,7 @@
       </v-col>
     </v-row>
     <div>
+
       <div v-if="this.projects.length > 8">
         <v-pagination v-model="page" :length="Math.round(this.projects.length/this.pageSize)" @next="page = $event" @prev="page = $event"></v-pagination>
       </div>
