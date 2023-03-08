@@ -37,7 +37,7 @@
             <v-list-item :disabled="i.sensors.length === 0"
                 v-bind="props"
                 prepend-icon="mdi-home"
-                :title="'Piece ' + i.roomId"
+                :title="'Piece ' + i.roomName"
                 @dblclick="emitId(i.roomId,'rooms')"
             ></v-list-item>
           </template>
@@ -118,7 +118,7 @@
               <v-list-item
                   prepend-icon="mdi-home"
                   @dblclick="emitId(i.roomId,'rooms')"
-                  :title="'Piece ' + i.roomId"
+                  :title="'Piece ' + i.roomName"
               ></v-list-item>
             </v-list-group>
 
@@ -133,6 +133,7 @@ import {unitsTypeStore} from "@/store/unitsType";
 export default {
   name: "TreeViewSensors",
   props: {
+    roomIfcToName: {},
     searchFrom3dModel: {},
     room_list: {},
   },
@@ -190,7 +191,7 @@ export default {
       },
       findRoomByRoomId(roomId) {
         return this.localRoomList.filter(room => {
-          return room.roomId.includes(roomId);
+          return room.roomName.includes(roomId);
         });
       },
       searchFrom3d(obj) {
@@ -225,6 +226,7 @@ export default {
               IFCid: sensor.IFCid,
               DataId: sensor.DataId,
               roomId: room.roomId,
+              roomName: this.roomIfcToName[room.roomId],
               value: sensor.value
             };
           });
@@ -238,6 +240,7 @@ export default {
         for (const roomId in input) {
           const room = {
             roomId,
+            roomName: this.roomIfcToName[roomId],
             sensors: []
           };
 

@@ -36,7 +36,7 @@
           <TwoDToThreeDButton @click="changeTo2d()" :state="currentPlan"/>
         </div>
         <div class="fill-content">
-          <SensorsList  v-on:id-emit="pick3dElementFromList" ref="childComponent"  :room_list="room_list"/>
+          <SensorsList :room-ifc-to-name="roomIfcToName" v-on:id-emit="pick3dElementFromList" ref="childComponent"  :room_list="room_list"/>
         </div>
       </v-container>
       <SensorsControlButtons v-on:child-method="updateParent"/>
@@ -99,6 +99,7 @@ export default {
       entityData: '',
       sensorIFcToDataSet: {},
       knowledge: 0,
+      roomIfcToName:{},
       roomIdToMesh: {},
       arrayOfKids: [],
       host:null,
@@ -259,7 +260,8 @@ export default {
 
         if (type === "IFCSPACE" || type === "IFCDISTRIBUTIONCONTROLELEMENT") {
           this.entityData = (type === "IFCSPACE" ? "Pièce" : "Capteur") + " - " + id;
-          this.$refs.childComponent.search(type === "IFCSPACE" ? {id:id, type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+          this.$refs.childComponent.search(type === "IFCSPACE" ? {id:this.roomIfcToName[id], type:"rooms"} : {id: this.sensorIFcToDataSet[id], type: "sensors"});
+
           this.$refs.childComponent.updateList(this.room_list);
         } else {
           this.viewer.IFC.selector.unpickIfcItems();
@@ -500,6 +502,8 @@ export default {
       if (relIDs.type === "IFCSPACE") {
         this.room_list[relIDs.expressID] = {};
         this.sensorMapping.push({"roomId": relIDs.expressID, "sensors": []});
+        const room = await manager.getItemProperties(modelID, relIDs.expressID);
+        this.roomIfcToName[relIDs.expressID+""] =  !room.LongName.value ? "Pas nom" : room.LongName.value ;
       }
       for (let component in relIDs.children) {
         if (relIDs.type === "IFCSPACE" && relIDs.children[component].type === "IFCDISTRIBUTIONCONTROLELEMENT") {
