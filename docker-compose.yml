@@ -12,8 +12,6 @@ services:
     image: 'bimiot/bimiot:1.1.0'
     depends_on:
       - mongodb
-    build:
-      context: .
     container_name: bimiot
     ports:
       - "80:8080"
