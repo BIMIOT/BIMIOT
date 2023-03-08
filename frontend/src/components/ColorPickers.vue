@@ -19,8 +19,8 @@
       </v-tabs>
 
       <v-tab-item class="tab-item" v-if="selectedTab === 0">
-        <v-color-picker v-model="colorToValue[selectedColorIndex].colorCode" mode="hexa"
-                        @input="closeColorPicker"></v-color-picker>
+        <v-color-picker v-model="colorToValue[selectedColorIndex].colorCode" mode="rgb"
+                        ></v-color-picker>
 
       </v-tab-item>
 
@@ -133,7 +133,7 @@ export default {
 
 .color-picker-container-colors {
   position: absolute;
-  top: 450%;
+  top: 425%;
   left: 0;
   align-items: center;
 }
