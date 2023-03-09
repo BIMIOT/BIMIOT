@@ -124,7 +124,7 @@ public class ManageData {
                 if (sum.isPresent()) {
                     var firstSensor = sumCalc.getFirstSensor();
                     var websocketdata = new WebSocketData(firstSensor.getSensorIFCid(), firstSensor.getValue(), r.getRoomId(),
-                            t.toString(), getMatchingColor(t, sum.get()), String.valueOf(sum.get()));
+                            t.toString(), getMatchingColor(t, sum.get()), new DecimalFormat("#.#").format(sum.get()));
                     var event = new ConverterEvent(this, websocketdata);
                     applicationEventPublisher.publishEvent(event);
                 }
