@@ -16,13 +16,13 @@
       <div class="sensor-icon">
         <v-icon color="#0A0046" size="28">mdi-lightbulb-on</v-icon>
       </div>
-      <color-pickers  sensor-type="LIGHT" v-on:save="saveData"  v-on:colorToValue="updateLumColorToValue" v-on:click="this.showModal=true"/>
+      <color-pickers  sensor-type="LIGHT" v-on:save="saveData"  class="color-pickers" v-on:colorToValue="updateLumColorToValue" v-on:click="this.showModal=true"/>
     </div>
     <div class="sensor-item" v-show="this.selectedType === 'CO2'">
       <div class="sensor-icon">
         <v-icon color="#0A0046" size="28">mdi-molecule-co2</v-icon>
       </div>
-      <color-pickers sensor-type="CO2" v-on:save="saveData"  v-on:colorToValue="updateCo2ColorToValue" v-on:click="this.showModal=true"/>
+      <color-pickers sensor-type="CO2" v-on:save="saveData"  class="color-pickers" v-on:colorToValue="updateCo2ColorToValue" v-on:click="this.showModal=true"/>
     </div>
 
   </div>
@@ -99,11 +99,13 @@ export default {
     },
     updateCo2ColorToValue(colorToValue) {
       this.isDragging = false;
-      this.luminosityColorToValue = colorToValue;
+      this.co2ColorToValue = colorToValue;
+
     },
     updateLumColorToValue(colorToValue) {
       this.isDragging = false;
-      this.co2ColorToValue = colorToValue;
+      this.luminosityColorToValue = colorToValue;
+
     },
     updateColorToValue(colorToValue){
       this.temperatureColorToValue = colorToValue;
